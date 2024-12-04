@@ -1,0 +1,41 @@
+.header {
+  height: 10vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+  border-bottom: solid 2px #f8ffff;
+  padding: 0 5%;
+  box-sizing: border-box;
+}
+
+.header .logo {
+  display: flex;
+  align-items: center;
+  color: #f8ffff;
+  gap: 10px;
+}
+
+.header .navbar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header .navbar ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #f8ffff;
+}
+
+.header .info {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
