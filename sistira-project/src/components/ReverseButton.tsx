@@ -1,4 +1,4 @@
-import styles from "@/styles/Button.module.css";
+import styles from "@/styles/ReverseButton.module.css";
 
 export default function Button({ content }: ButtonProps) {
 	return (
