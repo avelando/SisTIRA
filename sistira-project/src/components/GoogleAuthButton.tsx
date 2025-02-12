@@ -1,15 +1,11 @@
 import React from 'react';
 import styles from '@/styles/GoogleAuthButton.module.css';
 
-interface GoogleAuthButtonProps {
-  text: string;
-}
-
-const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ text }) => {
+const GoogleAuthButton: React.FC<ButtonProps> = ({ content }: ButtonProps) => {
   return (
     <button className={styles.googleButton}>
       <img src="./google-logo.png" alt="Google Icon" className={styles.googleIcon} />
-      {text}
+      {content}
     </button>
   );
 };

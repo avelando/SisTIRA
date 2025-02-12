@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import FormField from '@/components/FormField';
 import AuthButton from '@/components/AuthButton';
 import GoogleAuthButton from '@/components/GoogleAuthButton';
-import styles from '@/styles/RegisterPage.module.css';
+import styles from '@/styles/AuthPages.module.css';
+import BackButton from '@/components/BackButton';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -16,6 +17,7 @@ export default function Register() {
 
   return (
     <div className={styles.content}>
+      <BackButton text='Home' />
       <div className={styles.page}>
         <div className={styles.text}>
           <h1>Bem vindo(a) de volta</h1>
@@ -31,7 +33,7 @@ export default function Register() {
           <hr className={styles.separator} />
         </div>
 
-        <GoogleAuthButton text="Acesse sua conta com o Google" />
+        <GoogleAuthButton content="Acesse sua conta com o Google" />
 
         <AuthButton text="Entrar" onClick={handleLogin} />        
 

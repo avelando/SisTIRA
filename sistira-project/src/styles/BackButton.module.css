@@ -1,0 +1,36 @@
+.backButton {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 5px 15px;
+  background-color: transparent;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 15px 10px 15px 0;
+  border-color: transparent white transparent transparent;
+  margin-right: 5px;
+}
+
+.retangle {
+  border: 2px solid #f8ffff;
+  padding: 2px 10px;
+  border-radius: 0 10px 10px 0;
+  transition: 0.1s ease-in-out;
+}
+
+.retangle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: 0.1s ease-in-out;
+}

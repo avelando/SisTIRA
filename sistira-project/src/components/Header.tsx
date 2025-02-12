@@ -1,13 +1,8 @@
-import Button from "@/components/Button"
-import ReverseButton from "@/components/ReverseButton"
-
-import Link from 'next/link'
-
-import styles from "@/styles/Header.module.css"
+import styles from "../styles/Header.module.css";
 
 export default function Header() {
   return (
-    <header className={styles.header}>
+    <div className={styles.content}>
       <div className={styles.logo}>
         <svg width="28" height="39" viewBox="0 0 28 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.52007 1.13596L0.662768 0.310169L0.00784302 0H3.72244L2.52007 1.13596Z" fill="#F8FFFF"/>
@@ -162,21 +157,6 @@ export default function Header() {
           <path d="M21.7665 20.7502L22.4068 19.7246L23.6624 20.0523L21.7665 20.7502Z" fill="#F8FFFF"/>
         </svg>
       </div>
-      <nav className={styles.navbar}>
-        <ul>
-          <li>Serviços</li>
-          <li>Sobre</li>
-          <li>Contato</li>
-        </ul>
-      </nav>
-      <div className={styles.info}>
-        <Link href="/login">
-          <ReverseButton content="Entrar" />
-        </Link>
-        <Link href="/register">
-          <Button content="Cadastra-se"/>
-        </Link>
-      </div>
-    </header>
-  )
+    </div>
+  );
 }

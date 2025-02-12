@@ -1,14 +1,7 @@
 import React from 'react';
 import styles from '@/styles/FormField.module.css';
 
-interface FormFieldProps {
-  label: string;
-  type: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const FormField: React.FC<FormFieldProps> = ({ label, type, value, onChange }) => {
+const FormField: React.FC<FormFieldProps> = ({ label, type, value, onChange }: FormFieldProps) => {
   return (
     <div className={styles.field}>
       <input 

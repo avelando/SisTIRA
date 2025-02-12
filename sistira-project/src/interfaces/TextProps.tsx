@@ -1,0 +1,3 @@
+interface TextProps {
+  text: string;
+}
