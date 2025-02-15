@@ -1,8 +1,9 @@
-import styles from "../styles/Header.module.css";
+import styles from '@/styles/Header.module.css';
+import Image from 'next/image';
 
 export default function Header() {
   return (
-    <div className={styles.content}>
+    <header className={styles.header}>
       <div className={styles.logo}>
         <svg width="28" height="39" viewBox="0 0 28 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.52007 1.13596L0.662768 0.310169L0.00784302 0H3.72244L2.52007 1.13596Z" fill="#F8FFFF"/>
@@ -156,7 +157,22 @@ export default function Header() {
           <path d="M21.6232 21.0926C21.6232 21.0926 21.94 21.5335 22.1034 22.1511L24.0693 20.3025L21.6232 21.0926Z" fill="#F8FFFF"/>
           <path d="M21.7665 20.7502L22.4068 19.7246L23.6624 20.0523L21.7665 20.7502Z" fill="#F8FFFF"/>
         </svg>
+
       </div>
-    </div>
+
+      <div className={styles.profile}>
+        <Image
+          src="/foto.jpg"
+          alt="Foto de perfil"
+          width={40}
+          height={40}
+          className={styles.avatar}
+        />
+        <div className={styles.userInfo}>
+          <span className={styles.name}>Avelar</span>
+          <span className={styles.username}>@avelando</span>
+        </div>
+      </div>
+    </header>
   );
 }
