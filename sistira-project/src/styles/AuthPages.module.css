@@ -30,6 +30,13 @@
   color: #555;
 }
 
+.stepTitle {
+  text-align: center;
+  font-size: 22px;
+  color: #133856;
+  margin-bottom: 10px;
+}
+
 .separatorContainer {
   display: flex;
   align-items: center;
@@ -47,6 +54,46 @@
   color: #555;
   font-size: 14px;
   font-weight: bold;
+}
+
+.progressContainer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.progressStep {
+  width: 20px;
+  height: 6px;
+  background-color: #ccc;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+.progressStep.active {
+  background-color: #133856;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.buttonContainer button:first-child {
+  background-color: #ccc;
+  color: #333;
+}
+
+.buttonContainer button:first-child:hover {
+  background-color: #bbb;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
 }
 
 .footer {

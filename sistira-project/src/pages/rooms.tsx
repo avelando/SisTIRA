@@ -5,7 +5,7 @@ import styles from '@/styles/Dashboard.module.css';
 import SideBar from "@/components/SideBar"
 import Header from '@/components/Header';
 
-export default function Dashboard() {
+export default function Rooms() {
   return (
     <div className={styles.container}>
       <Header />
