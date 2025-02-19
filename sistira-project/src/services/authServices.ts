@@ -51,3 +51,27 @@ export const logoutUser = async () => {
     return false;
   }
 };
+
+export const registerUser = async (data: { first_name: string; last_name: string; email: string; username: string; password: string }) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Erro ao registrar usuário.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("Ocorreu um erro desconhecido.");
+    }
+  }
+};
