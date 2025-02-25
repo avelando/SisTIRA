@@ -16,16 +16,11 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await loginUser({ email, password });
-      alert("Login realizado com sucesso!");
       router.push("/dashboard");
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Erro desconhecido ao tentar fazer login.");
-      }
+      setError(err instanceof Error ? err.message : "Erro desconhecido.");
     }
-  };  
+  };
 
   return (
     <div className={styles.content}>

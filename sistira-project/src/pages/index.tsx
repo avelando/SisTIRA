@@ -187,7 +187,9 @@ export default function Home() {
             <div className="title">
               <h2>Sistema de Tutoria Inteligente de <br/>Respostas Automáticas</h2>
             </div>
-            <Button content="Comece agora" />
+            <Link href={"/register"}>
+              <Button content="Comece agora" />
+            </Link>
           </div>
           <div className="image">
             <svg width="321" height="303" viewBox="0 0 321 303" fill="none" xmlns="http://www.w3.org/2000/svg">
