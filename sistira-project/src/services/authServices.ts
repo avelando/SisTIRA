@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://10.1.15.9";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://liara.picos.ifpi.edu.br";
 
 export const loginUser = async (data: { email: string; password: string }) => {
   const response = await fetch(`${API_BASE_URL}/api/accounts/login/`, {
