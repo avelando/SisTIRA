@@ -44,8 +44,8 @@ export default function Register() {
   
     try {
       const userData = {
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         email: email.trim(),
         username: username.trim(),
         password: password.trim(),
