@@ -23,7 +23,10 @@ export async function checkAuth() {
   });
 
   if (!response.ok) {
-    return null;
+    if (response.status === 401) {
+      return null;
+    }
+    throw new Error(`Erro ao verificar auth: ${response.status}`);
   }
 
   return await response.json();

@@ -1,31 +1,18 @@
 .container {
   display: flex;
   height: 100vh;
+  padding-left: 250px;
 }
 
 .content {
-  flex: 1;
-  margin-left: 250px;
-  margin-top: 60px;
-  padding: 30px;
-  overflow-y: auto;
+  margin-top: 10vh;
+  padding: 20px;
+  width: 100vw;
   background-color: #F3F3F3;
-}
-
-.content h1 {
-  font-size: 32px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-}
-
-.card {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 18px;
 }

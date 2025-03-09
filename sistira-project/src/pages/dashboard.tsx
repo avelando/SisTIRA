@@ -6,33 +6,29 @@ import styles from '@/styles/Dashboard.module.css';
 
 import Card from '@/components/Card';
 import SideBar from "@/components/SideBar"
-import Header from '@/components/Header';
 import { useRouter } from 'next/router';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
+import Header from "@/components/Header"
 
 export default function Dashboard() {
 
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProps | null>(null);
 
   useEffect(() => {
     async function fetchUser() {
-      const userData = await checkAuth();
-      if (!userData) {
-        router.push("/login");
-      } else {
-        setUser(userData);
+      try {
+        const userData = await checkAuth();
+        if (!userData) {
+          router.push("/login");
+        } else {
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error("Erro em checkAuth:", error);
       }
     }
     fetchUser();
-  }, []);
+  }, []);  
 
   const ExamsIcon = (
     <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,19 +77,11 @@ export default function Dashboard() {
   
   return (
     <div className={styles.container}>
-
-      <Header />
-
       <SideBar />
 
-      <div>
-        <h1>
-          {user ? `Bem-vindo, ${user.username}` : "Faça login"}
-        </h1>
-      </div>
-
       <main className={styles.content}>
-        <h1>Dashboard</h1>
+        <Header user={user} title="Dashboard" />
+
         <div className={styles.grid}>
           <Card title="Provas" quant={23} icon={ExamsIcon} bgColor="#FFE3A9" />
           <Card title="Banco de Questões" quant={4} icon={QuestionsBankIcon} bgColor="#FFD7D7" />
