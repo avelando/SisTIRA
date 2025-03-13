@@ -1,9 +1,10 @@
 import Button from "@/components/Button";
 import ReverseButton from "@/components/ReverseButton";
 import TextAnimated from "@/components/TextAnimated";
+import { NextPageWithLayout } from "@/types/nextPageWithLayout";
 import Link from "next/link";
 
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   return (
     <>
       <header className="header">
@@ -239,4 +240,9 @@ export default function Home() {
       </section>
     </>
   );
+
 }
+
+Home.getLayout = (page) => page;
+
+export default Home;

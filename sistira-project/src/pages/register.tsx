@@ -6,8 +6,9 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 import BackButton from "@/components/BackButton";
 import styles from "@/styles/AuthPages.module.css";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "@/types/nextPageWithLayout";
 
-export default function Register() {
+const Register: NextPageWithLayout = () => {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -120,3 +121,7 @@ export default function Register() {
     </div>
   );
 }
+
+Register.getLayout = (page) => page;
+
+export default Register;

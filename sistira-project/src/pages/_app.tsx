@@ -1,6 +1,35 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
+import React, { useEffect, useState } from 'react';
+import { AppProps } from 'next/app';
+import Layout from '@/components/Layout';
+import { NextPageWithLayout } from '@/types/nextPageWithLayout';
+import { checkAuth } from '@/services/authServices';
+import { UserProps } from '@/interfaces/UserProps';
+import '../styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const [user, setUser] = useState<UserProps | null>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const userData = await checkAuth();
+        if (userData) {
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Erro em checkAuth:', error);
+      }
+    }
+    fetchUser();
+  }, []);
+
+  const getLayout =
+    Component.getLayout ||
+    ((page) => <Layout user={user} title="Título Padrão">{page}</Layout>);
+
+  return getLayout(<Component {...pageProps} />);
 }

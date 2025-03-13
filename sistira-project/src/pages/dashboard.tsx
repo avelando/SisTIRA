@@ -5,9 +5,8 @@ import { checkAuth } from "@/services/authServices";
 import styles from '@/styles/Dashboard.module.css';
 
 import Card from '@/components/Card';
-import SideBar from "@/components/SideBar"
 import { useRouter } from 'next/router';
-import Header from "@/components/Header"
+import { UserProps } from '@/interfaces/UserProps';
 
 export default function Dashboard() {
 
@@ -19,16 +18,16 @@ export default function Dashboard() {
       try {
         const userData = await checkAuth();
         if (!userData) {
-          router.push("/login");
+          router.push('/login');
         } else {
           setUser(userData);
         }
       } catch (error) {
-        console.error("Erro em checkAuth:", error);
+        console.error('Erro em checkAuth:', error);
       }
     }
     fetchUser();
-  }, []);  
+  }, []);
 
   const ExamsIcon = (
     <svg width="32" height="30" viewBox="0 0 32 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,19 +75,11 @@ export default function Dashboard() {
   );
   
   return (
-    <div className={styles.container}>
-      <SideBar />
-
-      <main className={styles.content}>
-        <Header user={user} title="Dashboard" />
-
-        <div className={styles.grid}>
-          <Card title="Provas" quant={23} icon={ExamsIcon} bgColor="#FFE3A9" />
-          <Card title="Banco de Questões" quant={4} icon={QuestionsBankIcon} bgColor="#FFD7D7" />
-          <Card title="Questões" quant={132} icon={QuestionsIcon} bgColor="#CFF7D1" />
-          <Card title="Salas" quant={5} icon={RoomsIcon} bgColor="#E3D9FF" />
-        </div>
-      </main>
+    <div className={styles.grid}>
+      <Card title="Provas" quant={23} icon={ExamsIcon} bgColor="#FFE3A9" />
+      <Card title="Banco de Questões" quant={4} icon={QuestionsBankIcon} bgColor="#FFD7D7" />
+      <Card title="Questões" quant={132} icon={QuestionsIcon} bgColor="#CFF7D1" />
+      <Card title="Salas" quant={5} icon={RoomsIcon} bgColor="#E3D9FF" />
     </div>
   );
 }

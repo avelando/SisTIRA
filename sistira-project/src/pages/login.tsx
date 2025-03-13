@@ -6,8 +6,9 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 import BackButton from "@/components/BackButton";
 import styles from "@/styles/AuthPages.module.css";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "@/types/nextPageWithLayout";
 
-export default function Login() {
+const Login: NextPageWithLayout = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,3 +47,7 @@ export default function Login() {
     </div>
   );
 }
+
+Login.getLayout = (page) => page;
+
+export default Login;

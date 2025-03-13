@@ -1,12 +1,10 @@
 .container {
   display: flex;
   height: 100vh;
-  padding-left: 250px;
 }
 
 .content {
   margin-top: 10vh;
-  padding: 20px;
   width: 100vw;
   background-color: #F3F3F3;
 }
