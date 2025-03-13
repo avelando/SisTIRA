@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from '@/styles/Dashboard.module.css';
 
 import SideBar from "@/components/SideBar"
 import Header from '@/components/Header';
 
-export default function Rooms() {
+export default function Friends() {
+  const [user, setUser] = useState<UserProps | null>(null);
+
   return (
     <div className={styles.container}>
-      <Header />
+      <Header user={user} title="Salas" />
 
       <SideBar />
-
-      <main className={styles.content}>
-        <h1>Salas</h1>
-      </main>
     </div>
   );
 }
