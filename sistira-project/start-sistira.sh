@@ -1,12 +1,10 @@
 #!/bin/bash
 
-APP_DIR="/home/avelar/SisTIRA/sistira-project"
+APP_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 SERVER="$APP_DIR/.next/standalone/server.js"
-
 ASSETS_DIR="$APP_DIR/.next/static"
-
-PORT=3000
+PORT=${PORT:-3010}
 
 export NODE_ENV=production
 export PORT=$PORT
