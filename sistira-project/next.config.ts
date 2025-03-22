@@ -1,10 +1,11 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
-const nextConfig: NextConfig = {
+const nextConfig = {
     reactStrictMode: true,
-    output: "standalone",
+    output: 'standalone',
     basePath: '/sistira',
-    assetPrefix: '/sistira/'
+    assetPrefix: '/sistira/',
 };
 
-export default nextConfig;
+module.exports = nextConfig;
+  
