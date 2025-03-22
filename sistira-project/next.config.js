@@ -2,9 +2,7 @@
 
 const nextConfig = {
     reactStrictMode: true,
-    output: 'standalone',
-    basePath: '/sistira',
-    assetPrefix: '/sistira/',
+    output: 'standalone'
 };
 
 module.exports = nextConfig;
