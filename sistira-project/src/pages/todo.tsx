@@ -12,7 +12,7 @@ export default function Todo() {
 }
 
 Todo.getLayout = (page: React.ReactElement) => (
-  <Layout title="Todo">
+  <Layout title="To-do">
     {page}
   </Layout>
 );

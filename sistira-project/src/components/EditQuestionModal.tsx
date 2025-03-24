@@ -2,19 +2,6 @@ import React, { useState, KeyboardEvent, useEffect } from 'react';
 import styles from '@/styles/QuestionModal.module.css';
 import { updateQuestion } from '@/pages/api/questions';
 
-interface EditQuestionModalProps {
-  visible: boolean;
-  onClose: () => void;
-  onUpdated: (updated: any) => void;
-  question: {
-    id: number;
-    text: string;
-    questionType: 'OBJ' | 'SUB';
-    questionDisciplines: { discipline: { id: number; name: string } }[];
-    alternatives?: { content: string; correct: boolean }[];
-  };
-}
-
 export default function EditQuestionModal({ visible, onClose, onUpdated, question }: EditQuestionModalProps) {
   const [type, setType] = useState<'objective' | 'subjective'>('objective');
   const [text, setText] = useState('');

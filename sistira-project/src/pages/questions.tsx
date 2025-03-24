@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
-import { getQuestions } from '@/pages/api/questions';
+import { getQuestions, deleteQuestion } from '@/pages/api/questions';
 import Layout from '@/components/Layout';
 import AddQuestionModal from '@/components/AddQuestionModal';
 import EditQuestionModal from '@/components/EditQuestionModal';
@@ -38,6 +38,18 @@ export default function Questions() {
   const handleUpdated = () => {
     load();
     setShowEditModal(false);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Tem certeza que deseja deletar esta questão?')) return;
+
+    try {
+      await deleteQuestion(id.toString());
+      setQuestions(prev => prev.filter(q => q.id !== id));
+    } catch (error: any) {
+      console.error('Erro ao deletar questão:', error);
+      alert(error.message || 'Falha ao deletar questão.');
+    }
   };
 
   return (
@@ -79,7 +91,9 @@ export default function Questions() {
               <button className={styles.editButton} onClick={() => handleEditClick(question)}>
                 ✏ Editar
               </button>
-              <button className={styles.deleteButton}>🗑 Deletar</button>
+              <button className={styles.deleteButton} onClick={() => handleDelete(question.id)}>
+                🗑 Deletar
+              </button>
             </div>
           </div>
         </div>

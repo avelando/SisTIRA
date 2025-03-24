@@ -42,7 +42,20 @@ export default function Layout({ children, title }: LayoutProps) {
       }
     }
     fetchUser();
-  }, []);  
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (err) {
+      console.error('Erro ao deslogar:', err);
+    } finally {
+      router.push('/');
+    }
+  };  
 
   return (
     <div className={styles.layoutContainer}>
@@ -207,9 +220,6 @@ export default function Layout({ children, title }: LayoutProps) {
         </div>
 
         <div className={styles.headerRight}>
-          <div className={styles.searchBar}>
-            <input type="text" placeholder="Pesquisar..." />
-          </div>
 
           <FaBell className={styles.notificationIcon} />
 
@@ -233,7 +243,9 @@ export default function Layout({ children, title }: LayoutProps) {
               <li
                 key={item.route}
                 className={router.pathname === item.route ? styles.active : ''}
-                onClick={() => handleNavigation(item.route)}
+                onClick={() =>
+                  item.route === '/logout' ? handleLogout() : handleNavigation(item.route)
+                }                
               >
                 <span className={styles.icon}>{item.icon}</span>
                 <span>{item.label}</span>
