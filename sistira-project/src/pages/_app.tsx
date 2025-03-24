@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import Layout from '@/components/Layout';
 import { NextPageWithLayout } from '@/types/nextPageWithLayout';
-import { checkAuth } from '@/services/authServices';
+import { checkAuth } from '@/pages/api/auth';
 import { UserProps } from '@/interfaces/UserProps';
 import '../styles/globals.css';
 
@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   const getLayout =
     Component.getLayout ||
-    ((page) => <Layout user={user} title="Título Padrão">{page}</Layout>);
+    ((page) => <Layout user={user}>{page}</Layout>);
 
   return getLayout(<Component {...pageProps} />);
 }

@@ -170,10 +170,10 @@ const Home: NextPageWithLayout = () => {
           </ul>
         </nav>
         <div className="info">
-          <Link href="/login">
+          <Link href="/auth/login">
             <ReverseButton content="Entrar" />
           </Link>
-          <Link href="/register">
+          <Link href="/auth/register">
             <Button content="Cadastra-se"/>
           </Link>
         </div>
@@ -188,7 +188,7 @@ const Home: NextPageWithLayout = () => {
             <div className="title">
               <h2>Sistema de Tutoria Inteligente de <br/>Respostas Automáticas</h2>
             </div>
-            <Link href={"/register"}>
+            <Link href={"/auth/register"}>
               <Button content="Comece agora" />
             </Link>
           </div>
