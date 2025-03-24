@@ -1,64 +1,73 @@
 import React, { useState, KeyboardEvent, useEffect } from 'react';
 import styles from '@/styles/QuestionModal.module.css';
-import { createQuestion } from '@/pages/api/questions';
+import { updateQuestion } from '@/pages/api/questions';
 
-export default function AddQuestionModal({ visible, onClose, onCreated }: QuestionProps) {
+interface EditQuestionModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onUpdated: (updated: any) => void;
+  question: {
+    id: number;
+    text: string;
+    questionType: 'OBJ' | 'SUB';
+    questionDisciplines: { discipline: { id: number; name: string } }[];
+    alternatives?: { content: string; correct: boolean }[];
+  };
+}
+
+export default function EditQuestionModal({ visible, onClose, onUpdated, question }: EditQuestionModalProps) {
   const [type, setType] = useState<'objective' | 'subjective'>('objective');
   const [text, setText] = useState('');
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [discInput, setDiscInput] = useState('');
-  const [alternatives, setAlternatives] = useState<{ content: string; correct: boolean }[]>([
-    { content: '', correct: false },
-  ]);
+  const [alternatives, setAlternatives] = useState<{ content: string; correct: boolean }[]>([]);
 
   useEffect(() => {
-    if (visible) {
-      setType('objective');
-      setText('');
-      setDisciplines([]);
+    if (visible && question) {
+      setType(question.questionType === 'OBJ' ? 'objective' : 'subjective');
+      setText(question.text);
+      setDisciplines(question.questionDisciplines.map(qd => qd.discipline.name));
+      setAlternatives(question.alternatives ?? [{ content: '', correct: false }]);
       setDiscInput('');
-      setAlternatives([{ content: '', correct: false }]);
     }
-  }, [visible]);
+  }, [visible, question]);
 
   if (!visible) return null;
 
   const handleDiscKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === ';' || e.key === 'Enter') && discInput.trim()) {
       const value = discInput.trim().replace(/;$/, '');
-      if (!disciplines.includes(value)) {
-        setDisciplines(prev => [...prev, value]);
-      }
+      if (!disciplines.includes(value)) setDisciplines(prev => [...prev, value]);
       setDiscInput('');
       e.preventDefault();
     }
   };
 
-  const removeDisc = (idx: number) =>
-    setDisciplines(prev => prev.filter((_, i) => i !== idx));
+  const removeDisc = (idx: number) => setDisciplines(prev => prev.filter((_, i) => i !== idx));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (type === 'objective' && alternatives.length === 0) {
-        alert('Uma questão objetiva precisa ter ao menos uma alternativa.');
-        return;
+      alert('Uma questão objetiva precisa ter ao menos uma alternativa.');
+      return;
     }
-
-    const payload = {
+  
+    const data = {
       text,
       questionType: type === 'objective' ? 'OBJ' : 'SUB',
       disciplines,
       alternatives: type === 'objective' ? alternatives : [],
     };
-    const created = await createQuestion(payload);
-    onCreated(created);
-  };
+  
+    const updated = await updateQuestion(question.id.toString(), data);
+    onUpdated(updated);
+  };  
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modal}>
-        <div className={styles.modalHeader}>Adicionar questão</div>
+        <div className={styles.modalHeader}>Editar questão</div>
         <form onSubmit={handleSubmit} className={styles.form}>
           <select value={type} onChange={e => setType(e.target.value as any)}>
             <option value="objective">Objetiva</option>
@@ -76,8 +85,7 @@ export default function AddQuestionModal({ visible, onClose, onCreated }: Questi
           <div className={styles.chipsContainer}>
             {disciplines.map((disc, i) => (
               <span key={i} className={styles.chip}>
-                {disc}
-                <button type="button" onClick={() => removeDisc(i)}>×</button>
+                {disc}<button type="button" onClick={() => removeDisc(i)}>×</button>
               </span>
             ))}
           </div>
@@ -118,11 +126,7 @@ export default function AddQuestionModal({ visible, onClose, onCreated }: Questi
                   )}
                 </div>
               ))}
-              <button
-                type="button"
-                className={styles.addAltBtn}
-                onClick={() => setAlternatives([...alternatives, { content: '', correct: false }])}
-              >
+              <button type="button" className={styles.addAltBtn} onClick={() => setAlternatives([...alternatives, { content: '', correct: false }])}>
                 + Adicionar alternativa
               </button>
             </>

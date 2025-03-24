@@ -57,7 +57,7 @@ const Register: NextPageWithLayout = () => {
       await registerUser(userData);
 
       alert("Cadastro realizado com sucesso!");
-      router.push("/login");
+      router.push("/auth/login");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
