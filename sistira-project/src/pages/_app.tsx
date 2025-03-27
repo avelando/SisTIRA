@@ -5,7 +5,6 @@ import { NextPageWithLayout } from '@/types/nextPageWithLayout';
 import { checkAuth } from '@/pages/api/auth';
 import { UserProps } from '@/interfaces/UserProps';
 import '../styles/globals.css';
-import { SessionProvider } from 'next-auth/react';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -31,9 +30,5 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout =
     Component.getLayout || ((page) => <Layout user={user}>{page}</Layout>);
 
-  return (
-    <SessionProvider session={(pageProps as any).session}>
-      {getLayout(<Component {...pageProps} />)}
-    </SessionProvider>
-  );
+  return getLayout(<Component {...pageProps} />)
 }

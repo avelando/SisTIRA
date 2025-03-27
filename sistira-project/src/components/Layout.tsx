@@ -11,7 +11,7 @@ import { UserProps } from '@/interfaces/UserProps';
 
 const sidebarItems = [
   { label: 'Dashboard', route: '/dashboard', icon: <FaBook /> },
-  { label: 'Provas', route: '/exams', icon: <FaClipboardList /> },
+  // { label: 'Provas', route: '/exams', icon: <FaClipboardList /> },
   { label: 'Questões', route: '/questions', icon: <FaQuestionCircle /> },
   { label: 'Banco de Questões', route: '/questionsBank', icon: <FaDatabase /> },
   // { label: 'Salas', route: '/rooms', icon: <FaClone /> },
