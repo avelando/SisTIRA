@@ -19,7 +19,7 @@ export default function Dashboard() {
       try {
         const userData = await checkAuth();
         if (!userData) {
-          router.push('/login');
+          router.push('/auth/login');
         } else {
           setUser(userData);
         }

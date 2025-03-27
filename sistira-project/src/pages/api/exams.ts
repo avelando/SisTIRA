@@ -15,12 +15,8 @@ export const getExam = async (id: string) => {
 };
 
 export const createExam = async (payload: CreateExamPayload) => {
-  try {
-    const { data } = await axios.post(`${API_BASE_URL}/exams`, payload);
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao criar prova.');
-  }
+  const { data } = await axios.post(`${API_BASE_URL}/exams`, payload);
+  return data;
 };
 
 export const updateExam = async (id: string, payload: UpdateExamPayload) => {

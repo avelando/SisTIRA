@@ -1,13 +1,29 @@
 export interface CreateExamPayload {
   title: string;
   description?: string;
-  date?: string;
-  questionBankId?: string;
 }
 
 export interface UpdateExamPayload {
   title?: string;
   description?: string;
-  questions?: string[];
-  questionBankId?: string;
+}
+
+interface Alternative {
+  id: string;
+  content: string;
+}
+
+interface Question {
+  id: string;
+  text: string;
+  questionType: 'OBJ' | 'SUB';
+  alternatives?: Alternative[];
+}
+
+export interface ExamData {
+  id: string;
+  title: string;
+  description?: string;
+  creatorId: string;
+  allQuestions: Question[];
 }

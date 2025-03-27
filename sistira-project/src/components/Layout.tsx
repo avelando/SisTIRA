@@ -14,10 +14,10 @@ const sidebarItems = [
   { label: 'Provas', route: '/exams', icon: <FaClipboardList /> },
   { label: 'Questões', route: '/questions', icon: <FaQuestionCircle /> },
   { label: 'Banco de Questões', route: '/questionsBank', icon: <FaDatabase /> },
-  { label: 'Salas', route: '/rooms', icon: <FaClone /> },
-  { label: 'Amigos', route: '/friends', icon: <FaUsers /> },
-  { label: 'Calendário', route: '/calendar', icon: <FaCalendarAlt /> },
-  { label: 'To-do', route: '/todo', icon: <FaClipboardList /> },
+  // { label: 'Salas', route: '/rooms', icon: <FaClone /> },
+  // { label: 'Amigos', route: '/friends', icon: <FaUsers /> },
+  // { label: 'Calendário', route: '/calendar', icon: <FaCalendarAlt /> },
+  // { label: 'To-do', route: '/todo', icon: <FaClipboardList /> },
   { label: 'Log-out', route: '/logout', icon: <FaDoorOpen /> },
 ];
 
@@ -33,7 +33,7 @@ export default function Layout({ children, title }: LayoutProps) {
     async function fetchUser() {
       try {
         const userData = await checkAuth();
-        console.log("Dados do usuário:", userData); // depuração
+        console.log("Dados do usuário:", userData);
         if (userData) {
           setUser(userData);
         }
