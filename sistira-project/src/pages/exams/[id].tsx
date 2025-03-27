@@ -4,7 +4,6 @@ import { getExam, updateExam } from '@/pages/api/exams';
 import ExamItemsModal from '@/components/ExamItemsModal';
 import styles from '@/styles/ExamModal.module.css';
 import Layout from '@/components/Layout';
-import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { ExamData } from '@/interfaces/ExamsProps';
 
@@ -17,15 +16,7 @@ export default function ExamEditPage() {
   const [description, setDescription] = useState('');
   const [basicSaved, setBasicSaved] = useState(false);
   const [showItemsModal, setShowItemsModal] = useState(false);
-  const { data: session } = useSession();
   const [answers, setAnswers] = useState<{ [questionId: string]: { alternativeId?: string; textResponse?: string } }>({});
-
-  const isOwner = useMemo(() => {
-    return session?.user?.id === exam?.creatorId;
-  }, [session?.user?.id, exam?.creatorId]);
-  
-
-  console.log('Sessão:', session);
 
   useEffect(() => {
     if (!id) return;
@@ -88,7 +79,7 @@ export default function ExamEditPage() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        {isOwner && !basicSaved ? (
+        {!basicSaved ? (
           <div className={styles.basicInfo}>
             <input
               className={styles.basicInput}
@@ -129,7 +120,6 @@ export default function ExamEditPage() {
                       type="radio"
                       name={`q-${q.id}`}
                       value={alt.id}
-                      disabled={isOwner}
                       onChange={() => handleAnswer(q.id, alt.id)}
                     />{' '}
                     {alt.content}
@@ -142,31 +132,20 @@ export default function ExamEditPage() {
               placeholder="Resposta..."
               className={styles.subAnswer}
               rows={3}
-              disabled={isOwner}
               onChange={(e) => handleTextAnswer(q.id, e.target.value)}
             />
           )}
         </div>
       ))}
 
-      {isOwner && (
-        <div className={styles.floatingButtons}>
-          <button className={styles.floatingBtn} onClick={openItemsModal}>
-            + Questões
-          </button>
-          <button className={styles.floatingBtn} onClick={openItemsModal}>
-            + Bancos
-          </button>
-        </div>
-      )}
-
-      {!isOwner && (
-        <div style={{ marginTop: '2rem' }}>
-          <button onClick={handleSubmitAnswers} className={styles.addItemsBtn}>
-            Enviar Respostas
-          </button>
-        </div>
-      )}
+      <div className={styles.floatingButtons}>
+        <button className={styles.floatingBtn} onClick={openItemsModal}>
+          + Questões
+        </button>
+        <button className={styles.floatingBtn} onClick={openItemsModal}>
+          + Bancos
+        </button>
+      </div>
 
       {showItemsModal && (
         <ExamItemsModal examId={id} exam={exam} onClose={closeItemsModal} />
