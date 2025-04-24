@@ -1,3 +1,0 @@
-interface ButtonProps {
-  content: string;
-}

@@ -1,0 +1,128 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+}
+
+.form input[type="text"],
+.form textarea,
+.form select, .description, .title {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #CBD5E0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form label {
+  font-weight: 500;
+  color: #2D3748;
+}
+
+.chipsContainer,
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 10px;
+}
+
+.chip,
+.tag {
+  background-color: #E0F2FF;
+  color: #133856;
+  padding: 0.3rem 0.8rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+
+.chip button {
+  background: none;
+  border: none;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.questionGrid,
+.questionList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.questionGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.questionCard {
+  background: #F9FAFB;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  font-size: 0.95rem;
+  color: #2D3748;
+}
+
+.questionText {
+  margin-left: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+.altRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.altRow input[type="radio"] {
+  flex-shrink: 0;
+}
+
+.altRow input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #CBD5E0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.addAltBtn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #0070f3;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  border: 2px solid #0070f3;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.button {
+  background-color: #133856;
+  padding: 0.5rem;
+  color: #fff;
+  border-radius: 5px;
+  border: solid #133856 2px;
+  cursor: pointer;
+}
