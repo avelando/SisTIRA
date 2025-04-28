@@ -1,0 +1,8 @@
+services:
+  sistira:
+    build:
+      context: ../sistira
+      dockerfile: ../sistira-docker/Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: sistira-prod

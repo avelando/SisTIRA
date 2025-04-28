@@ -18,6 +18,6 @@ export interface ManualQuestionFormProps {
     text: string;
     type: 'objetiva' | 'subjetiva';
     disciplines: string[];
-    alternatives?: { id: string; content: string; correct: boolean }[];
+    alternatives?: { content: string; correct: boolean }[];
   }) => void;
 }
