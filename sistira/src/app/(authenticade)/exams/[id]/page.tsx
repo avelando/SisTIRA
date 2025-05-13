@@ -5,11 +5,8 @@ import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 
-import ManualQuestionForm from '@/components/ui/ManualQuestionForm';
 import FloatingActions from '@/components/ui/FloatingActions';
-
-import { createQuestion } from '@/api/questions';
-import { addQuestionsToExam } from '@/api/exams';
+import ExistingQuestionsModal from '@/components/modals/ExistingQuestionsModal';
 
 import { ExamUpdatePayload } from '@/interfaces/ExamsProps';
 import styles from '@/styles/ExamDetails.module.css';
@@ -21,6 +18,7 @@ export default function ExamDetailsPage() {
   const [description, setDescription] = useState<string>('');
   const isFirstLoad = useRef(true);
   const [showManualForm, setShowManualForm] = useState(false);
+  const [showExisting, setShowExisting] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -55,33 +53,9 @@ export default function ExamDetailsPage() {
   };
 
   const handleOpen = (type: string) => {
-    if (type === 'manual') setShowManualForm(true);
+    if (type === 'manual')  setShowManualForm(true);
+    if (type === 'existente') setShowExisting(true);
   };
-
-  const handleAddManualQuestion = async (data: {
-    text: string;
-    type: string;
-    disciplines?: string[];
-    alternatives?: { content: string; correct: boolean }[];
-  }) => {
-    try {
-      const newQuestion = await createQuestion({
-        text: data.text,
-        questionType: data.type === 'objetiva' ? 'OBJ' : 'SUB',
-        disciplines: data.disciplines ?? [],
-        alternatives: data.type === 'objetiva' ? data.alternatives : undefined,
-      });
-  
-      await addQuestionsToExam(id as string, [newQuestion.id]);
-  
-      const updated = await getExam(id as string);
-      setExam(updated);
-      setShowManualForm(false);
-    } catch (err: any) {
-      console.error('Erro ao adicionar questão manual:', err.message);
-      alert('Erro ao adicionar questão: ' + err.message);
-    }
-  };  
 
   if (!exam) return <p>Carregando prova...</p>;
 
@@ -101,13 +75,6 @@ export default function ExamDetailsPage() {
         placeholder="Descrição da Prova"
       />
 
-      {showManualForm && (
-        <ManualQuestionForm
-          onCancel={() => setShowManualForm(false)}
-          onSubmit={handleAddManualQuestion}
-        />
-      )}
-
       <div className={styles.questionList}>
         {exam.allQuestions?.map((q: any) => (
           <div key={q.id} className={styles.question}>
@@ -126,6 +93,16 @@ export default function ExamDetailsPage() {
       </div>
 
       <FloatingActions onOpen={handleOpen} />
+
+      <ExistingQuestionsModal
+        visible={showExisting}
+        examId={id as string}
+        onClose={() => setShowExisting(false)}
+        onAdded={(updatedExam) => {
+          setExam(updatedExam);
+          setShowExisting(false);
+        } } currentQuestionIds={[]}
+      />
     </div>
   );
 }

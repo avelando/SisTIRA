@@ -33,3 +33,5 @@ export const registerUser = async (data: {
     throw new Error(error.response?.data?.message || 'Erro ao registrar usuário.');
   }
 };
+
+export { api };

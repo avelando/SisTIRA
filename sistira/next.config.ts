@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/sistira",
+  // basePath: "/sistira",
   trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,

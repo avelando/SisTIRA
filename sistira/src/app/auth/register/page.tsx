@@ -136,7 +136,11 @@ const Register = () => {
           <span className={styles.separatorText}>ou</span>
           <hr className={styles.separator} />
         </div>
-        <GoogleAuthButton content="Crie uma conta com o Google" />
+        
+        <GoogleAuthButton
+          content="Crie uma conta com o Google"
+          redirectUrl="http://127.0.0.1:3001/auth/google"
+        />
 
         <div className={styles.progressContainer}>
           <div className={`${styles.progressStep} ${step === 1 ? styles.active : ""}`} />
