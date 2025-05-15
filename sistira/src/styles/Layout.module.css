@@ -118,8 +118,12 @@
 .navList {
   list-style: none;
   margin: 0;
+  margin-bottom: 3%;
   padding: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .navList li {
@@ -176,4 +180,3 @@
   margin-right: 8px;
   object-fit: cover;
 }
-

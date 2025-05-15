@@ -5,6 +5,8 @@ import {
   FullExam,
 } from '@/interfaces/ExamsProps';
 
+import { CountsResponse } from '@/interfaces/CountsResponse';
+
 export const getExams = async (): Promise<FullExam[]> => {
   const { data } = await api.get('/exams');
   return data;
@@ -75,4 +77,9 @@ export const removeBanksFromExam = async (examId: string, bankIds: string[]): Pr
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Erro ao remover banco de questões da prova.');
   }
+};
+
+export const getUserCounts = async (): Promise<CountsResponse> => {
+  const { data } = await api.get<CountsResponse>('/exams/counts');
+  return data;
 };

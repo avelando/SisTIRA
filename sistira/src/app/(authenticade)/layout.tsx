@@ -22,7 +22,6 @@ const sidebarItems = [
   { label: 'Provas', route: '/exams', icon: <FaClipboardList /> },
   { label: 'Questões', route: '/questions', icon: <FaQuestionCircle /> },
   { label: 'Banco de Questões', route: '/questionsBank', icon: <FaDatabase /> },
-  { label: 'Log-out', route: '/logout', icon: <FaDoorOpen /> },
 ]
 
 export default function AuthenticatedLayout({
@@ -109,20 +108,33 @@ export default function AuthenticatedLayout({
       <div className={styles.bodyContainer}>
         <aside className={styles.sidebar}>
           <ul className={styles.navList}>
-            {sidebarItems.map((item) => (
+            <div className={styles.sideOne}>
+              {sidebarItems.map((item) => (
+                <li
+                  key={item.route}
+                  className={isRouteActive(pathname, item.route) ? styles.active : ''}
+                  onClick={() =>
+                    item.route === '/logout'
+                      ? handleLogout()
+                      : router.push(item.route)
+                  }
+                >
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span>{item.label}</span>
+                </li>
+              ))}
+            </div>
+
+            <div className={styles.sideTwo}>
               <li
-                key={item.route}
-                className={isRouteActive(pathname, item.route) ? styles.active : ''}
-                onClick={() =>
-                  item.route === '/logout'
-                    ? handleLogout()
-                    : router.push(item.route)
-                }
+                key="logout"
+                className={styles.logoutItem}
+                onClick={handleLogout}
               >
-                <span className={styles.icon}>{item.icon}</span>
-                <span>{item.label}</span>
+                <span className={styles.icon}><FaDoorOpen /></span>
+                <span>Log-out</span>
               </li>
-            ))}
+            </div>
           </ul>
         </aside>
 
