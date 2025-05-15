@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useTransition } from 'react';
 import { useParams } from 'next/navigation';
 import debounce from 'lodash/debounce';
 
@@ -9,6 +9,7 @@ import { ExamUpdatePayload, FullExam } from '@/interfaces/ExamsProps';
 
 import FloatingActions from '@/components/ui/FloatingActions';
 import ExistingQuestionsModal from '@/components/modals/ExistingQuestionsModal';
+import LoadingBar from '@/components/ui/LoadingBar';
 
 import styles from '@/styles/ExamDetails.module.css';
 
@@ -21,12 +22,11 @@ export default function ExamDetailsPage() {
   const [exam, setExam] = useState<FullExam | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isPending, startTransition] = useTransition();
   const isFirstLoad = useRef(true);
 
-  // Só precisamos de um estado para o modal de questões existentes
   const [showExisting, setShowExisting] = useState(false);
 
-  // 1) Carrega a prova
   useEffect(() => {
     if (!examId) return;
     (async () => {
@@ -38,11 +38,20 @@ export default function ExamDetailsPage() {
     })();
   }, [examId]);
 
-  // 2) Debounce para título/descritivo
-  const debouncedUpdate = debounce((payload: ExamUpdatePayload) => {
-    if (!examId) return;
-    updateExam(examId, payload);
-  }, 500);
+  const debouncedUpdate = useRef(
+    debounce((payload: ExamUpdatePayload) => {
+      if (!examId) return;
+      startTransition(async () => {
+        try {
+          await updateExam(examId, payload);
+          const fresh = await getExam(examId);
+          setExam(fresh);
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    }, 500)
+  ).current;
 
   const handleTitleChange = (v: string) => {
     setTitle(v);
@@ -58,12 +67,10 @@ export default function ExamDetailsPage() {
     }
   };
 
-  // 3) Abre o modal de questões existentes
   const handleOpen: (type: ModalType) => void = (type) => {
     if (type === 'existente') setShowExisting(true);
   };
 
-  // 4) Callback ao salvar/fechar o modal
   const handleAddedQuestions = (updated: FullExam) => {
     setExam(updated);
     setShowExisting(false);
@@ -72,49 +79,52 @@ export default function ExamDetailsPage() {
   if (!exam) return <p>Carregando prova...</p>;
 
   return (
-    <div className={styles.container}>
-      <input
-        className={styles.input}
-        placeholder="Título da Prova"
-        value={title}
-        onChange={(e) => handleTitleChange(e.target.value)}
-      />
+    <>
+      <LoadingBar loading={isPending} />
 
-      <textarea
-        className={styles.textarea}
-        placeholder="Descrição da Prova"
-        value={description}
-        onChange={(e) => handleDescriptionChange(e.target.value)}
-      />
+      <div className={styles.container}>
+        <input
+          className={styles.input}
+          placeholder="Título da Prova"
+          value={title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+        />
 
-      <div className={styles.questionList}>
-        {exam.allQuestions.map((q) => (
-          <div key={q.id} className={styles.question}>
-            <strong>• {q.text}</strong>
-            {/* só renderiza alternativa se existir */}
-            {q.questionType === 'OBJ' && q.alternatives && q.alternatives.length > 0 && (
-              <ul className={styles.alternativesList}>
-                {q.alternatives.map((alt, i) => (
-                  <li key={i} className={styles.alternativeItem}>
-                    {alt.correct ? <strong>✓</strong> : '○'} {alt.content}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
+        <textarea
+          className={styles.textarea}
+          placeholder="Descrição da Prova"
+          value={description}
+          onChange={(e) => handleDescriptionChange(e.target.value)}
+        />
+
+        <div className={styles.questionList}>
+          {exam.allQuestions.map((q) => (
+            <div key={q.id} className={styles.question}>
+              <strong>• {q.text}</strong>
+              {q.questionType === 'OBJ' && q.alternatives && q.alternatives.length > 0 && (
+                <ul className={styles.alternativesList}>
+                  {q.alternatives.map((alt, i) => (
+                    <li key={i} className={styles.alternativeItem}>
+                      {alt.correct ? <strong>✓</strong> : '○'} {alt.content}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <FloatingActions onOpen={handleOpen} />
+        
+        <ExistingQuestionsModal
+          visible={showExisting}
+          examId={examId}
+          currentBankIds={exam.examQuestionBanks.map(b => b.questionBank.id)}
+          currentQuestionIds={exam.allQuestions.map(q => q.id)}
+          onClose={() => setShowExisting(false)}
+          onAdded={handleAddedQuestions}
+        />
       </div>
-
-      <FloatingActions onOpen={handleOpen} />
-      
-      <ExistingQuestionsModal
-        visible={showExisting}
-        examId={examId}
-        currentBankIds={exam.examQuestionBanks.map(b => b.questionBank.id)}
-        currentQuestionIds={exam.allQuestions.map(q => q.id)}
-        onClose={() => setShowExisting(false)}
-        onAdded={handleAddedQuestions}
-      />
-    </div>
+    </>
   );
 }
