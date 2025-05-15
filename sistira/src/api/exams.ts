@@ -49,7 +49,10 @@ export const addQuestionsToExam = async (examId: string, questions: string[]): P
 
 export const removeQuestionsFromExam = async (examId: string, questions: string[]): Promise<FullExam> => {
   try {
-    const { data } = await api.patch(`/exams/${examId}/remove-questions`, { questions });
+    const { data } = await api.delete(
+      `/exams/${examId}/remove-questions`,
+      { data: { questions } }
+    );
     return data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Erro ao remover questões da prova.');

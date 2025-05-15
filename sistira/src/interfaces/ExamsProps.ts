@@ -37,7 +37,10 @@ export interface FullExam {
   description?: string;
   createdAt: string;
   creatorId: string;
-  questions: any[];
-  questionBank?: ExamBank;
+
+  examQuestionBanks: {
+    questionBank: ExamBank;
+  }[];
+
   allQuestions: ExamQuestion[];
 }

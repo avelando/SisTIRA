@@ -1,60 +1,72 @@
 'use client';
 
-import { getExam, updateExam } from '@/api/exams';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
+
+import { getExam, updateExam } from '@/api/exams';
+import { ExamUpdatePayload, FullExam } from '@/interfaces/ExamsProps';
 
 import FloatingActions from '@/components/ui/FloatingActions';
 import ExistingQuestionsModal from '@/components/modals/ExistingQuestionsModal';
 
-import { ExamUpdatePayload } from '@/interfaces/ExamsProps';
 import styles from '@/styles/ExamDetails.module.css';
+
+type ModalType = 'existente';
 
 export default function ExamDetailsPage() {
   const { id } = useParams();
-  const [exam, setExam] = useState<any>(null);
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const examId = Array.isArray(id) ? id[0] : id ?? '';
+
+  const [exam, setExam] = useState<FullExam | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const isFirstLoad = useRef(true);
-  const [showManualForm, setShowManualForm] = useState(false);
+
+  // Só precisamos de um estado para o modal de questões existentes
   const [showExisting, setShowExisting] = useState(false);
 
+  // 1) Carrega a prova
   useEffect(() => {
-    async function load() {
-      const data = await getExam(id as string);
+    if (!examId) return;
+    (async () => {
+      const data = await getExam(examId);
       setExam(data);
-      setTitle(data.title || '');
-      setDescription(data.description || '');
+      setTitle(data.title);
+      setDescription(data.description ?? '');
       isFirstLoad.current = false;
-    }
-    load();
-  }, [id]);
+    })();
+  }, [examId]);
 
-  const debouncedUpdateExam = debounce(
-    async (examId: string, data: ExamUpdatePayload) => {
-      await updateExam(examId, data);
-    },
-    500
-  );
+  // 2) Debounce para título/descritivo
+  const debouncedUpdate = debounce((payload: ExamUpdatePayload) => {
+    if (!examId) return;
+    updateExam(examId, payload);
+  }, 500);
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-    if (!isFirstLoad.current && newTitle !== exam?.title) {
-      debouncedUpdateExam(id as string, { title: newTitle, description });
+  const handleTitleChange = (v: string) => {
+    setTitle(v);
+    if (!isFirstLoad.current && v !== exam?.title) {
+      debouncedUpdate({ title: v, description });
     }
   };
 
-  const handleDescriptionChange = (newDesc: string) => {
-    setDescription(newDesc);
-    if (!isFirstLoad.current && newDesc !== exam?.description) {
-      debouncedUpdateExam(id as string, { title, description: newDesc });
+  const handleDescriptionChange = (v: string) => {
+    setDescription(v);
+    if (!isFirstLoad.current && v !== exam?.description) {
+      debouncedUpdate({ title, description: v });
     }
   };
 
-  const handleOpen = (type: string) => {
-    if (type === 'manual')  setShowManualForm(true);
+  // 3) Abre o modal de questões existentes
+  const handleOpen: (type: ModalType) => void = (type) => {
     if (type === 'existente') setShowExisting(true);
+  };
+
+  // 4) Callback ao salvar/fechar o modal
+  const handleAddedQuestions = (updated: FullExam) => {
+    setExam(updated);
+    setShowExisting(false);
   };
 
   if (!exam) return <p>Carregando prova...</p>;
@@ -63,25 +75,26 @@ export default function ExamDetailsPage() {
     <div className={styles.container}>
       <input
         className={styles.input}
+        placeholder="Título da Prova"
         value={title}
         onChange={(e) => handleTitleChange(e.target.value)}
-        placeholder="Título da Prova"
       />
 
       <textarea
         className={styles.textarea}
+        placeholder="Descrição da Prova"
         value={description}
         onChange={(e) => handleDescriptionChange(e.target.value)}
-        placeholder="Descrição da Prova"
       />
 
       <div className={styles.questionList}>
-        {exam.allQuestions?.map((q: any) => (
+        {exam.allQuestions.map((q) => (
           <div key={q.id} className={styles.question}>
             <strong>• {q.text}</strong>
-            {q.questionType === 'OBJ' && q.alternatives?.length > 0 && (
+            {/* só renderiza alternativa se existir */}
+            {q.questionType === 'OBJ' && q.alternatives && q.alternatives.length > 0 && (
               <ul className={styles.alternativesList}>
-                {q.alternatives.map((alt: any, i: number) => (
+                {q.alternatives.map((alt, i) => (
                   <li key={i} className={styles.alternativeItem}>
                     {alt.correct ? <strong>✓</strong> : '○'} {alt.content}
                   </li>
@@ -93,15 +106,14 @@ export default function ExamDetailsPage() {
       </div>
 
       <FloatingActions onOpen={handleOpen} />
-
+      
       <ExistingQuestionsModal
         visible={showExisting}
-        examId={id as string}
+        examId={examId}
+        currentBankIds={exam.examQuestionBanks.map(b => b.questionBank.id)}
+        currentQuestionIds={exam.allQuestions.map(q => q.id)}
         onClose={() => setShowExisting(false)}
-        onAdded={(updatedExam) => {
-          setExam(updatedExam);
-          setShowExisting(false);
-        } } currentQuestionIds={[]}
+        onAdded={handleAddedQuestions}
       />
     </div>
   );

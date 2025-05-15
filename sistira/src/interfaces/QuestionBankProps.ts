@@ -1,3 +1,5 @@
+import { FullExam } from "./ExamsProps";
+
 export interface QuestionBankProps {
   id: string;
   name: string;
@@ -28,4 +30,13 @@ export interface QuestionBankModalProps {
 export interface QuestionSummary {
   id: string;
   text: string;
+}
+
+export interface ExistingBanksModalProps {
+  visible: boolean;
+  examId: string;
+  currentBankIds: string[];
+  currentQuestionIds: string[];
+  onClose: () => void;
+  onAdded: (updatedExam: FullExam) => void;
 }

@@ -40,8 +40,9 @@ export interface Question {
 
 export interface ExistingQuestionsModalProps {
   visible: boolean;
-  examId: FullExam['id'];
-  onClose: () => void;
-  onAdded: (questions: Question[]) => void;
+  examId: string;
+  currentBankIds: string[];
   currentQuestionIds: string[];
+  onClose: () => void;
+  onAdded: (updated: FullExam) => void;
 }

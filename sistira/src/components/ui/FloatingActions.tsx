@@ -6,8 +6,9 @@ import { FloatingActionsProps } from '@/interfaces/FloatingActionsProps';
 export default function FloatingActions({ onOpen }: FloatingActionsProps) {
   return (
     <div className={styles.floating}>
-      <button onClick={() => onOpen('existente')}>+ Questões Existentes</button>
-      <button onClick={() => onOpen('banco')}>+ Banco de Questões</button>
+      <button onClick={() => onOpen('existente')}>
+        + Questões Existentes
+      </button>
     </div>
   );
 }
