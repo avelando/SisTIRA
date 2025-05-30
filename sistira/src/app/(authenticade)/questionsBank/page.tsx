@@ -7,7 +7,7 @@ import {
   deleteQuestionBank,
 } from '@/api/questionsBank';
 import QuestionBankModal from '@/components/modals/QuestionBankModal';
-import { FaEdit, FaFilter, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaFilter, FaStar, FaTrash } from 'react-icons/fa';
 import styles from '@/styles/QuestionsBank.module.css';
 import { QuestionBankProps } from '@/interfaces/QuestionBankProps';
 
@@ -60,7 +60,8 @@ export default function QuestionBank() {
   return (
     <div className={styles.container}>
       <div className={styles.bar}>
-        <div className={styles.filterIconContainer}><FaFilter /></div>
+        <div className={styles.filterIconContainer}><FaStar/></div>
+        {/* <div className={styles.filterIconContainer}><FaFilter /></div> */}
         <div className={styles.addIconContainer} onClick={() => openModal('create')}>
           + Adicionar banco de questões
         </div>

@@ -1,10 +1,10 @@
 import api from '@/lib/axios';
-
 import {
   ExamPayload,
   FullExam,
+  ExamForResponse,
+  SubmitResponseDto
 } from '@/interfaces/ExamsProps';
-
 import { CountsResponse } from '@/interfaces/CountsResponse';
 
 export const getExams = async (): Promise<FullExam[]> => {
@@ -23,63 +23,49 @@ export const createExam = async (payload: ExamPayload): Promise<FullExam> => {
 };
 
 export const updateExam = async (id: string, payload: ExamPayload): Promise<FullExam> => {
-  try {
-    const { data } = await api.put(`/exams/${id}`, payload);
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao atualizar prova.');
-  }
+  const { data } = await api.put(`/exams/${id}`, payload);
+  return data;
 };
 
 export const deleteExam = async (id: string): Promise<{ message: string }> => {
-  try {
-    const { data } = await api.delete(`/exams/${id}`);
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao deletar prova.');
-  }
+  const { data } = await api.delete(`/exams/${id}`);
+  return data;
 };
 
 export const addQuestionsToExam = async (examId: string, questions: string[]): Promise<FullExam> => {
-  try {
-    const { data } = await api.patch(`/exams/${examId}/add-questions`, { questions });
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao adicionar questões à prova.');
-  }
+  const { data } = await api.patch(`/exams/${examId}/add-questions`, { questions });
+  return data;
 };
 
 export const removeQuestionsFromExam = async (examId: string, questions: string[]): Promise<FullExam> => {
-  try {
-    const { data } = await api.delete(
-      `/exams/${examId}/remove-questions`,
-      { data: { questions } }
-    );
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao remover questões da prova.');
-  }
+  const { data } = await api.delete(`/exams/${examId}/remove-questions`, { data: { questions } });
+  return data;
 };
 
 export const addBanksToExam = async (examId: string, bankIds: string[]): Promise<FullExam> => {
-  try {
-    const { data } = await api.patch(`/exams/${examId}/add-banks`, { bankIds });
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao adicionar banco de questões à prova.');
-  }
+  const { data } = await api.patch(`/exams/${examId}/add-banks`, { bankIds });
+  return data;
 };
 
 export const removeBanksFromExam = async (examId: string, bankIds: string[]): Promise<FullExam> => {
-  try {
-    const { data } = await api.patch(`/exams/${examId}/remove-banks`, { bankIds });
-    return data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao remover banco de questões da prova.');
-  }
+  const { data } = await api.patch(`/exams/${examId}/remove-banks`, { bankIds });
+  return data;
 };
 
 export const getUserCounts = async (): Promise<CountsResponse> => {
   const { data } = await api.get<CountsResponse>('/exams/counts');
   return data;
+};
+
+export const getExamForResponse = async (
+  identifier: string
+): Promise<ExamForResponse> => {
+  const { data } = await api.get(`/exams/respond/${identifier}`);
+  return data;
+};
+
+export const submitExamResponse = async (
+  payload: SubmitResponseDto
+): Promise<void> => {
+  await api.post('/exams/respond', payload);
 };

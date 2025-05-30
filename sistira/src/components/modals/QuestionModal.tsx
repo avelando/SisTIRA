@@ -1,8 +1,13 @@
 import React, { useEffect, useState, KeyboardEvent } from 'react';
 import styles from '@/styles/modals/UnifiedModalStyles.module.css';
 import BaseModal from './BaseModal';
-
 import { QuestionModalProps } from '@/interfaces/QuestionProps';
+import { ModelAnswerType } from '@/interfaces/ExamsProps';
+
+type ModelAnswerState = {
+  id?: string;
+  content: string;
+};
 
 export default function QuestionModal({
   visible,
@@ -18,6 +23,12 @@ export default function QuestionModal({
   const [alternatives, setAlternatives] = useState<{ content: string; correct: boolean }[]>([
     { content: '', correct: false },
   ]);
+  const [useModelAnswers, setUseModelAnswers] = useState(false);
+  const [modelAnswers, setModelAnswers] = useState<Record<ModelAnswerType, ModelAnswerState>>({
+    WRONG:  { content: '', id: undefined },
+    MEDIAN: { content: '', id: undefined },
+    CORRECT:{ content: '', id: undefined },
+  });
 
   useEffect(() => {
     if (!visible) return;
@@ -26,13 +37,34 @@ export default function QuestionModal({
       setType(question.questionType === 'OBJ' ? 'objective' : 'subjective');
       setText(question.text);
       setDisciplines(question.questionDisciplines.map(d => d.discipline.name));
-      setAlternatives(question.alternatives ?? [{ content: '', correct: false }]);
+      setAlternatives(
+        question.alternatives?.length
+          ? question.alternatives.map(a => ({ content: a.content, correct: a.correct }))
+          : [{ content: '', correct: false }]
+      );
+      setUseModelAnswers(!!question.useModelAnswers);
+
+      const ma: Record<ModelAnswerType, ModelAnswerState> = {
+        WRONG:  { content: '', id: undefined },
+        MEDIAN: { content: '', id: undefined },
+        CORRECT:{ content: '', id: undefined },
+      };
+      question.modelAnswers?.forEach(m => {
+        ma[m.type] = { content: m.content, id: m.id };
+      });
+      setModelAnswers(ma);
     } else {
       setType('objective');
       setText('');
       setDisciplines([]);
       setDiscInput('');
       setAlternatives([{ content: '', correct: false }]);
+      setUseModelAnswers(false);
+      setModelAnswers({
+        WRONG:  { content: '', id: undefined },
+        MEDIAN: { content: '', id: undefined },
+        CORRECT:{ content: '', id: undefined },
+      });
     }
   }, [visible, mode, question]);
 
@@ -50,23 +82,46 @@ export default function QuestionModal({
   const removeDisc = (idx: number) =>
     setDisciplines(prev => prev.filter((_, i) => i !== idx));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (type === 'objective' && alternatives.length === 0) {
       alert('Uma questão objetiva precisa ter ao menos uma alternativa.');
       return;
     }
+    if (type === 'subjective' && useModelAnswers) {
+      if (
+        !modelAnswers.WRONG.content ||
+        !modelAnswers.MEDIAN.content ||
+        !modelAnswers.CORRECT.content
+      ) {
+        alert('Preencha as três respostas-modelo para questões subjetivas.');
+        return;
+      }
+    }
 
-    const data = {
+    const payload: any = {
       ...(question?.id && { id: question.id }),
       text,
       questionType: type === 'objective' ? 'OBJ' : 'SUB',
       disciplines,
-      alternatives: type === 'objective' ? alternatives : [],
+      useModelAnswers,
+      alternatives:
+        type === 'objective'
+          ? alternatives.map(a => ({ content: a.content, correct: a.correct }))
+          : undefined,
+      modelAnswers:
+        type === 'subjective' && useModelAnswers
+          ? (Object.entries(modelAnswers) as [ModelAnswerType, ModelAnswerState][])
+              .map(([type, { id, content }]) => ({
+                ...(id && { id }), 
+                type,
+                content,
+              }))
+          : undefined,
     };
 
-    onSubmit(data);
+    onSubmit(payload);
   };
 
   return (
@@ -75,18 +130,23 @@ export default function QuestionModal({
       title={mode === 'create' ? 'Adicionar questão' : 'Editar questão'}
       onClose={onClose}
       actions={
-        <>
-          <button type="submit" form="question-form" disabled={type === 'objective' && alternatives.length === 0} className={styles.button}>
-            Salvar
-          </button>
-        </>
+        <button
+          type="submit"
+          form="question-form"
+          disabled={type === 'objective' && alternatives.length === 0}
+          className={styles.button}
+        >
+          Salvar
+        </button>
       }
     >
       <form id="question-form" onSubmit={handleSubmit} className={styles.form}>
-        <select value={type} onChange={e => setType(e.target.value as any)}>
-          <option value="objective">Objetiva</option>
-          <option value="subjective">Subjetiva</option>
-        </select>
+        <label>
+          <select value={type} onChange={e => setType(e.target.value as any)}>
+            <option value="objective">Objetiva</option>
+            <option value="subjective">Subjetiva</option>
+          </select>
+        </label>
 
         <textarea
           placeholder="Enunciado"
@@ -118,9 +178,13 @@ export default function QuestionModal({
               <div key={idx} className={styles.altRow}>
                 <input
                   type="radio"
+                  name="correctAlt"
                   checked={alt.correct}
                   onChange={() =>
-                    setAlternatives(alternatives.map((a, i) => ({ ...a, correct: i === idx })))
+                    setAlternatives(alternatives.map((a, i) => ({
+                      ...a,
+                      correct: i === idx
+                    })))
                   }
                 />
                 <input
@@ -135,7 +199,10 @@ export default function QuestionModal({
                   required
                 />
                 {alternatives.length > 1 && (
-                  <button type="button" onClick={() => setAlternatives(alternatives.filter((_, i) => i !== idx))}>
+                  <button
+                    type="button"
+                    onClick={() => setAlternatives(alternatives.filter((_, i) => i !== idx))}
+                  >
                     ✕
                   </button>
                 )}
@@ -149,6 +216,51 @@ export default function QuestionModal({
               + Adicionar alternativa
             </button>
           </>
+        )}
+
+        {type === 'subjective' && (
+          <label className={styles.checkbox}>
+            <input
+              type="checkbox"
+              checked={useModelAnswers}
+              onChange={() => setUseModelAnswers(prev => !prev)}
+            />
+            Usar respostas‐modelo na correção por IA
+          </label>
+        )}
+
+        {type === 'subjective' && useModelAnswers && (
+          <div className={styles.modelAnswersSection}>
+            <label>Resposta totalmente ERRADA</label>
+            <input
+              type="text"
+              value={modelAnswers.WRONG.content}
+              onChange={e =>
+                setModelAnswers(ma => ({ ...ma, WRONG: { ...ma.WRONG, content: e.target.value } }))
+              }
+              required
+            />
+
+            <label>Resposta MEIA-CERTA</label>
+            <input
+              type="text"
+              value={modelAnswers.MEDIAN.content}
+              onChange={e =>
+                setModelAnswers(ma => ({ ...ma, MEDIAN: { ...ma.MEDIAN, content: e.target.value } }))
+              }
+              required
+            />
+
+            <label>Resposta totalmente CERTA</label>
+            <input
+              type="text"
+              value={modelAnswers.CORRECT.content}
+              onChange={e =>
+                setModelAnswers(ma => ({ ...ma, CORRECT: { ...ma.CORRECT, content: e.target.value } }))
+              }
+              required
+            />
+          </div>
         )}
       </form>
     </BaseModal>

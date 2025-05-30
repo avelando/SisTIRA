@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import BaseModal from './BaseModal';
 import type { ExistingQuestionsModalProps } from '@/interfaces/QuestionProps';
-import type { QuestionBankProps }       from '@/interfaces/QuestionBankProps';
+import type { QuestionBankProps } from '@/interfaces/QuestionBankProps';
 import {
   addBanksToExam,
   removeBanksFromExam,
@@ -21,11 +21,11 @@ export default function ExistingQuestionsModal({
   onClose,
   onAdded,
 }: ExistingQuestionsModalProps) {
-  const [banks, setBanks]                       = useState<QuestionBankProps[]>([]);
-  const [selectedBankIds, setSelectedBankIds]   = useState<Set<string>>(new Set());
+  const [banks, setBanks] = useState<QuestionBankProps[]>([]);
+  const [selectedBankIds, setSelectedBankIds] = useState<Set<string>>(new Set());
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(new Set());
-  const [expandedBanks, setExpandedBanks]       = useState<Set<string>>(new Set());
-  const [loading, setLoading]                   = useState(false);
+  const [expandedBanks, setExpandedBanks] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -53,7 +53,7 @@ export default function ExistingQuestionsModal({
     if (!bank) return;
 
     const nextBanks = new Set(selectedBankIds);
-    const nextQs    = new Set(selectedQuestionIds);
+    const nextQs = new Set(selectedQuestionIds);
 
     if (nextBanks.has(bankId)) {
       nextBanks.delete(bankId);
@@ -109,7 +109,7 @@ export default function ExistingQuestionsModal({
   const hasChanges = () => {
     const initBanks = new Set(currentBankIds);
     if (initBanks.size !== selectedBankIds.size ||
-        Array.from(initBanks).some(b => !selectedBankIds.has(b))) {
+      Array.from(initBanks).some(b => !selectedBankIds.has(b))) {
       return true;
     }
     let initQs = [...currentQuestionIds];
@@ -120,7 +120,7 @@ export default function ExistingQuestionsModal({
     });
     const uniqInitQs = Array.from(new Set(initQs));
     if (uniqInitQs.length !== selectedQuestionIds.size ||
-        uniqInitQs.some(q => !selectedQuestionIds.has(q))) {
+      uniqInitQs.some(q => !selectedQuestionIds.has(q))) {
       return true;
     }
     return false;

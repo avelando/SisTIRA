@@ -17,6 +17,8 @@ export default function NewExamPage() {
         const exam = await createExam({
           title: 'Prova sem título',
           description: '',
+          isPublic: false,
+          generateAccessCode: true,
         });
         router.replace(`/exams/${exam.id}`);
       } catch (err) {

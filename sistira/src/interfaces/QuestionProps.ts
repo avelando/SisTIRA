@@ -1,41 +1,46 @@
-import { FullExam } from "./ExamsProps";
+import { FullExam, QuestionForResponse, ModelAnswer, ModelAnswerType } from "./ExamsProps";
+
+export interface ModelAnswerWithId extends ModelAnswer {
+  id?: string;
+}
 
 export interface QuestionModalProps {
   visible: boolean;
-  onClose: () => void;
-  onSubmit: (questionData: any) => void;
   mode: 'create' | 'edit';
-  question?: {
-    id: number;
+  onClose: () => void;
+  onSubmit: (data: {
+    id?: string;
     text: string;
     questionType: 'OBJ' | 'SUB';
-    questionDisciplines: { discipline: { id: number; name: string } }[];
-    alternatives?: { content: string; correct: boolean }[];
-  };
-}
-
-export interface ManualQuestionFormProps {
-  onCancel: () => void;
-  onSubmit: (data: {
-    text: string;
-    type: 'objetiva' | 'subjetiva';
     disciplines: string[];
+    useModelAnswers?: boolean;
     alternatives?: { content: string; correct: boolean }[];
+    modelAnswers?: ModelAnswerWithId[];
   }) => void;
-}
-
-export interface ManualQuestionPayload {
-  text: string;
-  type: 'objetiva' | 'subjetiva';
-  disciplines: string[];
-  alternatives?: { content: string; correct: boolean }[];
+  question?: {
+    id: string;
+    text: string;
+    questionType: 'OBJ' | 'SUB';
+    questionDisciplines: { discipline: { id: string; name: string } }[];
+    useModelAnswers?: boolean;
+    alternatives?: { content: string; correct: boolean }[];
+    modelAnswers?: ModelAnswerWithId[];
+  };
 }
 
 export interface Question {
   id: string;
   text: string;
   questionType: 'OBJ' | 'SUB';
-  alternatives?: { content: string; correct: boolean }[];
+  alternatives?: { id: string; content: string }[];
+  modelAnswers?: ModelAnswerWithId[];
+  selectedOption?: string;
+  answerText?: string;
+}
+
+export interface QuestionUI extends QuestionForResponse {
+  selectedOption?: string;
+  answerText?: string;
 }
 
 export interface ExistingQuestionsModalProps {

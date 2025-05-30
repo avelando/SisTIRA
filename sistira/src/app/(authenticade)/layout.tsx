@@ -7,7 +7,6 @@ import { UserProps } from '@/interfaces/UserProps'
 import styles from '@/styles/Layout.module.css'
 import { pageTitles } from '@/utils/pageTitles'
 import {
-  FaBell,
   FaBook,
   FaClipboardList,
   FaQuestionCircle,
@@ -59,12 +58,13 @@ export default function AuthenticatedLayout({
   }
 
   function getPageTitle(pathname: string): string {
-    if (pathname.startsWith('/exams/') && pathname.split('/').length === 3 && !pathname.endsWith('/new')) {
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments[0] === 'exams' && segments.length === 2 && segments[1] !== 'new') {
       return pageTitles['/exams/[id]'];
     }
-  
-    return pageTitles[pathname] || 'SisTIRA';
-  }  
+    const key = '/' + segments.join('/');
+    return pageTitles[key] || 'SisTIRA';
+  }
 
   return (
     <div className={styles.layoutContainer}>
@@ -79,7 +79,7 @@ export default function AuthenticatedLayout({
         </div>
 
         <div className={styles.headerRight}>
-          <FaBell className={styles.notificationIcon} />
+          {/* <FaBell className={styles.notificationIcon} /> */}
           <div className={styles.profile}>
             {user ? (
               <div

@@ -1,6 +1,10 @@
+export type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT';
+
 export interface ExamPayload {
   title: string;
   description?: string;
+  isPublic?: boolean;
+  generateAccessCode?: boolean;
 }
 
 export interface ExamQuestionRelation {
@@ -32,6 +36,7 @@ export interface ExamQuestion {
 }
 
 export interface FullExam {
+  accessCode?: string;
   id: string;
   title: string;
   description?: string;
@@ -43,4 +48,35 @@ export interface FullExam {
   }[];
 
   allQuestions: ExamQuestion[];
+}
+
+export interface QuestionForResponse {
+  id: string;
+  text: string;
+  questionType: 'OBJ' | 'SUB';
+  alternatives?: { id: string; content: string }[];
+  modelAnswers?: { type: 'WRONG' | 'MEDIAN' | 'CORRECT'; content: string }[];
+}
+
+export interface ExamForResponse {
+  examId: string;
+  title: string;
+  accessCode?: string;   
+  description?: string;
+  questions: QuestionForResponse[];
+}
+
+export interface SubmitResponseDto {
+  examId: string;
+  accessCode?: string;
+  answers: Array<{
+    questionId: string;
+    alternativeId?: string;
+    textResponse?: string;
+  }>;
+}
+
+export interface ModelAnswer {
+  type: ModelAnswerType;
+  content: string;
 }

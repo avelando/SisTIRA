@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaStar } from 'react-icons/fa';
 import { getQuestions, createQuestion, updateQuestion, deleteQuestion } from '@/api/questions';
 import QuestionModal from '@/components/modals/QuestionModal';
 import styles from '@/styles/Questions.module.css';
@@ -39,20 +39,19 @@ export default function Questions() {
 
   const handleSubmit = async (formData: any) => {
     try {
+      const payload = {
+        text: formData.text,
+        questionType: formData.questionType as 'OBJ' | 'SUB',
+        disciplines: formData.disciplines,
+        alternatives: formData.alternatives,
+        useModelAnswers: formData.useModelAnswers,
+        modelAnswers: formData.modelAnswers,
+      };
+
       if (modalMode === 'create') {
-        await createQuestion({
-          text: formData.text,
-          questionType: formData.questionType,
-          disciplines: formData.disciplines,
-          alternatives: formData.alternatives,
-        });
-      } else if (modalMode === 'edit' && formData.id) {
-        await updateQuestion(formData.id, {
-          text: formData.text,
-          questionType: formData.questionType,
-          disciplines: formData.disciplines,
-          alternatives: formData.alternatives,
-        });
+        await createQuestion(payload);
+      } else {
+        await updateQuestion(formData.id, payload);
       }
 
       await load();
@@ -77,7 +76,8 @@ export default function Questions() {
   return (
     <div className={styles.container}>
       <div className={styles.bar}>
-        <div className={styles.filterIconContainer}><FaFilter /></div>
+        <div className={styles.filterIconContainer}><FaStar/></div>
+        {/* <div className={styles.filterIconContainer}><FaFilter /></div> */}
         <div className={styles.addIconContainer} onClick={openCreateModal}>
           + Adicionar questão
         </div>
