@@ -58,14 +58,43 @@ export const getUserCounts = async (): Promise<CountsResponse> => {
 };
 
 export const getExamForResponse = async (
-  identifier: string
+  examId: string
 ): Promise<ExamForResponse> => {
-  const { data } = await api.get(`/exams/respond/${identifier}`);
-  return data;
-};
+  const { data } = await api.get(`/exams/respond/${examId}`, { withCredentials: true })
+  return data
+}
 
 export const submitExamResponse = async (
   payload: SubmitResponseDto
 ): Promise<void> => {
-  await api.post('/exams/respond', payload);
+  await api.post('/exams/respond', payload, { withCredentials: true })
+}
+
+export const checkExamAccess = async (
+  examId: string
+): Promise<{ hasAccess: boolean }> => {
+  const { data } = await api.get(`/exams/${examId}/check-access`, { withCredentials: true });
+  return data;
 };
+
+export const grantExamAccess = async (
+  examId: string,
+  accessCode: string
+): Promise<ExamForResponse> => {
+  const { data } = await api.post(
+    `/exams/${examId}/grant-access`,
+    { accessCode },
+    { withCredentials: true }
+  )
+  return data
+}
+
+export const getExamForResponseAuth = async (
+  examId: string
+): Promise<ExamForResponse> => {
+  const { data } = await api.get(
+    `/exams/${examId}/respond-auth`,
+    { withCredentials: true }
+  );
+  return data;
+}

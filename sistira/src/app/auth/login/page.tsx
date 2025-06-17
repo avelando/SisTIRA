@@ -38,7 +38,7 @@ const Login = () => {
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <GoogleAuthButton 
+        <GoogleAuthButton
           content="Acesse sua conta com o Google"
           redirectUrl="http://127.0.0.1:3001/auth/google"
         />

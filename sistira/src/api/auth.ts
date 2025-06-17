@@ -11,11 +11,10 @@ export const loginUser = async (data: { email: string; password: string }) => {
 
 export const checkAuth = async () => {
   try {
-    const response = await api.get('/users/me');
+    const response = await api.get('/users/me', { withCredentials: true });
     return response.data;
-  } catch (error: any) {
-    if (error.response?.status === 401) return null;
-    throw new Error(`Erro ao verificar auth: ${error.response?.status}`);
+  } catch (error) {
+    return null;
   }
 };
 

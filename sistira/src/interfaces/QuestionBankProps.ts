@@ -5,7 +5,7 @@ export interface QuestionBankProps {
   name: string;
   description: string;
   createdAt: string;
-  questions?: {
+  questions: {
     questionId: string;
     question: {
       text: string;

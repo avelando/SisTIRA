@@ -87,31 +87,6 @@ const Register = () => {
             <FormField type="text" label="Nome" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
             <FormField type="text" label="Sobrenome" value={lastName} onChange={(e) => setLastName(e.target.value)} />
             <FormField type="text" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <div>
-              <label>Tipo de Perfil</label>
-              <div>
-                <input
-                  type="radio"
-                  id="student"
-                  name="profileType"
-                  value="STUDENT"
-                  checked={profileType === 'STUDENT'}
-                  onChange={(e) => setProfileType(e.target.value)}
-                />
-                <label htmlFor="student">Aluno</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  id="teacher"
-                  name="profileType"
-                  value="TEACHER"
-                  checked={profileType === 'TEACHER'}
-                  onChange={(e) => setProfileType(e.target.value)}
-                />
-                <label htmlFor="teacher">Professor</label>
-              </div>
-            </div>
             {error && <p className={styles.error}>{error}</p>}
             <AuthButton text="Próximo" onClick={handleNextStep} />
           </>
@@ -136,7 +111,7 @@ const Register = () => {
           <span className={styles.separatorText}>ou</span>
           <hr className={styles.separator} />
         </div>
-        
+
         <GoogleAuthButton
           content="Crie uma conta com o Google"
           redirectUrl="http://127.0.0.1:3001/auth/google"

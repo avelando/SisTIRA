@@ -20,7 +20,7 @@ export interface ExamBank {
 export interface ExamUpdatePayload {
   title: string;
   description: string;
-};
+}
 
 export interface ExamQuestionAlternative {
   id: string;
@@ -55,14 +55,15 @@ export interface QuestionForResponse {
   text: string;
   questionType: 'OBJ' | 'SUB';
   alternatives?: { id: string; content: string }[];
-  modelAnswers?: { type: 'WRONG' | 'MEDIAN' | 'CORRECT'; content: string }[];
+  modelAnswers?: { type: ModelAnswerType; content: string }[];
 }
 
 export interface ExamForResponse {
   examId: string;
   title: string;
-  accessCode?: string;   
+  accessCode?: string;
   description?: string;
+  createdBy?: string;
   questions: QuestionForResponse[];
 }
 
