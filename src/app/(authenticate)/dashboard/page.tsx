@@ -7,14 +7,14 @@ import { getUserCounts } from '@/api/exams'
 import type { CountsResponse } from '@/interfaces/CountsResponse'
 import { UserProps } from '@/interfaces/UserProps'
 import Card from '@/components/ui/Card'
-import { QuickActions } from '@/components/ui/QuickActions'
+import QuickActions from '@/components/ui/QuickActions/QuickActions'
 import {
   ExamsIcon,
   QuestionsBankIcon,
   QuestionsIcon,
   // RoomsIcon,
 } from '@/lib/images'
-import { RecentActivity } from '@/components/ui/RecentActivity'
+import { RecentActivity } from '@/components/ui/RecentActivity/RecentActivity'
 
 export default function DashboardPage() {
   const router = useRouter()

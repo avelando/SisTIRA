@@ -1,13 +1,8 @@
-import React from 'react';
-import { Clock, FileText, HelpCircle, Database } from 'lucide-react';
+'use client'
 
-interface ActivityItem {
-  id: string;
-  type: 'prova' | 'questao' | 'banco';
-  title: string;
-  time: string;
-  icon: React.ReactNode;
-}
+import React from 'react'
+import { Clock, FileText, HelpCircle } from 'lucide-react'
+import { ActivityItem } from '@/interfaces/Activities'
 
 const activities: ActivityItem[] = [
   {
@@ -24,18 +19,23 @@ const activities: ActivityItem[] = [
     time: '5 horas atrás',
     icon: <HelpCircle size={16} />
   }
-];
+]
 
-export const RecentActivity: React.FC = () => {
+export function RecentActivity() {
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-6 h-71 overflow-auto">
       <div className="flex items-center gap-2 mb-4">
         <Clock size={20} className="text-slate-600" />
-        <h2 className="text-lg font-semibold text-slate-900">Atividade Recente</h2>
+        <h2 className="text-lg font-semibold text-slate-900">
+          Atividade Recente
+        </h2>
       </div>
       <div className="space-y-4">
-        {activities.map((activity) => (
-          <div key={activity.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
+        {activities.map(activity => (
+          <div
+            key={activity.id}
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
+          >
             <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
               {activity.icon}
             </div>
@@ -52,5 +52,5 @@ export const RecentActivity: React.FC = () => {
         Ver todas as atividades
       </button>
     </div>
-  );
-};
+  )
+}

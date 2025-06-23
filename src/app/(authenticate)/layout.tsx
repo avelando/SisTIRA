@@ -130,7 +130,7 @@ export default function AuthenticatedLayout({
         <aside
           className={`
             flex flex-col bg-white border-r border-slate-200 z-50 h-full
-            transform transition-transform duration-300 ease-in-out
+            transition-all duration-300 ease-in-out
             ${isCollapsed ? 'w-16' : 'w-64'}
             ${isMobile
               ? `${isCollapsed ? '-translate-x-full' : 'translate-x-0'} fixed top-0 left-0`
@@ -189,12 +189,10 @@ export default function AuthenticatedLayout({
                 <div className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center">
                   <User size={16} className="text-white" />
                 </div>
-                {!isCollapsed && (
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-medium text-slate-900">{user?.firstName}</p>
-                    <p className="text-xs text-slate-500">@{user?.username}</p>
-                  </div>
-                )}
+                <div className="hidden md:block text-left">
+                  <p className="text-sm font-medium text-slate-900">{user?.firstName}</p>
+                  <p className="text-xs text-slate-500">@{user?.username}</p>
+                </div>
                 <ChevronDown
                   size={16}
                   className={`text-slate-400 transition-transform duration-200 ${
