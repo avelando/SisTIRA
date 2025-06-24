@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Plus, HelpCircle, X } from 'lucide-react'
+import React from 'react'
+import { HelpCircle, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
@@ -10,106 +10,37 @@ import { QuestionsSkeleton } from '@/components/questions/QuestionsSkeleton'
 import { QuestionModal } from '@/components/questions/QuestionModal'
 import { useDisciplines } from '@/hooks/useDisciplines'
 import { useResponsive } from '@/hooks/useResponsive'
-import {
-  getQuestions,
-  createQuestion,
-  updateQuestion,
-  deleteQuestion,
-} from '@/api/questions'
-import { Question } from '@/interfaces/QuestionProps'
+import { useQuestions } from '@/hooks/app/useQuestions'
 
 export default function QuestionsPage() {
   const router = useRouter()
-  const { isMobile } = useResponsive()
+  const { isMobile }    = useResponsive()
   const { disciplines } = useDisciplines()
+  const {
+    filteredQuestions,
+    loading,
+    error,
 
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    search,
+    setSearch,
+    filters,
+    setFilters,
+    isFilterOpen,
+    setIsFilterOpen,
 
-  const [search, setSearch] = useState('')
-  const [filters, setFilters] = useState({
-    questionType:   '',
-    educationLevel: '',
-    difficulty:     '',
-    disciplineId:   '',
-  })
+    isModalOpen,
+    setIsModalOpen,
+    modalMode,
+    editingQuestion,
+    handleCreateClick,
+    handleEditClick,
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen]   = useState(false)
-  const [modalMode, setModalMode]       = useState<'create'|'edit'>('create')
-  const [editingQuestion, setEditingQuestion] =
-    useState<Question|null>(null)
+    handleDelete,
+    handleSubmit,
 
-  useEffect(() => {
-    loadQuestions()
-  }, [])
-
-  async function loadQuestions() {
-    setLoading(true)
-    setError(null)
-    try {
-      const data = await getQuestions()
-      setQuestions(data)
-    } catch (err: any) {
-      setError(err.message || 'Erro ao carregar questões.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  function handleCreateClick() {
-    setEditingQuestion(null)
-    setModalMode('create')
-    setIsModalOpen(true)
-  }
-
-  function handleEditClick(q: Question) {
-    setEditingQuestion(q)
-    setModalMode('edit')
-    setIsModalOpen(true)
-  }
-
-  async function handleDelete(id: string) {
-    if (!confirm('Tem certeza que deseja deletar esta questão?')) return
-    try {
-      await deleteQuestion(id)
-      setQuestions(prev => prev.filter(q => q.id !== id))
-    } catch (err: any) {
-      alert(err.message || 'Falha ao deletar questão.')
-    }
-  }
-
-  async function handleSubmit(payload: any) {
-    try {
-      if (modalMode === 'create') await createQuestion(payload)
-      else await updateQuestion(payload.id, payload)
-      await loadQuestions()
-      setIsModalOpen(false)
-    } catch (err: any) {
-      alert(err.message || 'Erro ao salvar questão.')
-    }
-  }
-
-  const filteredQuestions = questions.filter(q => {
-    if (search && !q.text.toLowerCase().includes(search.toLowerCase()))
-      return false
-    if (filters.questionType && q.questionType !== filters.questionType)
-      return false
-    if (
-      filters.disciplineId &&
-      !q.questionDisciplines?.some(d => d.discipline.id === filters.disciplineId)
-    )
-      return false
-    return true
-  })
-
-  const hasActiveFilters =
-    !!search ||
-    !!filters.questionType ||
-    !!filters.educationLevel ||
-    !!filters.difficulty ||
-    !!filters.disciplineId
+    hasActiveFilters,
+    loadQuestions,
+  } = useQuestions()
 
   return (
     <div className="space-y-6">
@@ -166,14 +97,10 @@ export default function QuestionsPage() {
             <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
               <span>
                 Tipo:{' '}
-                {filters.questionType === 'OBJ'
-                  ? 'Objetiva'
-                  : 'Subjetiva'}
+                {filters.questionType === 'OBJ' ? 'Objetiva' : 'Subjetiva'}
               </span>
               <button
-                onClick={() =>
-                  setFilters(f => ({ ...f, questionType: '' }))
-                }
+                onClick={() => setFilters(f => ({ ...f, questionType: '' }))}
                 className="text-slate-500 hover:text-slate-700"
               >
                 <X size={14} />
@@ -184,7 +111,10 @@ export default function QuestionsPage() {
             <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
               <span>
                 Disciplina:{' '}
-                {disciplines.find(d => d.id === filters.disciplineId)?.name}
+                {
+                  disciplines.find(d => d.id === filters.disciplineId)
+                    ?.name
+                }
               </span>
               <button
                 onClick={() =>
@@ -224,7 +154,11 @@ export default function QuestionsPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          className={`grid gap-6 ${
+            isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'
+          }`}
+        >
           {filteredQuestions.map(q => (
             <QuestionCard
               key={q.id}
