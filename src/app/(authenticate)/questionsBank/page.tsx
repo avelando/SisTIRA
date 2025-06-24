@@ -14,6 +14,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 interface Bank {
   id: string
@@ -110,7 +111,6 @@ export default function QuestionBankPage() {
 
   return (
     <div className="space-y-6">
-
       <Toolbar
         searchValue={searchQuery}
         onSearch={q => {
@@ -154,26 +154,15 @@ export default function QuestionBankPage() {
       />
 
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText size={24} className="text-slate-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
-            Nenhum banco encontrado
-          </h3>
-          <p className="text-slate-600 mb-6">
-            Crie seu primeiro banco de questões.
-          </p>
-          <button
-            onClick={() => router.push('/questions-bank/new')}
-            className="px-6 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800"
-          >
-            Criar Novo Banco
-          </button>
-        </div>
+        <EmptyState
+          icon={<FileText size={24} className="text-slate-400" />}
+          title="Nenhum banco encontrado"
+          message="Crie seu primeiro banco de questões."
+          actionLabel="Criar Novo Banco"
+          onAction={() => router.push('/questions-bank/new')}
+        />
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          {/* cabeçalho */}
           <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-slate-600">
@@ -199,7 +188,6 @@ export default function QuestionBankPage() {
             </div>
           </div>
 
-          {/* tabela */}
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
@@ -311,13 +299,11 @@ export default function QuestionBankPage() {
                       <button
                         key={i}
                         onClick={() => setCurrentPage(p as number)}
-                        className={`
-                          px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900
-                          ${p === currentPage
+                        className={`px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 ${
+                          p === currentPage
                             ? 'bg-slate-900 text-white'
                             : 'text-slate-600 bg-white border border-slate-300 hover:bg-slate-50'
-                          }
-                        `}
+                        }`}
                       >
                         {p}
                       </button>

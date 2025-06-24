@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getExams, deleteExam } from '@/api/exams'
 import { Edit, Trash2, Eye, Calendar, FileText } from 'lucide-react'
+
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 interface Exam {
   id: string
@@ -136,29 +138,16 @@ export default function ExamsPage() {
       />
 
       {filteredExams.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText size={24} className="text-slate-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
-            Nenhuma prova encontrada
-          </h3>
-          <p className="text-slate-600 mb-6">
-            Crie sua primeira prova para começar.
-          </p>
-          <button
-            onClick={() => router.push('/exams/new')}
-            className="
-              bg-slate-900 text-white px-6 py-2 rounded-lg font-medium
-              hover:bg-slate-800 transition-colors
-              focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50
-            "
-          >
-            Criar Nova Prova
-          </button>
-        </div>
+        <EmptyState
+          icon={<FileText size={24} className="text-slate-400" />}
+          title="Nenhuma prova encontrada"
+          message="Crie sua primeira prova para começar."
+          actionLabel="Criar Nova Prova"
+          onAction={() => router.push('/exams/new')}
+        />
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          {/* Cabeçalho de seleção e contagem */}
           <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-slate-600">
@@ -182,6 +171,7 @@ export default function ExamsPage() {
             </div>
           </div>
 
+          {/* Tabela de exames */}
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
@@ -219,9 +209,7 @@ export default function ExamsPage() {
                           className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 focus:ring-opacity-50"
                         />
                         <div>
-                          <div className="font-medium text-slate-900">
-                            {exam.title}
-                          </div>
+                          <div className="font-medium text-slate-900">{exam.title}</div>
                           <div className="text-xs text-slate-500">
                             ID: {exam.id.slice(0, 8)}…
                           </div>
@@ -279,6 +267,7 @@ export default function ExamsPage() {
             </table>
           </div>
 
+          {/* Paginação */}
           {totalPages > 1 && (
             <div className="px-6 py-4 border-t border-slate-200 bg-slate-50">
               <div className="flex items-center justify-between">
@@ -295,9 +284,7 @@ export default function ExamsPage() {
                   </button>
                   {getPagination().map((p, i) =>
                     p === '...' ? (
-                      <span key={i} className="px-3 py-2 text-slate-400">
-                        ...
-                      </span>
+                      <span key={i} className="px-3 py-2 text-slate-400">…</span>
                     ) : (
                       <button
                         key={i}
