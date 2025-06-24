@@ -3,20 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getExams, deleteExam } from '@/api/exams'
-import {
-  Edit,
-  Trash2,
-  Eye,
-  Calendar,
-  FileText,
-  Search,
-  Filter,
-  Download,
-  Plus,
-  ChevronDown,
-  Settings,
-  User as UserIcon,
-} from 'lucide-react'
+import { Edit, Trash2, Eye, Calendar, FileText } from 'lucide-react'
+import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 
 interface Exam {
   id: string
@@ -24,18 +12,6 @@ interface Exam {
   createdAt: string
   questionsCount?: number
   status?: 'draft' | 'published' | 'archived'
-}
-
-const statusColors = {
-  draft: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  published: 'bg-green-100 text-green-800 border-green-200',
-  archived: 'bg-gray-100 text-gray-800 border-gray-200',
-}
-
-const statusLabels = {
-  draft: 'Rascunho',
-  published: 'Publicada',
-  archived: 'Arquivada',
 }
 
 export default function ExamsPage() {
@@ -88,8 +64,7 @@ export default function ExamsPage() {
       year: 'numeric',
     })
 
-  const totalItems = exams.length
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const totalPages = Math.ceil(exams.length / itemsPerPage)
 
   const getPagination = () => {
     const delta = 2
@@ -112,12 +87,8 @@ export default function ExamsPage() {
   }
 
   const filteredExams = exams
-    .filter(e =>
-      e.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter(e =>
-      filters.status ? e.status === filters.status : true
-    )
+    .filter(e => e.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter(e => (filters.status ? e.status === filters.status : true))
 
   const start = (currentPage - 1) * itemsPerPage
   const end = start + itemsPerPage
@@ -125,89 +96,44 @@ export default function ExamsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="flex flex-1 gap-3 w-full sm:w-auto">
-            <div className="relative flex-1 max-w-md">
-              <Search
-                size={20}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
-              />
-              <input
-                type="text"
-                placeholder="Buscar provas..."
-                value={searchQuery}
-                onChange={e => {
-                  setSearchQuery(e.target.value)
-                  setCurrentPage(1)
-                }}
-                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50 focus:border-slate-900 outline-none transition-colors"
-              />
-            </div>
-            <div className="relative">
-              <button
-                onClick={() => setIsFilterOpen(v => !v)}
-                className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50"
-              >
-                <Filter size={16} />
-                <span className="hidden sm:inline">Filtros</span>
-              </button>
-              {isFilterOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-slate-200 p-4 z-10">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Status
-                      </label>
-                      <select
-                        value={filters.status}
-                        onChange={e => {
-                          const s = e.target.value
-                          setFilters(f => ({ ...f, status: s }))
-                          setCurrentPage(1)
-                        }}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50 focus:border-slate-900 outline-none"
-                      >
-                        <option value="">Todos</option>
-                        <option value="draft">Rascunho</option>
-                        <option value="published">Publicada</option>
-                        <option value="archived">Arquivada</option>
-                      </select>
-                    </div>
-                    <div className="flex gap-2 pt-2">
-                      <button
-                        onClick={() => {
-                          setFilters({ status: '', dateRange: '', sortBy: 'createdAt' })
-                          setIsFilterOpen(false)
-                          setCurrentPage(1)
-                        }}
-                        className="flex-1 px-3 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
-                      >
-                        Limpar
-                      </button>
-                      <button
-                        onClick={() => setIsFilterOpen(false)}
-                        className="flex-1 px-3 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
-                      >
-                        Aplicar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-3 w-full sm:w-auto">
-            <button
-              onClick={() => router.push('/exams/new')}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50"
-            >
-              <Plus size={16} />
-              <span>Nova Prova</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <Toolbar
+        searchValue={searchQuery}
+        onSearch={value => {
+          setSearchQuery(value)
+          setCurrentPage(1)
+        }}
+        isFilterOpen={isFilterOpen}
+        onToggleFilters={() => setIsFilterOpen(o => !o)}
+
+        statusValue={filters.status}
+        onStatusChange={newStatus => {
+          setFilters(f => ({ ...f, status: newStatus }))
+          setCurrentPage(1)
+        }}
+        onStatusClear={() => {
+          setFilters({ status: '', dateRange: '', sortBy: 'createdAt' })
+          setCurrentPage(1)
+          setIsFilterOpen(false)
+        }}
+        onStatusApply={() => setIsFilterOpen(false)}
+
+        questionFilters={{
+          questionType: '',
+          educationLevel: '',
+          difficulty: '',
+          disciplineId: '',
+        }}
+        onQuestionFilterChange={() => {}}
+        onQuestionFilterClear={() => {}}
+        onQuestionFilterApply={() => {}}
+        disciplines={[]}
+
+        bankFilterValue=""
+        onBankFilterChange={() => {}}
+        onBankFilterClear={() => {}}
+        onBankFilterApply={() => {}}
+        bankFilterOptions={[]}
+      />
 
       {filteredExams.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
@@ -222,7 +148,11 @@ export default function ExamsPage() {
           </p>
           <button
             onClick={() => router.push('/exams/new')}
-            className="bg-slate-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50"
+            className="
+              bg-slate-900 text-white px-6 py-2 rounded-lg font-medium
+              hover:bg-slate-800 transition-colors
+              focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50
+            "
           >
             Criar Nova Prova
           </button>
@@ -246,7 +176,8 @@ export default function ExamsPage() {
                 )}
               </label>
               <div className="text-sm text-slate-600">
-                Mostrando {start + 1} a {Math.min(end, filteredExams.length)} de {filteredExams.length} provas
+                Mostrando {start + 1} a {Math.min(end, filteredExams.length)} de{' '}
+                {filteredExams.length} provas
               </div>
             </div>
           </div>
@@ -255,10 +186,18 @@ export default function ExamsPage() {
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">Prova</th>
-                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">Data de Criação</th>
-                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">Questões</th>
-                  <th className="text-right py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">Ações</th>
+                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Prova
+                  </th>
+                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Data de Criação
+                  </th>
+                  <th className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Questões
+                  </th>
+                  <th className="text-right py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -280,8 +219,12 @@ export default function ExamsPage() {
                           className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 focus:ring-opacity-50"
                         />
                         <div>
-                          <div className="font-medium text-slate-900">{exam.title}</div>
-                          <div className="text-xs text-slate-500">ID: {exam.id.slice(0, 8)}…</div>
+                          <div className="font-medium text-slate-900">
+                            {exam.title}
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            ID: {exam.id.slice(0, 8)}…
+                          </div>
                         </div>
                       </div>
                     </td>

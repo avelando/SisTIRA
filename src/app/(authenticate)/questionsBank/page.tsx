@@ -7,16 +7,13 @@ import {
   deleteQuestionBank,
 } from '@/api/questionsBank'
 import {
-  Plus,
-  Search,
-  Filter,
-  X,
   Eye,
   Edit,
   Trash2,
   Calendar,
   FileText,
 } from 'lucide-react'
+import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 
 interface Bank {
   id: string
@@ -41,7 +38,6 @@ export default function QuestionBankPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [filters, setFilters] = useState({ disciplineId: '' })
 
-  // load data
   useEffect(() => {
     loadBanks()
   }, [])
@@ -53,7 +49,6 @@ export default function QuestionBankPage() {
     setCurrentPage(1)
   }
 
-  // delete one
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja deletar este banco?')) return
     await deleteQuestionBank(id)
@@ -61,7 +56,6 @@ export default function QuestionBankPage() {
     setSelected(prev => prev.filter(x => x !== id))
   }
 
-  // pagination helpers
   const totalItems = banks.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
   const start = (currentPage - 1) * itemsPerPage
@@ -87,7 +81,6 @@ export default function QuestionBankPage() {
     return res
   }
 
-  // filtering
   const filtered = banks
     .filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .filter(b =>
@@ -100,7 +93,6 @@ export default function QuestionBankPage() {
 
   const pageBanks = filtered.slice(start, end)
 
-  // format date
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -108,104 +100,59 @@ export default function QuestionBankPage() {
       year: 'numeric',
     })
 
+  const disciplineOptions = Array.from(
+    new Map(
+      banks
+        .flatMap(b => b.questionBankDisciplines ?? [])
+        .map(d => [d.discipline.id, d.discipline])
+    ).values()
+  )
+
   return (
     <div className="space-y-6">
-      {/* Search + Filter + Add */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 flex-1 max-w-md">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search
-              size={20}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type="text"
-              placeholder="Buscar bancos..."
-              value={searchQuery}
-              onChange={e => {
-                setSearchQuery(e.target.value)
-                setCurrentPage(1)
-              }}
-              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 outline-none transition-colors"
-            />
-          </div>
 
-          {/* Filter */}
-          <div className="relative">
-            <button
-              onClick={() => setIsFilterOpen(v => !v)}
-              className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900"
-            >
-              <Filter size={16} />
-              <span className="hidden sm:inline">Filtros</span>
-            </button>
-            {isFilterOpen && (
-              <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-slate-200 p-4 z-10">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Disciplina
-                    </label>
-                    <select
-                      value={filters.disciplineId}
-                      onChange={e => {
-                        setFilters(f => ({
-                          ...f,
-                          disciplineId: e.target.value,
-                        }))
-                        setCurrentPage(1)
-                      }}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 outline-none"
-                    >
-                      <option value="">Todas</option>
-                      {banks
-                        .flatMap(b => b.questionBankDisciplines ?? [])
-                        .map(d => d.discipline)
-                        .filter(
-                          (v, i, a) => a.findIndex(x => x.id === v.id) === i
-                        )
-                        .map(d => (
-                          <option key={d.id} value={d.id}>
-                            {d.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className="flex gap-2 pt-2">
-                    <button
-                      onClick={() => {
-                        setFilters({ disciplineId: '' })
-                        setIsFilterOpen(false)
-                        setCurrentPage(1)
-                      }}
-                      className="flex-1 px-3 py-2 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
-                    >
-                      Limpar
-                    </button>
-                    <button
-                      onClick={() => setIsFilterOpen(false)}
-                      className="flex-1 px-3 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-800"
-                    >
-                      Aplicar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+      <Toolbar
+        searchValue={searchQuery}
+        onSearch={q => {
+          setSearchQuery(q)
+          setCurrentPage(1)
+        }}
+        isFilterOpen={isFilterOpen}
+        onToggleFilters={() => {
+          setIsFilterOpen(o => !o)
+          setCurrentPage(1)
+        }}
 
-        {/* Novo Banco */}
-        <button
-          onClick={() => router.push('/questions-bank/new')}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900"
-        >
-          <Plus size={16} /> Novo Banco
-        </button>
-      </div>
+        statusValue=""
+        onStatusChange={() => {}}
+        onStatusClear={() => {}}
+        onStatusApply={() => {}}
 
-      {/* Lista ou estado vazio */}
+        questionFilters={{
+          questionType: '',
+          educationLevel: '',
+          difficulty: '',
+          disciplineId: '',
+        }}
+        onQuestionFilterChange={() => {}}
+        onQuestionFilterClear={() => {}}
+        onQuestionFilterApply={() => {}}
+        disciplines={[]}
+
+        bankFilterValue={filters.disciplineId}
+        onBankFilterChange={v => {
+          setFilters(f => ({ ...f, disciplineId: v }))
+          setCurrentPage(1)
+        }}
+        onBankFilterClear={() => {
+          setFilters({ disciplineId: '' })
+          setIsFilterOpen(false)
+          setCurrentPage(1)
+        }}
+        onBankFilterApply={() => setIsFilterOpen(false)}
+        bankFilterOptions={disciplineOptions}
+      />
+
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
           <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -226,17 +173,16 @@ export default function QuestionBankPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          {/* header com select-all e contagem */}
+          {/* cabeçalho */}
           <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-slate-600">
                 <input
                   type="checkbox"
                   checked={selected.length === banks.length}
-                  onChange={e => {
-                    const chk = e.target.checked
-                    setSelected(chk ? banks.map(b => b.id) : [])
-                  }}
+                  onChange={e =>
+                    setSelected(e.target.checked ? banks.map(b => b.id) : [])
+                  }
                   className="rounded border-slate-300 focus:ring-slate-900"
                 />
                 {selected.length > 0 && (
@@ -258,14 +204,7 @@ export default function QuestionBankPage() {
             <table className="min-w-full">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
-                  {[
-                    'ID',
-                    'TÍTULO',
-                    'DISCIPLINA',
-                    'DATA',
-                    'QUESTÕES',
-                    'AÇÕES',
-                  ].map(h => (
+                  {['ID', 'TÍTULO', 'DISCIPLINA', 'DATA', 'QUESTÕES', 'AÇÕES'].map(h => (
                     <th
                       key={h}
                       className="text-left py-3 px-6 text-xs font-semibold text-slate-600 uppercase tracking-wider"
@@ -351,7 +290,6 @@ export default function QuestionBankPage() {
             </table>
           </div>
 
-          {/* paginação */}
           {totalPages > 1 && (
             <div className="px-6 py-4 border-t border-slate-200 bg-slate-50">
               <div className="flex items-center justify-between">
@@ -360,9 +298,7 @@ export default function QuestionBankPage() {
                 </div>
                 <div className="flex items-center gap-1">
                   <button
-                    onClick={() =>
-                      setCurrentPage(p => Math.max(1, p - 1))
-                    }
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
                     className="px-3 py-2 text-sm text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50"
                   >
@@ -370,31 +306,25 @@ export default function QuestionBankPage() {
                   </button>
                   {getPagination().map((p, i) =>
                     p === '...' ? (
-                      <span key={i} className="px-3 py-2 text-slate-400">
-                        …
-                      </span>
+                      <span key={i} className="px-3 py-2 text-slate-400">…</span>
                     ) : (
                       <button
                         key={i}
-                        onClick={() =>
-                          setCurrentPage(p as number)
-                        }
-                        className={`px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 ${
-                          p === currentPage
+                        onClick={() => setCurrentPage(p as number)}
+                        className={`
+                          px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900
+                          ${p === currentPage
                             ? 'bg-slate-900 text-white'
                             : 'text-slate-600 bg-white border border-slate-300 hover:bg-slate-50'
-                        }`}
+                          }
+                        `}
                       >
                         {p}
                       </button>
                     )
                   )}
                   <button
-                    onClick={() =>
-                      setCurrentPage(p =>
-                        Math.min(totalPages, p + 1)
-                      )
-                    }
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
                     className="px-3 py-2 text-sm text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50"
                   >

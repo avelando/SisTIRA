@@ -1,7 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, HelpCircle, Search, Filter, X } from 'lucide-react'
+import { Plus, HelpCircle, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+
+import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 import { QuestionCard } from '@/components/questions/QuestionCard'
 import { QuestionsSkeleton } from '@/components/questions/QuestionsSkeleton'
 import { QuestionModal } from '@/components/questions/QuestionModal'
@@ -16,32 +19,31 @@ import {
 import { Question } from '@/interfaces/QuestionProps'
 
 export default function QuestionsPage() {
+  const router = useRouter()
   const { isMobile } = useResponsive()
   const { disciplines } = useDisciplines()
 
   const [questions, setQuestions] = useState<Question[]>([])
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const [search, setSearch]     = useState('')
-  const [filters, setFilters]   = useState({
+  const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState({
     questionType:   '',
     educationLevel: '',
     difficulty:     '',
     disciplineId:   '',
   })
 
-  const hasActiveFilters =
-    !!filters.questionType ||
-    !!filters.educationLevel ||
-    !!filters.difficulty ||
-    !!filters.disciplineId
-
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isModalOpen, setIsModalOpen]   = useState(false)
-  const [modalMode, setModalMode]       = useState<'create' | 'edit'>('create')
+  const [modalMode, setModalMode]       = useState<'create'|'edit'>('create')
   const [editingQuestion, setEditingQuestion] =
-    useState<Question | null>(null)
+    useState<Question|null>(null)
+
+  useEffect(() => {
+    loadQuestions()
+  }, [])
 
   async function loadQuestions() {
     setLoading(true)
@@ -55,10 +57,6 @@ export default function QuestionsPage() {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    loadQuestions()
-  }, [])
 
   function handleCreateClick() {
     setEditingQuestion(null)
@@ -84,11 +82,8 @@ export default function QuestionsPage() {
 
   async function handleSubmit(payload: any) {
     try {
-      if (modalMode === 'create') {
-        await createQuestion(payload)
-      } else {
-        await updateQuestion(payload.id, payload)
-      }
+      if (modalMode === 'create') await createQuestion(payload)
+      else await updateQuestion(payload.id, payload)
       await loadQuestions()
       setIsModalOpen(false)
     } catch (err: any) {
@@ -103,139 +98,58 @@ export default function QuestionsPage() {
       return false
     if (
       filters.disciplineId &&
-      !q.questionDisciplines?.some(
-        d => d.discipline.id === filters.disciplineId
-      )
+      !q.questionDisciplines?.some(d => d.discipline.id === filters.disciplineId)
     )
       return false
     return true
   })
 
+  const hasActiveFilters =
+    !!search ||
+    !!filters.questionType ||
+    !!filters.educationLevel ||
+    !!filters.difficulty ||
+    !!filters.disciplineId
+
   return (
     <div className="space-y-6">
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        {/* Search input */}
-        <div className="relative flex-1 max-w-md">
-          <Search
-            size={20}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
-          />
-          <input
-            type="text"
-            placeholder="Buscar questões..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50 outline-none transition-colors"
-          />
-        </div>
+      <Toolbar
+        searchValue={search}
+        onSearch={value => {
+          setSearch(value)
+          setIsFilterOpen(false)
+        }}
+        isFilterOpen={isFilterOpen}
+        onToggleFilters={() => setIsFilterOpen(o => !o)}
 
-        {/* Filter button */}
-        <div className="relative">
-          <button
-            onClick={() => setIsFilterOpen(o => !o)}
-            className={`
-              flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900
-              ${hasActiveFilters
-                ? 'border-slate-900 bg-slate-900 text-white'
-                : 'border-slate-300 hover:bg-slate-50'}
-            `}
-          >
-            <Filter size={16} />
-            <span className="hidden sm:inline">Filtros</span>
-            {hasActiveFilters && (
-              <span className="bg-white text-slate-900 text-xs px-1.5 py-0.5 rounded-full font-medium">
-                {[
-                  filters.questionType,
-                  filters.educationLevel,
-                  filters.difficulty,
-                  filters.disciplineId,
-                ].filter(Boolean).length}
-              </span>
-            )}
-          </button>
+        statusValue=""
+        onStatusChange={() => {}}
+        onStatusClear={() => {}}
+        onStatusApply={() => {}}
 
-          {isFilterOpen && (
-            <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-slate-200 p-4 z-10">
-              <div className="space-y-4">
-                {/* Question Type */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Tipo de Questão
-                  </label>
-                  <select
-                    value={filters.questionType}
-                    onChange={e =>
-                      setFilters(f => ({ ...f, questionType: e.target.value }))
-                    }
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-900 outline-none"
-                  >
-                    <option value="">Todos os tipos</option>
-                    <option value="OBJ">Objetiva</option>
-                    <option value="SUB">Subjetiva</option>
-                  </select>
-                </div>
+        questionFilters={filters}
+        onQuestionFilterChange={(field, value) =>
+          setFilters(f => ({ ...f, [field]: value }))
+        }
+        onQuestionFilterClear={() =>
+          setFilters({
+            questionType:   '',
+            educationLevel: '',
+            difficulty:     '',
+            disciplineId:   '',
+          })
+        }
+        onQuestionFilterApply={() => setIsFilterOpen(false)}
+        disciplines={disciplines}
 
-                {/* Discipline */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Disciplina
-                  </label>
-                  <select
-                    value={filters.disciplineId}
-                    onChange={e =>
-                      setFilters(f => ({ ...f, disciplineId: e.target.value }))
-                    }
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-900 outline-none"
-                  >
-                    <option value="">Todas as disciplinas</option>
-                    {disciplines.map(d => (
-                      <option key={d.id} value={d.id}>
-                        {d.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        bankFilterValue=""
+        onBankFilterChange={() => {}}
+        onBankFilterClear={() => {}}
+        onBankFilterApply={() => {}}
+        bankFilterOptions={[]}
+      />
 
-                {/* Buttons */}
-                <div className="flex gap-2 pt-2">
-                  <button
-                    onClick={() => {
-                      setFilters({
-                        questionType: '',
-                        educationLevel: '',
-                        difficulty: '',
-                        disciplineId: '',
-                      })
-                      setIsFilterOpen(false)
-                    }}
-                    className="flex-1 px-3 py-2 text-sm text-slate-600 border rounded-lg hover:bg-slate-50"
-                  >
-                    Limpar
-                  </button>
-                  <button
-                    onClick={() => setIsFilterOpen(false)}
-                    className="flex-1 px-3 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-800"
-                  >
-                    Aplicar
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* New Question */}
-        <button
-          onClick={handleCreateClick}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900"
-        >
-          <Plus size={16} /> Nova Questão
-        </button>
-      </div>
-
-      {/* Active filters */}
-      {(search || hasActiveFilters) && (
+      {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
           {search && (
             <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
@@ -252,7 +166,9 @@ export default function QuestionsPage() {
             <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
               <span>
                 Tipo:{' '}
-                {filters.questionType === 'OBJ' ? 'Objetiva' : 'Subjetiva'}
+                {filters.questionType === 'OBJ'
+                  ? 'Objetiva'
+                  : 'Subjetiva'}
               </span>
               <button
                 onClick={() =>
@@ -268,10 +184,7 @@ export default function QuestionsPage() {
             <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
               <span>
                 Disciplina:{' '}
-                {
-                  disciplines.find(d => d.id === filters.disciplineId)
-                    ?.name
-                }
+                {disciplines.find(d => d.id === filters.disciplineId)?.name}
               </span>
               <button
                 onClick={() =>
@@ -286,7 +199,6 @@ export default function QuestionsPage() {
         </div>
       )}
 
-      {/* Content */}
       {loading ? (
         <QuestionsSkeleton />
       ) : error ? (

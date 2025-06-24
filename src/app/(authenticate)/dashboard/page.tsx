@@ -14,7 +14,7 @@ import {
   QuestionsIcon,
   // RoomsIcon,
 } from '@/lib/images'
-import { RecentActivity } from '@/components/ui/RecentActivity/RecentActivity'
+import { RecentActivity } from '@/components/ui/RecentActivity'
 
 export default function DashboardPage() {
   const router = useRouter()
