@@ -1,5 +1,5 @@
 import Button from "@/components/ui/Button";
-import TextAnimated from "@/components/TextAnimated";
+import TextAnimated from "@/components/ui/TextAnimated";
 import Link from "next/link";
 
 import { LogoIcon, TeacherElement } from "@/lib/images";

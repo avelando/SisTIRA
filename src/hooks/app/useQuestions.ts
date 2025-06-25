@@ -7,11 +7,10 @@ import {
   updateQuestion,
   deleteQuestion,
 } from '@/api/questions'
-import { Question } from '@/interfaces/QuestionProps'
-import { QuestionModalProps } from '@/interfaces/QuestionProps'
+import { Alternative, ModelAnswerWithId, Question } from '@/interfaces/QuestionProps'
 
-type QuestionPayload = Parameters<QuestionModalProps['onSubmit']>[0]
 type ModalMode = 'create' | 'edit'
+const generateUniqueId = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
 export function useQuestions() {
   const [questions, setQuestions] = useState<Question[]>([])
@@ -71,33 +70,21 @@ export function useQuestions() {
     }
   }
 
-  async function handleSubmit(payload: QuestionPayload) {
-    try {
-      if (modalMode === 'create') {
-        await createQuestion({
-          text:            payload.text,
-          questionType:    payload.questionType,
-          disciplines:     payload.disciplines,
-          useModelAnswers: payload.useModelAnswers,
-          alternatives:    payload.alternatives,
-          modelAnswers:    payload.modelAnswers,
-        })
-      } else {
-        await updateQuestion(payload.id!, {
-          text:            payload.text,
-          questionType:    payload.questionType,
-          disciplines:     payload.disciplines,
-          useModelAnswers: payload.useModelAnswers,
-          alternatives:    payload.alternatives,
-          modelAnswers:    payload.modelAnswers,
-        })
-      }
-      await loadQuestions()
-      setIsModalOpen(false)
-    } catch (err: any) {
-      alert(err.message || 'Erro ao salvar questão.')
+  const handleSubmit = async (data: {
+    id?: string;
+    text: string;
+    questionType: 'OBJ' | 'SUB';
+    disciplines: string[];
+    useModelAnswers?: boolean;
+    alternatives?: Alternative[];
+    modelAnswers?: ModelAnswerWithId[];
+  }) => {
+    if (!data.id) {
+      data.id = generateUniqueId();
     }
-  }
+
+    console.log(data);
+  };
 
   const filteredQuestions = questions.filter(q => {
     if (search && !q.text.toLowerCase().includes(search.toLowerCase()))

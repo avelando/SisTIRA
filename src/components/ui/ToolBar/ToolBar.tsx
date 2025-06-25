@@ -4,17 +4,19 @@ import React from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Plus } from 'lucide-react'
 
-import { ActionButton } from '@/components/ui/ToolBar/ActionButton'
-import { SearchBar } from '@/components/ui/ToolBar/SearchBar'
-import { FilterButton } from '@/components/ui/ToolBar/FilterButton'
-
-import { StatusFilterPanel } from '@/components/ui/ToolBar/ExamFilterPanel'
-import { QuestionFilterPanel } from '@/components/ui/ToolBar/QuestionFilterPanel'
-import { QuestionBankFilterPanel } from '@/components/ui/ToolBar/QuestionBankFilterPanel'
-
+import { ActionButton } from './ActionButton'
+import { SearchBar } from './SearchBar'
+import { FilterButton } from './FilterButton'
+import { StatusFilterPanel } from './ExamFilterPanel'
+import { QuestionFilterPanel } from './QuestionFilterPanel'
+import { QuestionBankFilterPanel } from './QuestionBankFilterPanel'
 import { ToolbarProps } from '@/interfaces/Activities'
 
-export const Toolbar: React.FC<ToolbarProps> = ({
+interface Props extends ToolbarProps {
+  onNewClick?: () => void
+}
+
+export const Toolbar: React.FC<Props> = ({
   searchValue,
   onSearch,
 
@@ -37,6 +39,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onBankFilterClear,
   onBankFilterApply,
   bankFilterOptions,
+
+  onNewClick,
 }) => {
   const router = useRouter()
   const path = usePathname()
@@ -49,15 +53,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     placeholder = 'Buscar provas...'
     buttonLabel = 'Nova Prova'
     buttonRoute = '/exams/new'
+
   } else if (path.startsWith('/questionsBank')) {
     placeholder = 'Buscar no banco de questões...'
     buttonLabel = 'Novo Banco'
-    buttonRoute = '/questionsBank/new'
   } else if (path.startsWith('/questions')) {
     placeholder = 'Buscar questões...'
     buttonLabel = 'Nova Questão'
-    buttonRoute = '/questions/new'
   }
+
+  const handleNew = onNewClick ?? (() => router.push(buttonRoute))
 
   return (
     <div className="mb-6">
@@ -101,7 +106,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <ActionButton
             label={buttonLabel}
             icon={<Plus size={16} />}
-            onClick={() => router.push(buttonRoute)}
+            onClick={handleNew}
           />
         </div>
       </div>

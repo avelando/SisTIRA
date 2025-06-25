@@ -21,9 +21,6 @@ export default function TextAnimated() {
       >
         |
       </span>
-      {/* Keyframes são globais; certifique-se de ter isso no seu CSS global: 
-          @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0 } } 
-      */}
     </div>
   );
 }

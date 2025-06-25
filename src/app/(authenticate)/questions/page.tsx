@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 import { QuestionCard } from '@/components/questions/QuestionCard'
 import { QuestionsSkeleton } from '@/components/questions/QuestionsSkeleton'
-import { QuestionModal } from '@/components/questions/QuestionModal'
+import { QuestionModal } from '@/components/modals/QuestionModal'
 import { useDisciplines } from '@/hooks/useDisciplines'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useQuestions } from '@/hooks/app/useQuestions'
@@ -78,6 +78,8 @@ export default function QuestionsPage() {
         onBankFilterClear={() => {}}
         onBankFilterApply={() => {}}
         bankFilterOptions={[]}
+
+        onNewClick={handleCreateClick} 
       />
 
       {hasActiveFilters && (
@@ -161,10 +163,10 @@ export default function QuestionsPage() {
         >
           {filteredQuestions.map(q => (
             <QuestionCard
-              key={q.id}
+              key={q.id ?? 'default-id'}
               question={q}
               onEdit={() => handleEditClick(q)}
-              onDelete={() => handleDelete(q.id)}
+              onDelete={() => handleDelete(q.id ?? 'default-id')}
             />
           ))}
         </div>
@@ -175,7 +177,13 @@ export default function QuestionsPage() {
         mode={modalMode}
         question={editingQuestion ?? undefined}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmit}
+        onSubmit={data => {
+          if (!data.id) {
+            data.id = 'novo-id';
+          }
+
+          void handleSubmit(data);
+        }}
         loading={loading}
       />
     </div>

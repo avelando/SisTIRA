@@ -25,17 +25,17 @@ export interface ModelAnswerWithId {
 }
 
 export interface Question {
-  id: string
-  text: string
-  questionType: 'OBJ' | 'SUB'
-  questionDisciplines?: { discipline: Discipline }[]
-  educationLevel?: string
-  difficulty?: string
-  examReference?: string
-  useModelAnswers?: boolean
-  alternatives?: Alternative[]
-  modelAnswers?: ModelAnswerWithId[]
-  createdAt?: string
+  id?: string;
+  text: string;
+  questionType: 'OBJ' | 'SUB';
+  questionDisciplines?: { discipline: Discipline }[];
+  educationLevel?: string;
+  difficulty?: string;
+  examReference?: string;
+  useModelAnswers?: boolean;
+  alternatives?: Alternative[];
+  modelAnswers?: ModelAnswerWithId[];
+  createdAt?: string;
 }
 
 export interface QuestionModalProps {
