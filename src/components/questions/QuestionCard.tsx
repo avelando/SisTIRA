@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Question } from '@/interfaces/QuestionProps';
+'use client'
+
+import React, { useState } from 'react'
 import {
   Edit,
   Trash2,
@@ -8,19 +9,21 @@ import {
   BookOpen,
   Target,
   GraduationCap,
-} from 'lucide-react';
+} from 'lucide-react'
+
+import { Question } from '@/interfaces/QuestionProps';
 
 interface QuestionCardProps {
   question: Question & {
-    questionDisciplines?: { discipline: { id: string; name: string } }[];
-    educationLevel?: string;
-    difficulty?: string;
-    examReference?: string;
-    useModelAnswers?: boolean;
-    createdAt?: string;
-  };
-  onEdit: (question: Question) => void;
-  onDelete: (id: string) => void;
+    questionDisciplines?: { discipline: { id: string; name: string } }[]
+    educationLevel?: string
+    difficulty?: string
+    examReference?: string
+    useModelAnswers?: boolean
+    createdAt?: string
+  }
+  onEdit: (question: Question) => void
+  onDelete: (id: string) => void
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -28,22 +31,22 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const [showActions, setShowActions] = useState(false);
+  const [showActions, setShowActions] = useState(false)
 
   const truncate = (text: string, len = 150) =>
-    text.length > len ? text.slice(0, len) + '...' : text;
+    text.length > len ? text.slice(0, len) + '...' : text
 
   const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit(question);
-  };
+    e.stopPropagation()
+    onEdit(question)
+  }
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation()
     if (confirm('Tem certeza que deseja deletar esta questão?')) {
-      onDelete(question.id);
+      onDelete(question.id)
     }
-  };
+  }
 
   return (
     <div
@@ -54,17 +57,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     >
       <div className="flex items-center justify-between mb-4">
         <span
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-            ${
-              question.questionType === 'OBJ'
-                ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                : 'bg-purple-100 text-purple-800 border border-purple-200'
-            }
-          `}
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            question.questionType === 'OBJ'
+              ? 'bg-blue-100 text-blue-800 border border-blue-200'
+              : 'bg-purple-100 text-purple-800 border border-purple-200'
+          }`}
         >
           {question.questionType === 'OBJ' ? 'Objetiva' : 'Subjetiva'}
         </span>
-
         <div
           className={`flex items-center gap-2 transition-opacity duration-200 ${
             showActions ? 'opacity-100' : 'opacity-0'
@@ -95,9 +95,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       {question.questionDisciplines?.length ? (
         <div className="flex flex-wrap gap-2 mb-4">
-          {question.questionDisciplines.map((qd) => (
+          {question.questionDisciplines.map(qd => (
             <span
-              key={qd.discipline.id}
+              key={qd.discipline.name}
               className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700"
             >
               {qd.discipline.name}
@@ -159,10 +159,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       question.modelAnswers?.length ? (
         <div className="space-y-2 mb-4">
           <h4 className="text-sm font-medium text-slate-700">Respostas Modelo:</h4>
-          {question.modelAnswers.slice(0, 2).map((ans) => (
+          {question.modelAnswers.slice(0, 2).map(ans => (
             <div key={ans.id} className="text-sm">
               <span className="font-medium text-slate-700">{ans.type}:</span>
-              <p className="text-slate-600 mt-1 truncate">{truncate(ans.content, 100)}</p>
+              <p className="text-slate-600 mt-1 truncate">
+                {truncate(ans.content, 100)}
+              </p>
             </div>
           ))}
           {question.modelAnswers.length > 2 && (
@@ -179,5 +181,5 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

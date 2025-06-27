@@ -1,8 +1,16 @@
+'use client'
+
 import { useState, useEffect, useCallback } from 'react'
-import { createQuestion, updateQuestion } from '@/api/questions'
 import { QuestionModalProps } from '@/interfaces/QuestionProps'
 
-type SuccessCallback = (data: any) => void
+export interface UseQuestionModalParams {
+  question?: QuestionModalProps['question']
+  mode: 'create' | 'edit'
+  visible: boolean
+  onClose: () => void
+  onSuccess: QuestionModalProps['onSubmit']
+  loading?: boolean
+}
 
 export function useQuestionModal({
   question,
@@ -10,29 +18,31 @@ export function useQuestionModal({
   visible,
   onClose,
   onSuccess,
-}: Pick<QuestionModalProps, 'question' | 'mode' | 'visible'> & {
-  onClose: () => void
-  onSuccess: SuccessCallback
-}) {
-  const [formData, setFormData] = useState({
-    id: question?.id,
+  loading = false,
+}: UseQuestionModalParams) {
+  const [formData, setFormData] = useState<{
+    id?: string
+    text: string
+    questionType: 'OBJ' | 'SUB'
+    educationLevel: string
+    difficulty: string
+    examReference: string
+    useModelAnswers: boolean
+    disciplines: string[]
+    alternatives: { content: string; correct: boolean }[]
+    modelAnswers: { id?: string; type: string; content: string }[]
+  }>({
+    id: undefined,
     text: '',
-    questionType: (question?.questionType ?? 'OBJ') as 'OBJ' | 'SUB',
-    educationLevel: question?.educationLevel ?? '',
-    difficulty: question?.difficulty ?? '',
-    examReference: question?.examReference ?? '',
-    useModelAnswers: question?.useModelAnswers ?? false,
-    disciplines:
-      (question?.questionDisciplines?.map(d => d.discipline.id) as string[]) ??
-      [],
-    alternatives:
-      question?.alternatives ??
-      Array(4).fill({ content: '', correct: false }),
-    modelAnswers:
-      (question?.modelAnswers as { id?: string; type: string; content: string }[]) ??
-      [],
+    questionType: 'OBJ',
+    educationLevel: '',
+    difficulty: '',
+    examReference: '',
+    useModelAnswers: false,
+    disciplines: [],
+    alternatives: Array(4).fill({ content: '', correct: false }),
+    modelAnswers: [],
   })
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (question) {
@@ -45,9 +55,18 @@ export function useQuestionModal({
         examReference: question.examReference ?? '',
         useModelAnswers: question.useModelAnswers ?? false,
         disciplines:
-          question.questionDisciplines?.map(qd => qd.discipline.id) ?? [],
-        alternatives: question.alternatives ?? formData.alternatives,
-        modelAnswers: question.modelAnswers ?? [],
+          question.questionDisciplines?.map(qd => qd.discipline.name) ?? [],
+        alternatives:
+          question.alternatives?.map(a => ({
+            content: a.content,
+            correct: a.correct,
+          })) ?? Array(4).fill({ content: '', correct: false }),
+        modelAnswers:
+          question.modelAnswers?.map(ma => ({
+            id: ma.id,
+            type: ma.type,
+            content: ma.content,
+          })) ?? [],
       })
     } else {
       setFormData({
@@ -65,35 +84,21 @@ export function useQuestionModal({
     }
   }, [question, mode, visible])
 
-  const updateField = useCallback(
-    <K extends keyof typeof formData>(field: K, value: typeof formData[K]) => {
-      setFormData(fd => ({ ...fd, [field]: value }))
-    },
-    []
-  )
-
-  const toggleDiscipline = useCallback(
-    (id: string) => {
-      updateField(
-        'disciplines',
-        formData.disciplines.includes(id)
-          ? formData.disciplines.filter(d => d !== id)
-          : [...formData.disciplines, id]
-      )
-    },
-    [formData.disciplines, updateField]
-  )
+  const updateField = useCallback<
+    <K extends keyof typeof formData>(field: K, value: typeof formData[K]) => void
+  >((field, value) => {
+    setFormData(fd => ({ ...fd, [field]: value }))
+  }, [])
 
   const updateAlt = useCallback(
     (i: number, key: 'content' | 'correct', val: any) => {
-      const alts = formData.alternatives.map((alt, idx) =>
-        idx !== i
-          ? key === 'correct' && val
-            ? { ...alt, correct: false }
-            : alt
-          : { ...alt, [key]: val }
-      )
-      updateField('alternatives', alts)
+      const newAlts = formData.alternatives.map((alt, idx) => {
+        if (idx === i) return { ...alt, [key]: val }
+        return key === 'correct' && val
+          ? { ...alt, correct: false }
+          : alt
+      })
+      updateField('alternatives', newAlts)
     },
     [formData.alternatives, updateField]
   )
@@ -119,10 +124,10 @@ export function useQuestionModal({
 
   const updateModel = useCallback(
     (i: number, key: 'type' | 'content', val: string) => {
-      const mas = formData.modelAnswers.map((ma, idx) =>
+      const newModels = formData.modelAnswers.map((ma, idx) =>
         idx === i ? { ...ma, [key]: val } : ma
       )
-      updateField('modelAnswers', mas)
+      updateField('modelAnswers', newModels)
     },
     [formData.modelAnswers, updateField]
   )
@@ -130,7 +135,7 @@ export function useQuestionModal({
   const addModel = useCallback(() => {
     updateField('modelAnswers', [
       ...formData.modelAnswers,
-      { type: '', content: '' },
+      { id: undefined, type: '', content: '' },
     ])
   }, [formData.modelAnswers, updateField])
 
@@ -145,7 +150,7 @@ export function useQuestionModal({
   )
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    (e: React.FormEvent) => {
       e.preventDefault()
       if (!formData.text.trim()) {
         alert('Insira o texto da questão.')
@@ -158,30 +163,28 @@ export function useQuestionModal({
         alert('Marque uma alternativa correta.')
         return
       }
-      setLoading(true)
-      try {
-        let result: any
-        if (mode === 'edit' && formData.id) {
-          result = await updateQuestion(formData.id, formData)
-        } else {
-          result = await createQuestion(formData)
-        }
-        onSuccess(result)
-        onClose()
-      } catch (err: any) {
-        alert(err.message || 'Erro ao salvar questão.')
-      } finally {
-        setLoading(false)
-      }
+
+      onSuccess({
+        id: formData.id,
+        text: formData.text,
+        questionType: formData.questionType,
+        educationLevel: formData.educationLevel,
+        difficulty: formData.difficulty,
+        examReference: formData.examReference,
+        useModelAnswers: formData.useModelAnswers,
+        disciplines: formData.disciplines,
+        alternatives: formData.alternatives,
+        modelAnswers: formData.modelAnswers,
+      })
+      onClose()
     },
-    [formData, mode, onClose, onSuccess]
+    [formData, onClose, onSuccess]
   )
 
   return {
     formData,
     loading,
     updateField,
-    toggleDiscipline,
     updateAlt,
     addAlt,
     removeAlt,

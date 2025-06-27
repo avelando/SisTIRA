@@ -22,7 +22,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
       className="
         fixed inset-0
         bg-black/50
-        backdrop-filter backdrop-blur-3xl
+        backdrop-filter backdrop-blur-md
         flex items-center justify-center p-4 z-50
       "
       onClick={onClose}

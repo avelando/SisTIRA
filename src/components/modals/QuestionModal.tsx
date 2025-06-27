@@ -1,9 +1,8 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Plus, Minus, Check } from 'lucide-react'
 import { QuestionModalProps } from '@/interfaces/QuestionProps'
-import { useDisciplines } from '@/hooks/useDisciplines'
 import { BaseModal } from '@/components/modals/BaseModal'
 import { useQuestionModal } from '@/hooks/modals/useQuestionModal'
 
@@ -25,12 +24,10 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   question,
   mode,
 }) => {
-  const { disciplines } = useDisciplines()
   const {
     formData,
     loading,
     updateField,
-    toggleDiscipline,
     updateAlt,
     addAlt,
     removeAlt,
@@ -46,9 +43,32 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
     onSuccess: onSubmit,
   })
 
+  const [disciplineInput, setDisciplineInput] = useState('')
+
   const handleSave = () => {
     handleSubmit({ preventDefault: () => {} } as React.FormEvent)
   }
+
+  const handleDisciplineKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ';') {
+      e.preventDefault()
+      const val = disciplineInput.trim().replace(/;$/, '')
+      if (val && !formData.disciplines.includes(val)) {
+        updateField('disciplines', [...formData.disciplines, val])
+      }
+      setDisciplineInput('')
+    }
+  }
+
+  const removeDiscipline = (name: string) => {
+    updateField(
+      'disciplines',
+      formData.disciplines.filter(d => d !== name)
+    )
+  }
+
+  const truncate = (text: string, len = 150) =>
+    text.length > len ? text.slice(0, len) + '...' : text
 
   return (
     <BaseModal
@@ -61,7 +81,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
       title={mode === 'edit' ? 'Editar Questão' : 'Nova Questão'}
       maxWidthClass="max-w-3xl"
     >
-      <div className="space-y-6">
+      <form className="space-y-6" onSubmit={e => e.preventDefault()}>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Texto da Questão *
@@ -149,20 +169,29 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
             Disciplinas
           </label>
           <div className="flex flex-wrap gap-2">
-            {disciplines.map(d => (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => toggleDiscipline(d.id)}
-                className={`px-3 py-1 rounded-full text-sm font-medium border transition ${
-                  formData.disciplines.includes(d.id)
-                    ? 'bg-slate-900 text-white border-slate-900'
-                    : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
-                }`}
+            {formData.disciplines.map(name => (
+              <span
+                key={name}
+                className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-800 rounded-full text-sm"
               >
-                {d.name}
-              </button>
+                {name}
+                <button
+                  type="button"
+                  onClick={() => removeDiscipline(name)}
+                  className="p-1 hover:text-red-600 rounded-full"
+                  title="Remover"
+                >
+                  <Minus size={12} />
+                </button>
+              </span>
             ))}
+            <input
+              value={disciplineInput}
+              onChange={e => setDisciplineInput(e.target.value)}
+              onKeyDown={handleDisciplineKeyDown}
+              placeholder="Digite e pressione Enter ou ';'"
+              className="flex-1 min-w-[120px] px-2 py-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+            />
           </div>
         </div>
 
@@ -205,7 +234,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                     <button
                       type="button"
                       onClick={() => removeAlt(i)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
                     >
                       <Minus size={16} />
                     </button>
@@ -255,9 +284,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                         <input
                           type="text"
                           value={ma.type}
-                          onChange={e =>
-                            updateModel(i, 'type', e.target.value)
-                          }
+                          onChange={e => updateModel(i, 'type', e.target.value)}
                           className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
                           placeholder="Tipo de resposta"
                         />
@@ -285,7 +312,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
             )}
           </div>
         )}
-      </div>
+      </form>
     </BaseModal>
   )
 }

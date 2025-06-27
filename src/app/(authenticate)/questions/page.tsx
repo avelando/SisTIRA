@@ -177,13 +177,7 @@ export default function QuestionsPage() {
         mode={modalMode}
         question={editingQuestion ?? undefined}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={data => {
-          if (!data.id) {
-            data.id = 'novo-id';
-          }
-
-          void handleSubmit(data);
-        }}
+        onSubmit={handleSubmit}
         loading={loading}
       />
     </div>
