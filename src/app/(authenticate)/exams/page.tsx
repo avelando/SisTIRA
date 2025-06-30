@@ -2,9 +2,10 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, Edit, Trash2, Calendar } from 'lucide-react'
+import { Eye, Edit, Trash2, Calendar, Plus } from 'lucide-react'
 
 import { useExams } from '@/hooks/app/useExams'
+import { createExam } from '@/api/exams'
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Pagination } from '@/components/ui/Pagination/Pagination'
@@ -30,6 +31,17 @@ export default function ExamsPage() {
     handleSelectOne,
     formatDate,
   } = useExams()
+
+  // cria uma prova "vazia" e navega direto para /exams/:id
+  async function handleNewExam() {
+    const created = await createExam({
+      title: 'Prova sem título',
+      description: '',
+      isPublic: false,
+      generateAccessCode: true,
+    })
+    router.push(`/exams/${created.id}`)
+  }
 
   return (
     <div>
@@ -70,6 +82,8 @@ export default function ExamsPage() {
         onBankFilterClear={() => {}}
         onBankFilterApply={() => {}}
         bankFilterOptions={[]}
+
+        onNewClick={handleNewExam}
       />
 
       {filteredExams.length === 0 ? (
@@ -78,7 +92,7 @@ export default function ExamsPage() {
           title="Nenhuma prova encontrada"
           message="Crie sua primeira prova para começar."
           actionLabel="Criar Nova Prova"
-          onAction={() => router.push('/exams/new')}
+          onAction={handleNewExam}
         />
       ) : (
         <>

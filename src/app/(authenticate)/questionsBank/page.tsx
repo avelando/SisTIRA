@@ -23,26 +23,22 @@ import { QuestionBankProps } from '@/interfaces/QuestionBankProps'
 export default function QuestionBankPage() {
   const router = useRouter()
 
-  // lista de bancos
   const [banks, setBanks] = useState<QuestionBankProps[]>([])
   const [filtered, setFiltered] = useState<QuestionBankProps[]>([])
   const [pageBanks, setPageBanks] = useState<QuestionBankProps[]>([])
   const [selected, setSelected] = useState<string[]>([])
 
-  // busca, filtros e paginação
   const [searchQuery, setSearchQuery] = useState('')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [filters, setFilters] = useState({ disciplineId: '' })
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
-  // controle do modal
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null)
   const [modalBankId, setModalBankId] = useState<string | null>(null)
   const showModal = modalMode !== null
   const closeModal = () => setModalMode(null)
 
-  // Carregar bancos
   useEffect(() => {
     ;(async () => {
       const data = await getQuestionBanks()
@@ -52,7 +48,6 @@ export default function QuestionBankPage() {
     })()
   }, [])
 
-  // Buscar + filtrar
   useEffect(() => {
     let result = banks.filter(b =>
       b.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -68,7 +63,6 @@ export default function QuestionBankPage() {
     setCurrentPage(1)
   }, [banks, searchQuery, filters])
 
-  // Paginar
   useEffect(() => {
     const start = (currentPage - 1) * itemsPerPage
     setPageBanks(filtered.slice(start, start + itemsPerPage))
@@ -76,7 +70,6 @@ export default function QuestionBankPage() {
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage)
 
-  // Handlers tabela
   const handleDelete = async (id: string) => {
     if (!confirm('Tem certeza que deseja deletar este banco?')) return
     await deleteQuestionBank(id)
@@ -92,7 +85,6 @@ export default function QuestionBankPage() {
       year: 'numeric',
     })
 
-  // Opções de disciplina
   const disciplineOptions = Array.from(
     new Map(
       banks
@@ -101,7 +93,6 @@ export default function QuestionBankPage() {
     ).values()
   )
 
-  // Abrir modal nos modos certos
   const openCreateModal = () => {
     setModalMode('create')
     setModalBankId(null)
@@ -300,11 +291,11 @@ export default function QuestionBankPage() {
         editMode={modalMode === 'edit'}
         viewMode={modalMode === 'view'}
         bankId={modalBankId ?? undefined}
-        examId=""             /* adicionado */
+        examId=""
         currentBankIds={[]}
         currentQuestionIds={[]}
         onClose={closeModal}
-        onAdded={() => {}}    /* adicionado */
+        onAdded={() => {}}
         onCreated={newBank => {
           setBanks(prev => [newBank, ...prev])
           closeModal()

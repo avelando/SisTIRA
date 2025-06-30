@@ -30,8 +30,8 @@ export default function ExamPage() {
   const isFirstLoad = useRef(true)
 
   useEffect(() => {
-    if (!examId) return
-    ;(async () => {
+    if (!examId || examId === 'undefined') return;
+    (async () => {
       if (examId === 'new') {
         const created = await createExam({
           title: 'Prova sem título',

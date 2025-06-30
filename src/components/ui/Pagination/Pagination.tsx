@@ -44,7 +44,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const pages = getPages()
 
   return (
-    <div className="px-6 py-4 border-t border-slate-200 bg-slate-50">
+    <div className="px-6 py-4 border-slate-200">
       <div className="flex items-center justify-between">
         <div className="text-sm text-slate-600">
           Página {currentPage} de {totalPages}
