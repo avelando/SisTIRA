@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { BaseModal } from '@/components/modals/BaseModal'
+import { BaseModal } from '@/components/ui/Modals/BaseModal'
 import { useExistingQuestionsModal, UseExistingQuestionsModalOptions } from '@/hooks/modals/useExistingQuestionsModal'
 
 export default function ExistingQuestionsModal(props: UseExistingQuestionsModalOptions) {
@@ -33,18 +33,18 @@ export default function ExistingQuestionsModal(props: UseExistingQuestionsModalO
   const title = createMode
     ? 'Criar Banco de Questões'
     : editMode
-    ? 'Editar Banco de Questões'
-    : viewMode
-    ? 'Visualizar Banco de Questões'
-    : 'Associar Bancos & Questões'
+      ? 'Editar Banco de Questões'
+      : viewMode
+        ? 'Visualizar Banco de Questões'
+        : 'Associar Bancos & Questões'
 
   const saveLabel = viewMode
     ? 'Fechar'
     : createMode
-    ? 'Criar Banco'
-    : editMode
-    ? 'Salvar Alterações'
-    : 'Salvar'
+      ? 'Criar Banco'
+      : editMode
+        ? 'Salvar Alterações'
+        : 'Salvar'
 
   return (
     <BaseModal

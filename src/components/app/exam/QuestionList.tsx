@@ -1,7 +1,7 @@
 import QuestionCard from './QuestionCard'
 import EmptyQuestions from './EmptyQuestions'
-import NewQuestionModal from './NewQuestionModal'
 import { Question } from '@/interfaces/QuestionProps'
+import { useState } from 'react'
 
 interface QuestionListProps {
   questions: Question[]
@@ -19,15 +19,12 @@ interface QuestionListProps {
 export default function QuestionList({
   questions,
   showAdd,
-  showExisting,
   onAddNew,
-  onOpenExisting,
   onRemove,
-  onChangeNew,
-  onAddQuestion,
-  onUpdateOption,
-  newQuestion,
 }: QuestionListProps) {
+
+  const [showAddQuestionModal, setShowAddQuestionModal] = useState(false)
+  
   return (
     <>
       {questions.length > 0 ? (
@@ -41,18 +38,9 @@ export default function QuestionList({
         ))
       ) : (
         !showAdd && (
-          <EmptyQuestions onAddNew={onAddNew} onOpenBank={onOpenExisting} />
+          <EmptyQuestions onAddNew={onAddNew} />
         )
       )}
-
-      <NewQuestionModal
-        visible={showAdd}
-        question={newQuestion}
-        onChangeQuestion={onChangeNew}
-        onAdd={onAddQuestion}
-        onClose={() => onChangeNew({ ...newQuestion, text: '', alternatives: newQuestion.alternatives })}
-        onUpdateOption={onUpdateOption}
-      />
     </>
   )
 }

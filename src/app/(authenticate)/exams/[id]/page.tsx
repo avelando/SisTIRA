@@ -1,29 +1,30 @@
 'use client'
 
-import React, { useState, useEffect, useTransition, useRef } from 'react'
+import React, { useEffect, useRef, useState, useTransition } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import debounce from 'lodash/debounce'
 import { createExam, getExam, updateExam } from '@/api/exams'
 import type { FullExam, ExamUpdatePayload } from '@/interfaces/ExamsProps'
 import type { Question } from '@/interfaces/QuestionProps'
 import LoadingBar from '@/components/ui/LoadingBar'
-import ExamInfo from '@/components/exam/ExamInfo'
-import QuestionList from '@/components/exam/QuestionList'
-import SidebarActions from '@/components/exam/SidebarActions'
-import ExistingQuestionsModal from '@/components/modals/ExistingQuestions'
+import ExamInfo from '@/components/app/exam/ExamInfo'
+import QuestionList from '@/components/app/exam/QuestionList'
+import SidebarActions from '@/components/app/exam/SidebarActions'
+import ExistingQuestionsModal from '@/components/ui/Modals/CreateQuestionBank'
+import AddQuestionsModal from '@/components/ui/Modals/AddQuestionsModal'
 
 export default function ExamPage() {
   const { id } = useParams()
   const router = useRouter()
   const examId = Array.isArray(id) ? id[0] : id ?? ''
 
-  const [exam, setExam] = useState<FullExam | null>(null)
+  const [exam,     setExam]     = useState<FullExam | null>(null)
   const [questions, setQuestions] = useState<Question[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading,  setLoading]  = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [showAddQuestion, setShowAddQuestion] = useState(false)
-  const [showExisting, setShowExisting] = useState(false)
-  const [newQuestion, setNewQuestion] = useState<Partial<Question>>({
+  const [showExisting,    setShowExisting]    = useState(false)
+  const [newQuestion,     setNewQuestion]     = useState<Partial<Question>>({
     text: '',
     questionType: 'OBJ',
     alternatives: Array(4).fill('').map(() => ({ content: '', correct: false })),
@@ -58,7 +59,6 @@ export default function ExamPage() {
           router.replace(`/exams/${created.id}`)
           return
         }
-
         const data = await getExam(examId)
         setExam(data)
         setQuestions(data.allQuestions)
@@ -78,8 +78,7 @@ export default function ExamPage() {
       </div>
     )
   }
-
-  if (notFound) {
+  if (notFound || !exam) {
     return (
       <div className="h-screen flex items-center justify-center">
         <p className="text-xl text-red-600">⚠️ Prova não encontrada</p>
@@ -89,7 +88,6 @@ export default function ExamPage() {
 
   const addQuestion = () => {
     if (!newQuestion.text?.trim()) return
-
     const q: Question = {
       id: Date.now().toString(),
       text: newQuestion.text.trim(),
@@ -97,7 +95,6 @@ export default function ExamPage() {
       alternatives:
         newQuestion.questionType === 'OBJ' ? newQuestion.alternatives! : undefined,
     }
-
     setQuestions(prev => [...prev, q])
     setNewQuestion({
       text: '',
@@ -106,10 +103,8 @@ export default function ExamPage() {
     })
     setShowAddQuestion(false)
   }
-
   const removeQuestion = (qid: string) =>
     setQuestions(prev => prev.filter(q => q.id !== qid))
-
   const updateQuestionOption = (idx: number, value: string) => {
     setNewQuestion(prev => {
       const alts = [...(prev.alternatives ?? [])]
@@ -124,19 +119,19 @@ export default function ExamPage() {
 
       <div className="w-full max-w-4xl mx-auto space-y-6 p-0">
         <ExamInfo
-          title={exam!.title}
-          description={exam!.description ?? ''}
+          title={exam.title}
+          description={exam.description ?? ''}
           onTitleChange={v => {
             setExam(prev => prev && { ...prev, title: v })
             if (!isFirstUpdate.current) {
-              debouncedUpdate({ title: v, description: exam!.description ?? '' })
+              debouncedUpdate({ title: v, description: exam.description ?? '' })
             }
             isFirstUpdate.current = false
           }}
           onDescriptionChange={v => {
             setExam(prev => prev && { ...prev, description: v })
             if (!isFirstUpdate.current) {
-              debouncedUpdate({ title: exam!.title, description: v })
+              debouncedUpdate({ title: exam.title, description: v })
             }
             isFirstUpdate.current = false
           }}
@@ -166,14 +161,25 @@ export default function ExamPage() {
 
       <ExistingQuestionsModal
         visible={showExisting}
-        examId={exam!.id}
-        currentBankIds={exam!.examQuestionBanks.map(b => b.questionBank.id)}
+        examId={exam.id}
+        currentBankIds={exam.examQuestionBanks.map(b => b.questionBank.id)}
         currentQuestionIds={questions.map(q => q.id)}
         onClose={() => setShowExisting(false)}
         onAdded={updated => {
           setExam(updated)
           setQuestions(updated.allQuestions)
           setShowExisting(false)
+        }}
+      />
+
+      <AddQuestionsModal
+        visible={showAddQuestion}
+        examId={exam.id}
+        onClose={() => setShowAddQuestion(false)}
+        onAdded={updated => {
+          setExam(updated)
+          setQuestions(updated.allQuestions)
+          setShowAddQuestion(false)
         }}
       />
     </div>

@@ -1,5 +1,3 @@
-// interfaces/Activities.ts
-
 import { ReactNode } from 'react'
 
 export interface ActionButtonProps {

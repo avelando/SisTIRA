@@ -3,18 +3,18 @@
 import React, { useState } from 'react'
 import { Plus, Minus, Check } from 'lucide-react'
 import { QuestionModalProps } from '@/interfaces/QuestionProps'
-import { BaseModal } from '@/components/modals/BaseModal'
+import { BaseModal } from '@/components/ui/Modals/BaseModal'
 import { useQuestionModal } from '@/hooks/modals/useQuestionModal'
 
 const EDUCATION_LEVELS = [
-  '1º ano EF','2º ano EF','3º ano EF','4º ano EF','5º ano EF',
-  '6º ano EF','7º ano EF','8º ano EF','9º ano EF',
-  '1º ano EM','2º ano EM','3º ano EM',
-  'Graduação','Especialização','Mestrado','Doutorado'
+  '1º ano EF', '2º ano EF', '3º ano EF', '4º ano EF', '5º ano EF',
+  '6º ano EF', '7º ano EF', '8º ano EF', '9º ano EF',
+  '1º ano EM', '2º ano EM', '3º ano EM',
+  'Graduação', 'Especialização', 'Mestrado', 'Doutorado'
 ] as const
 
 const DIFFICULTIES = [
-  'Muito fácil','Fácil','Médio','Difícil','Muito difícil'
+  'Muito fácil', 'Fácil', 'Médio', 'Difícil', 'Muito difícil'
 ] as const
 
 export const QuestionModal: React.FC<QuestionModalProps> = ({
@@ -46,7 +46,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   const [disciplineInput, setDisciplineInput] = useState('')
 
   const handleSave = () => {
-    handleSubmit({ preventDefault: () => {} } as React.FormEvent)
+    handleSubmit({ preventDefault: () => { } } as React.FormEvent)
   }
 
   const handleDisciplineKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -215,11 +215,10 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                   <button
                     type="button"
                     onClick={() => updateAlt(i, 'correct', !alt.correct)}
-                    className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors ${
-                      alt.correct
-                        ? 'bg-green-600 border-green-600 text-white'
-                        : 'border-slate-300 hover:border-slate-400'
-                    }`}
+                    className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors ${alt.correct
+                      ? 'bg-green-600 border-green-600 text-white'
+                      : 'border-slate-300 hover:border-slate-400'
+                      }`}
                   >
                     {alt.correct && <Check size={14} />}
                   </button>
