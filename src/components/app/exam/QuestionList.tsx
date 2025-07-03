@@ -1,32 +1,26 @@
+'use client'
+
+import { Question } from '@/interfaces/QuestionProps'
 import QuestionCard from './QuestionCard'
 import EmptyQuestions from './EmptyQuestions'
-import { Question } from '@/interfaces/QuestionProps'
-import { useState } from 'react'
 
 interface QuestionListProps {
   questions: Question[]
-  showAdd: boolean
   showExisting: boolean
-  onAddNew: () => void
   onOpenExisting: () => void
   onRemove: (id: string) => void
-  onChangeNew: (q: Partial<Question>) => void
-  onAddQuestion: () => void
-  onUpdateOption: (idx: number, v: string) => void
-  newQuestion: Partial<Question>
+  onEdit: (id: string) => void
 }
 
 export default function QuestionList({
   questions,
-  showAdd,
-  onAddNew,
+  showExisting,
+  onOpenExisting,
   onRemove,
+  onEdit,
 }: QuestionListProps) {
-
-  const [showAddQuestionModal, setShowAddQuestionModal] = useState(false)
-  
   return (
-    <>
+    <div className="flex flex-col gap-4">
       {questions.length > 0 ? (
         questions.map((q, idx) => (
           <QuestionCard
@@ -34,13 +28,14 @@ export default function QuestionList({
             question={q}
             index={idx}
             onRemove={onRemove}
+            onEdit={onEdit}
           />
         ))
       ) : (
-        !showAdd && (
-          <EmptyQuestions onAddNew={onAddNew} />
+        !showExisting && (
+          <EmptyQuestions onOpen={onOpenExisting} />
         )
       )}
-    </>
+    </div>
   )
 }

@@ -48,7 +48,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-6 overflow-y-auto flex-1 bg-gray-100">
           {children}
         </div>
 
