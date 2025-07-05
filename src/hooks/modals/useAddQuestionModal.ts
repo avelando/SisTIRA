@@ -35,7 +35,7 @@ export function useAddQuestionModal({
   visible,
   examId,
   currentBankIds = [],
-  currentQuestionIds = [],
+  currentQuestionIds = [], 
   onClose,
   onAdded,
   createMode = false,

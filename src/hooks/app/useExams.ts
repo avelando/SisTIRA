@@ -22,8 +22,20 @@ export function useExams(itemsPerPage = 10) {
 
   useEffect(() => {
     ;(async () => {
-      const data = await getExams()
-      setExams(data)
+      try {
+        const data = await getExams()
+
+        const summaries: ExamSummary[] = data.map(e => ({
+          id: e.id,
+          title: e.title,
+          createdAt: e.createdAt,
+          questionsCount: e._count.questions,
+        }))
+
+        setExams(summaries)
+      } catch (err) {
+        console.error('Erro ao listar provas:', err)
+      }
     })()
   }, [])
 

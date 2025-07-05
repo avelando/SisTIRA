@@ -3,12 +3,19 @@ import {
   ExamPayload,
   FullExam,
   ExamForResponse,
-  SubmitResponseDto
+  SubmitResponseDto,
 } from '@/interfaces/ExamsProps'
 import { CountsResponse } from '@/interfaces/CountsResponse'
 
-export const getExams = async (): Promise<FullExam[]> => {
-  const { data } = await api.get<FullExam[]>('/exams')
+export interface RawExam {
+  id: string
+  title: string
+  createdAt: string
+  _count: { questions: number }
+}
+
+export const getExams = async (): Promise<RawExam[]> => {
+  const { data } = await api.get<RawExam[]>('/exams')
   return data
 }
 
@@ -18,7 +25,9 @@ export const getExam = async (id: string): Promise<FullExam> => {
   return data
 }
 
-export const createExam = async (payload: ExamPayload): Promise<FullExam> => {
+export const createExam = async (
+  payload: ExamPayload
+): Promise<FullExam> => {
   const { data } = await api.post<FullExam>('/exams', payload)
   return data
 }
@@ -32,7 +41,9 @@ export const updateExam = async (
   return data
 }
 
-export const deleteExam = async (id: string): Promise<{ message: string }> => {
+export const deleteExam = async (
+  id: string
+): Promise<{ message: string }> => {
   if (!id) throw new Error('deleteExam: id inválido')
   const { data } = await api.delete<{ message: string }>(`/exams/${id}`)
   return data
@@ -92,12 +103,14 @@ export const getUserCounts = async (): Promise<CountsResponse> => {
 }
 
 export const getExamForResponse = async (
-  examId: string
+  identifier: string,
+  accessCode?: string,
 ): Promise<ExamForResponse> => {
-  if (!examId) throw new Error('getExamForResponse: id inválido')
   const { data } = await api.get<ExamForResponse>(
-    `/exams/respond/${examId}`,
-    { withCredentials: true }
+    `/exams/respond/${encodeURIComponent(identifier)}`,
+    {
+      params: accessCode ? { accessCode } : {},
+    }
   )
   return data
 }
@@ -105,16 +118,14 @@ export const getExamForResponse = async (
 export const submitExamResponse = async (
   payload: SubmitResponseDto
 ): Promise<void> => {
-  await api.post('/exams/respond', payload, { withCredentials: true })
+  await api.post('/exams/respond', payload)
 }
 
 export const checkExamAccess = async (
   examId: string
 ): Promise<{ hasAccess: boolean }> => {
-  if (!examId) throw new Error('checkExamAccess: id inválido')
   const { data } = await api.get<{ hasAccess: boolean }>(
-    `/exams/${examId}/check-access`,
-    { withCredentials: true }
+    `/exams/${examId}/access`
   )
   return data
 }
@@ -122,12 +133,10 @@ export const checkExamAccess = async (
 export const grantExamAccess = async (
   examId: string,
   accessCode: string
-): Promise<ExamForResponse> => {
-  if (!examId) throw new Error('grantExamAccess: id inválido')
-  const { data } = await api.post<ExamForResponse>(
-    `/exams/${examId}/grant-access`,
-    { accessCode },
-    { withCredentials: true }
+): Promise<{ success: boolean }> => {
+  const { data } = await api.post<{ success: boolean }>(
+    `/exams/${examId}/access`,
+    { accessCode }
   )
   return data
 }
@@ -135,10 +144,8 @@ export const grantExamAccess = async (
 export const getExamForResponseAuth = async (
   examId: string
 ): Promise<ExamForResponse> => {
-  if (!examId) throw new Error('getExamForResponseAuth: id inválido')
   const { data } = await api.get<ExamForResponse>(
-    `/exams/${examId}/respond-auth`,
-    { withCredentials: true }
+    `/exams/${examId}/respond-auth`
   )
   return data
 }

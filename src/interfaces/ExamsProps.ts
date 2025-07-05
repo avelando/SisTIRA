@@ -83,5 +83,5 @@ export interface ExamSummary {
   id: string
   title: string
   createdAt: string
-  questionsCount?: number
+  questionsCount: number
 }

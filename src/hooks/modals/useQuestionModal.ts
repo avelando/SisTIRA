@@ -12,6 +12,8 @@ export interface UseQuestionModalParams {
   loading?: boolean
 }
 
+type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT'
+
 export function useQuestionModal({
   question,
   mode,
@@ -30,7 +32,7 @@ export function useQuestionModal({
     useModelAnswers: boolean
     disciplines: string[]
     alternatives: { content: string; correct: boolean }[]
-    modelAnswers: { id?: string; type: string; content: string }[]
+    modelAnswers: { id?: string; type: ModelAnswerType; content: string }[]
   }>({
     id: undefined,
     text: '',
@@ -64,7 +66,7 @@ export function useQuestionModal({
         modelAnswers:
           question.modelAnswers?.map(ma => ({
             id: ma.id,
-            type: ma.type,
+            type: ma.type as ModelAnswerType,
             content: ma.content,
           })) ?? [],
       })
@@ -83,6 +85,19 @@ export function useQuestionModal({
       })
     }
   }, [question, mode, visible])
+
+  useEffect(() => {
+    if (formData.useModelAnswers) {
+      const types: ModelAnswerType[] = ['WRONG', 'MEDIAN', 'CORRECT']
+      const merged = types.map(t => {
+        const exist = formData.modelAnswers.find(m => m.type === t)
+        return exist ?? { id: undefined, type: t, content: '' }
+      })
+      setFormData(fd => ({ ...fd, modelAnswers: merged }))
+    } else {
+      setFormData(fd => ({ ...fd, modelAnswers: [] }))
+    }
+  }, [formData.useModelAnswers])
 
   const updateField = useCallback<
     <K extends keyof typeof formData>(field: K, value: typeof formData[K]) => void
@@ -123,28 +138,11 @@ export function useQuestionModal({
   )
 
   const updateModel = useCallback(
-    (i: number, key: 'type' | 'content', val: string) => {
+    (i: number, val: string) => {
       const newModels = formData.modelAnswers.map((ma, idx) =>
-        idx === i ? { ...ma, [key]: val } : ma
+        idx === i ? { ...ma, content: val } : ma
       )
       updateField('modelAnswers', newModels)
-    },
-    [formData.modelAnswers, updateField]
-  )
-
-  const addModel = useCallback(() => {
-    updateField('modelAnswers', [
-      ...formData.modelAnswers,
-      { id: undefined, type: '', content: '' },
-    ])
-  }, [formData.modelAnswers, updateField])
-
-  const removeModel = useCallback(
-    (i: number) => {
-      updateField(
-        'modelAnswers',
-        formData.modelAnswers.filter((_, idx) => idx !== i)
-      )
     },
     [formData.modelAnswers, updateField]
   )
@@ -161,6 +159,14 @@ export function useQuestionModal({
         !formData.alternatives.some(a => a.correct && a.content.trim())
       ) {
         alert('Marque uma alternativa correta.')
+        return
+      }
+      if (
+        formData.questionType === 'SUB' &&
+        formData.useModelAnswers &&
+        formData.modelAnswers.some(m => !m.content.trim())
+      ) {
+        alert('Preencha todas as respostas-modelo.')
         return
       }
 
@@ -189,8 +195,6 @@ export function useQuestionModal({
     addAlt,
     removeAlt,
     updateModel,
-    addModel,
-    removeModel,
     handleSubmit,
   }
 }
