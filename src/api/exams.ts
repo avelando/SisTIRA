@@ -14,6 +14,23 @@ export interface RawExam {
   _count: { questions: number }
 }
 
+export interface ExamAnswerResult {
+  id: string
+  question: { text: string; questionType: 'OBJ' | 'SUB' }
+  alternative?: { content: string }
+  subjectiveText?: string
+  score?: number
+  feedback?: string
+}
+
+export interface ExamResponseResult {
+  id: string
+  examId: string
+  userId: string
+  createdAt: string
+  answers: ExamAnswerResult[]
+}
+
 export const getExams = async (): Promise<RawExam[]> => {
   const { data } = await api.get<RawExam[]>('/exams')
   return data
@@ -108,17 +125,26 @@ export const getExamForResponse = async (
 ): Promise<ExamForResponse> => {
   const { data } = await api.get<ExamForResponse>(
     `/exams/respond/${encodeURIComponent(identifier)}`,
-    {
-      params: accessCode ? { accessCode } : {},
-    }
+    { params: accessCode ? { accessCode } : {} }
   )
   return data
 }
 
 export const submitExamResponse = async (
   payload: SubmitResponseDto
-): Promise<void> => {
-  await api.post('/exams/respond', payload)
+): Promise<{
+  id: string
+  examId: string
+  userId: string
+  createdAt: string
+}> => {
+  const { data } = await api.post<{
+    id: string
+    examId: string
+    userId: string
+    createdAt: string
+  }>('/exams/respond', payload)
+  return data
 }
 
 export const checkExamAccess = async (
@@ -146,6 +172,16 @@ export const getExamForResponseAuth = async (
 ): Promise<ExamForResponse> => {
   const { data } = await api.get<ExamForResponse>(
     `/exams/${examId}/respond-auth`
+  )
+  return data
+}
+
+export const getResponseResult = async (
+  responseId: string
+): Promise<ExamResponseResult> => {
+  if (!responseId) throw new Error('responseId inválido')
+  const { data } = await api.get<ExamResponseResult>(
+    `/exams/responses/${encodeURIComponent(responseId)}`
   )
   return data
 }

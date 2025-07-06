@@ -96,9 +96,17 @@ export default function AuthenticatedLayout({
   }, [router])
 
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST', credentials: 'include' })
-    router.push('/')
+    try {
+      await fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      router.push('/auth/login')
+    } catch (e) {
+      console.error('Logout falhou', e)
+    }
   }
+
   const handleToggle = () => setIsCollapsed(v => !v)
   const isRouteActive = (cur: string, route: string) =>
     cur === route || cur.startsWith(`${route}/`)
@@ -216,7 +224,10 @@ export default function AuthenticatedLayout({
                 >
                   <User size={16} /> Perfil
                 </button>
-                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                <button
+                  onClick={() => router.push('/settings')}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
                   <Settings size={16} /> Configurações
                 </button>
               </div>

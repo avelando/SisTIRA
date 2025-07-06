@@ -74,14 +74,50 @@ export interface SubmitResponseDto {
   }>
 }
 
-export interface ModelAnswer {
-  type: ModelAnswerType
-  content: string
-}
-
 export interface ExamSummary {
   id: string
   title: string
   createdAt: string
   questionsCount: number
+}
+
+export interface SubmitResponseResult {
+  id: string
+  examId: string
+  userId: string
+  createdAt: string
+}
+
+export interface ExamAnswerResult {
+  id: string
+  question: {
+    text: string
+    questionType: 'OBJ' | 'SUB'
+  }
+  alternative?: { content: string }
+  subjectiveText?: string
+  score?: number
+  feedback?: string
+}
+
+export interface ExamAnswerResult {
+  id: string
+  question: {
+    text: string
+    questionType: 'OBJ' | 'SUB'
+  }
+  alternative?: {
+    content: string
+  }
+  subjectiveText?: string
+  score?: number
+  feedback?: string
+}
+
+export interface ExamResponseResult {
+  id: string
+  examId: string
+  userId: string
+  createdAt: string
+  answers: ExamAnswerResult[]
 }

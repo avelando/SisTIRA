@@ -26,8 +26,11 @@ export default function RespondLayout({
     ;(async () => {
       try {
         const u = await checkAuth()
-        if (!u) router.push('/auth/login')
-        else setUser(u)
+        if (!u) {
+          router.push('/auth/login')
+        } else {
+          setUser(u)
+        }
       } catch {
         router.push('/auth/login')
       }
@@ -45,8 +48,15 @@ export default function RespondLayout({
   }, [])
 
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST', credentials: 'include' })
-    router.push('/')
+    try {
+      await fetch('/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      router.push('/auth/login')
+    } catch (err) {
+      console.error('Logout falhou', err)
+    }
   }
 
   const getPageTitle = (path: string) => {
@@ -100,7 +110,10 @@ export default function RespondLayout({
             >
               <User size={16} /> Perfil
             </button>
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+            <button
+              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              onClick={() => router.push('/settings')}
+            >
               <Settings size={16} /> Configurações
             </button>
             <button
