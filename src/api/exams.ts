@@ -4,8 +4,11 @@ import {
   FullExam,
   ExamForResponse,
   SubmitResponseDto,
+  SubmitResponseResult,
 } from '@/interfaces/ExamsProps'
 import { CountsResponse } from '@/interfaces/CountsResponse'
+
+import { ExamResponseResult } from '@/interfaces/ExamsProps'
 
 export interface RawExam {
   id: string
@@ -21,14 +24,6 @@ export interface ExamAnswerResult {
   subjectiveText?: string
   score?: number
   feedback?: string
-}
-
-export interface ExamResponseResult {
-  id: string
-  examId: string
-  userId: string
-  createdAt: string
-  answers: ExamAnswerResult[]
 }
 
 export const getExams = async (): Promise<RawExam[]> => {
@@ -132,18 +127,8 @@ export const getExamForResponse = async (
 
 export const submitExamResponse = async (
   payload: SubmitResponseDto
-): Promise<{
-  id: string
-  examId: string
-  userId: string
-  createdAt: string
-}> => {
-  const { data } = await api.post<{
-    id: string
-    examId: string
-    userId: string
-    createdAt: string
-  }>('/exams/respond', payload)
+): Promise<SubmitResponseResult> => {
+  const { data } = await api.post<SubmitResponseResult>('/exams/respond', payload)
   return data
 }
 
@@ -183,5 +168,10 @@ export const getResponseResult = async (
   const { data } = await api.get<ExamResponseResult>(
     `/exams/responses/${encodeURIComponent(responseId)}`
   )
+  return data
+}
+
+export const getExamResponses = async (examId: string): Promise<ExamResponseResult[]> => {
+  const { data } = await api.get<ExamResponseResult[]>(`/exams/${examId}/responses`)
   return data
 }

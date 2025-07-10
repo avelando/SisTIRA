@@ -1,123 +1,120 @@
-export type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT'
+export type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT';
 
 export interface ExamPayload {
-  title: string
-  description?: string
-  isPublic?: boolean
-  generateAccessCode?: boolean
+  title: string;
+  description?: string;
+  isPublic?: boolean;
+  generateAccessCode?: boolean;
 }
 
 export interface ExamUpdatePayload {
-  title: string
-  description: string
+  title: string;
+  description: string;
 }
 
 export interface ExamBank {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
 export interface ExamQuestionAlternative {
-  id: string
-  content: string
-  correct: boolean
+  id: string;
+  content: string;
+  correct: boolean;
 }
 
 export interface ExamQuestion {
-  id: string
-  text: string
-  questionType: 'OBJ' | 'SUB'
-  alternatives?: ExamQuestionAlternative[]
+  id: string;
+  text: string;
+  questionType: 'OBJ' | 'SUB';
+  alternatives?: ExamQuestionAlternative[];
 }
 
 export interface FullExam {
-  accessCode?: string
-  id: string
-  title: string
-  description?: string
-  createdAt: string
-  creatorId: string
+  accessCode?: string;
+  id: string;
+  title: string;
+  description?: string;
+  createdAt: string;
+  creatorId: string;
 
   examQuestionBanks: {
-    questionBank: ExamBank
-  }[]
+    questionBank: ExamBank;
+  }[];
 
-  allQuestions: ExamQuestion[]
+  allQuestions: ExamQuestion[];
 
-  questionCount: number
+  questionCount: number;
 }
 
 export interface QuestionForResponse {
-  id: string
-  text: string
-  questionType: 'OBJ' | 'SUB'
-  alternatives?: { id: string; content: string }[]
-  modelAnswers?: { type: ModelAnswerType; content: string }[]
+  id: string;
+  text: string;
+  questionType: 'OBJ' | 'SUB';
+  alternatives?: { id: string; content: string }[];
+  modelAnswers?: { type: ModelAnswerType; content: string }[];
 }
 
 export interface ExamForResponse {
-  examId: string
-  title: string
-  accessCode?: string
-  description?: string
-  createdBy?: string
-  questions: QuestionForResponse[]
+  examId: string;
+  title: string;
+  accessCode?: string;
+  description?: string;
+  createdBy?: string;
+  questions: QuestionForResponse[];
 }
 
 export interface SubmitResponseDto {
-  examId: string
-  accessCode?: string
+  examId: string;
+  accessCode?: string;
   answers: Array<{
-    questionId: string
-    alternativeId?: string
-    textResponse?: string
-  }>
+    questionId: string;
+    alternativeId?: string;
+    textResponse?: string;
+  }>;
 }
 
 export interface ExamSummary {
-  id: string
-  title: string
-  createdAt: string
-  questionsCount: number
+  id: string;
+  title: string;
+  createdAt: string;
+  questionsCount: number;
 }
 
 export interface SubmitResponseResult {
-  id: string
-  examId: string
-  userId: string
-  createdAt: string
+  id: string;
+  examId: string;
+  userId: string;
+  createdAt: string;
 }
 
 export interface ExamAnswerResult {
-  id: string
+  id: string;
   question: {
-    text: string
-    questionType: 'OBJ' | 'SUB'
-  }
-  alternative?: { content: string }
-  subjectiveText?: string
-  score?: number
-  feedback?: string
-}
-
-export interface ExamAnswerResult {
-  id: string
-  question: {
-    text: string
-    questionType: 'OBJ' | 'SUB'
-  }
+    id: string;
+    text: string;
+    questionType: 'OBJ' | 'SUB';
+  };
   alternative?: {
-    content: string
-  }
-  subjectiveText?: string
-  score?: number
-  feedback?: string
+    id: string;
+    content: string;
+    correct: boolean;
+  };
+  subjectiveText?: string;
+  score?: number;
+  feedback?: string;
 }
 
 export interface ExamResponseResult {
-  id: string
-  examId: string
-  userId: string
-  createdAt: string
-  answers: ExamAnswerResult[]
+  id: string;
+  examId: string;
+  userId: string;
+  createdAt: string;
+  user: {
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+  };
+  answers: ExamAnswerResult[];
 }

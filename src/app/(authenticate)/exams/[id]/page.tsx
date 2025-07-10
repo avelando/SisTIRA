@@ -6,6 +6,8 @@ import { createQuestion, updateQuestion } from '@/api/questions'
 import { addQuestionsToExam } from '@/api/exams'
 import debounce from 'lodash/debounce'
 
+import ResponsesModal from '@/components/ui/Modals/ResponsesModal'
+
 import {
   createExam,
   getExam,
@@ -23,6 +25,8 @@ import SidebarActions from '@/components/app/exam/SidebarActions'
 import AddQuestionsModal from '@/components/ui/Modals/AddQuestionsModal'
 import { QuestionModal } from '@/components/ui/Modals/QuestionModal'
 import ExpandableFAB from '@/components/ui/ExpandableFAB'
+import ShareExamFAB from '@/components/ui/ShareExamFAB'
+import ViewResponsesFAB from '@/components/ui/ViewResponsesFAB'
 
 export default function ExamPage() {
   const { id } = useParams()
@@ -33,6 +37,8 @@ export default function ExamPage() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+
+  const [responsesVisible, setResponsesVisible] = useState(false)
 
   const [showExisting, setShowExisting] = useState(false)
   const [showQuestionModal, setShowQuestionModal] = useState(false)
@@ -211,6 +217,16 @@ export default function ExamPage() {
       <ExpandableFAB
         onAddExisting={() => setShowExisting(true)}
         onCreateNew={handleCreate}
+      />
+
+      <ShareExamFAB examId={exam.id} accessCode={exam.accessCode ?? undefined} />
+
+      <ViewResponsesFAB onClick={() => setResponsesVisible(true)} />
+
+      <ResponsesModal
+        visible={responsesVisible}
+        examId={exam.id}
+        onClose={() => setResponsesVisible(false)}
       />
     </div>
   )
