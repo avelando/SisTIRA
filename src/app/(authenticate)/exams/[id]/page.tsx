@@ -2,15 +2,31 @@
 
 import React, { useEffect, useRef, useState, useTransition } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { createQuestion, updateQuestion } from '@/api/questions'
+import { addQuestionsToExam } from '@/api/exams'
 import debounce from 'lodash/debounce'
-import { createExam, getExam, updateExam } from '@/api/exams'
+
+import ResponsesModal from '@/components/ui/Modals/ResponsesModal'
+
+import {
+  createExam,
+  getExam,
+  updateExam,
+  removeQuestionsFromExam,
+} from '@/api/exams'
+import { getQuestion } from '@/api/questions'
 import type { FullExam, ExamUpdatePayload } from '@/interfaces/ExamsProps'
 import type { Question } from '@/interfaces/QuestionProps'
+
 import LoadingBar from '@/components/ui/LoadingBar'
-import ExamInfo from '@/components/exam/ExamInfo'
-import QuestionList from '@/components/exam/QuestionList'
-import SidebarActions from '@/components/exam/SidebarActions'
-import ExistingQuestionsModal from '@/components/modals/ExistingQuestions'
+import ExamInfo from '@/components/app/exam/ExamInfo'
+import QuestionList from '@/components/app/exam/QuestionList'
+import SidebarActions from '@/components/app/exam/SidebarActions'
+import AddQuestionsModal from '@/components/ui/Modals/AddQuestionsModal'
+import { QuestionModal } from '@/components/ui/Modals/QuestionModal'
+import ExpandableFAB from '@/components/ui/ExpandableFAB'
+import ShareExamFAB from '@/components/ui/ShareExamFAB'
+import ViewResponsesFAB from '@/components/ui/ViewResponsesFAB'
 
 export default function ExamPage() {
   const { id } = useParams()
@@ -19,35 +35,19 @@ export default function ExamPage() {
 
   const [exam, setExam] = useState<FullExam | null>(null)
   const [questions, setQuestions] = useState<Question[]>([])
-  const [showAddQuestion, setShowAddQuestion] = useState(false)
-  const [showExisting, setShowExisting] = useState(false)
-  const [newQuestion, setNewQuestion] = useState<Partial<Question>>({
-    text: '',
-    questionType: 'OBJ',
-    alternatives: Array(4).fill('').map(() => ({ content: '', correct: false })),
-  })
-  const [isPending, startTransition] = useTransition()
-  const isFirstLoad = useRef(true)
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
 
-  useEffect(() => {
-    if (!examId || examId === 'undefined') return;
-    (async () => {
-      if (examId === 'new') {
-        const created = await createExam({
-          title: 'Prova sem título',
-          description: '',
-          isPublic: false,
-          generateAccessCode: true,
-        })
-        router.replace(`/exams/${created.id}`)
-      } else {
-        const data = await getExam(examId)
-        setExam(data)
-        setQuestions(data.allQuestions)
-        isFirstLoad.current = false
-      }
-    })()
-  }, [examId, router])
+  const [responsesVisible, setResponsesVisible] = useState(false)
+
+  const [showExisting, setShowExisting] = useState(false)
+  const [showQuestionModal, setShowQuestionModal] = useState(false)
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
+
+  const [isPending, startTransition] = useTransition()
+  const isFirstUpdate = useRef(true)
+
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
 
   const debouncedUpdate = useRef(
     debounce((payload: ExamUpdatePayload) => {
@@ -61,86 +61,120 @@ export default function ExamPage() {
     }, 500)
   ).current
 
-  const addQuestion = () => {
-    if (!newQuestion.text?.trim()) return
+  useEffect(() => {
+    if (!examId) return
+    ;(async () => {
+      try {
+        if (examId === 'new') {
+          const created = await createExam({
+            title: 'Prova sem título',
+            description: '',
+            isPublic: false,
+            generateAccessCode: true,
+          })
+          router.replace(`/exams/${created.id}`)
+          return
+        }
+        const data = await getExam(examId)
+        setExam(data)
+        setQuestions(data.allQuestions)
+      } catch (err) {
+        console.error('Erro ao buscar prova:', err)
+        setNotFound(true)
+      } finally {
+        setLoading(false)
+      }
+    })()
+  }, [examId, router])
 
-    const q: Question = {
-      id: Date.now().toString(),
-      text: newQuestion.text.trim(),
-      questionType: newQuestion.questionType!,
-      alternatives:
-        newQuestion.questionType === 'OBJ' ? newQuestion.alternatives! : undefined,
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p>Carregando prova…</p>
+      </div>
+    )
+  }
+  if (notFound || !exam) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-xl text-red-600">⚠️ Prova não encontrada</p>
+      </div>
+    )
+  }
+
+  const handleRemove = async (qid: string) => {
+    if (!confirm('Deseja remover esta questão da prova?')) return
+    try {
+      await removeQuestionsFromExam(examId, [qid])
+      const fresh = await getExam(examId)
+      setExam(fresh)
+      setQuestions(fresh.allQuestions)
+    } catch (err) {
+      console.error(err)
+      alert('Erro ao remover questão.')
     }
-
-    setQuestions(prev => [...prev, q])
-    setNewQuestion({
-      text: '',
-      questionType: 'OBJ',
-      alternatives: Array(4).fill('').map(() => ({ content: '', correct: false })),
-    })
-    setShowAddQuestion(false)
   }
 
-  const removeQuestion = (qid: string) =>
-    setQuestions(prev => prev.filter(q => q.id !== qid))
-
-  const updateQuestionOption = (idx: number, value: string) => {
-    setNewQuestion(prev => {
-      const alts = [...(prev.alternatives ?? [])]
-      alts[idx].content = value
-      return { ...prev, alternatives: alts }
-    })
+  const handleEdit = async (qid: string) => {
+    try {
+      const full = await getQuestion(qid)
+      setEditingQuestion(full)
+      setShowQuestionModal(true)
+      setModalMode('edit')
+    } catch (err) {
+      console.error('Não foi possível carregar a questão:', err)
+      alert('Erro ao carregar dados da questão.')
+    }
   }
 
-  if (!exam) {
-    return <p className="text-center mt-20">Carregando prova…</p>
+  const handleCreate = () => {
+    setEditingQuestion(null)
+    setModalMode('create')
+    setShowQuestionModal(true)
   }
 
   return (
     <div className="flex flex-col">
       <LoadingBar loading={isPending} />
 
-      <div className="w-full max-w-4xl mx-auto space-y-6 p-0">
+      <div className="w-full max-w-[75%] mx-auto space-y-6 p-0">
         <ExamInfo
           title={exam.title}
           description={exam.description ?? ''}
           onTitleChange={v => {
             setExam(prev => prev && { ...prev, title: v })
-            if (!isFirstLoad.current && v !== exam.title) {
-              debouncedUpdate({ title: v, description: exam.description ?? ''})
+            if (!isFirstUpdate.current) {
+              debouncedUpdate({ title: v, description: exam.description ?? '' })
             }
+            isFirstUpdate.current = false
           }}
           onDescriptionChange={v => {
             setExam(prev => prev && { ...prev, description: v })
-            if (!isFirstLoad.current && v !== exam.description) {
+            if (!isFirstUpdate.current) {
               debouncedUpdate({ title: exam.title, description: v })
             }
+            isFirstUpdate.current = false
           }}
         />
 
         <div className="relative">
           <QuestionList
             questions={questions}
-            showAdd={showAddQuestion}
             showExisting={showExisting}
-            newQuestion={newQuestion}
-            onAddNew={() => setShowAddQuestion(true)}
             onOpenExisting={() => setShowExisting(true)}
-            onChangeNew={q => setNewQuestion(q)}
-            onAddQuestion={addQuestion}
-            onUpdateOption={updateQuestionOption}
-            onRemove={removeQuestion}
+            onRemove={handleRemove}
+            onEdit={handleEdit}
           />
 
           <SidebarActions
             visible={questions.length > 0}
-            onAddQuestion={() => setShowAddQuestion(true)}
             onOpenBank={() => setShowExisting(true)}
+            onAddQuestion={handleCreate}
           />
         </div>
       </div>
 
-      <ExistingQuestionsModal
+      <AddQuestionsModal
         visible={showExisting}
         examId={exam.id}
         currentBankIds={exam.examQuestionBanks.map(b => b.questionBank.id)}
@@ -151,6 +185,48 @@ export default function ExamPage() {
           setQuestions(updated.allQuestions)
           setShowExisting(false)
         }}
+      />
+
+      <QuestionModal
+        visible={showQuestionModal}
+        mode={modalMode}
+        question={modalMode === 'edit' ? editingQuestion! : undefined}
+        onClose={() => setShowQuestionModal(false)}
+        onSubmit={async data => {
+          try {
+            if (modalMode === 'create') {
+              const created = await createQuestion(data)
+              const updated = await addQuestionsToExam(examId, [created.id])
+              setExam(updated)
+              setQuestions(updated.allQuestions)
+            } else {
+              await updateQuestion(data.id!, data)
+              const fresh = await getExam(examId)
+              setExam(fresh)
+              setQuestions(fresh.allQuestions)
+            }
+          } catch (err) {
+            console.error(err)
+            alert('Erro ao salvar questão.')
+          } finally {
+            setShowQuestionModal(false)
+          }
+        }}
+      />
+
+      <ExpandableFAB
+        onAddExisting={() => setShowExisting(true)}
+        onCreateNew={handleCreate}
+      />
+
+      <ShareExamFAB examId={exam.id} accessCode={exam.accessCode ?? undefined} />
+
+      <ViewResponsesFAB onClick={() => setResponsesVisible(true)} />
+
+      <ResponsesModal
+        visible={responsesVisible}
+        examId={exam.id}
+        onClose={() => setResponsesVisible(false)}
       />
     </div>
   )

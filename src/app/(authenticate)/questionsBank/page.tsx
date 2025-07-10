@@ -17,7 +17,7 @@ import {
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Pagination } from '@/components/ui/Pagination/Pagination'
-import ExistingQuestionsModal from '@/components/modals/ExistingQuestions'
+import ExistingQuestionsModal from '@/components/ui/Modals/CreateQuestionBank'
 import { QuestionBankProps } from '@/interfaces/QuestionBankProps'
 
 export default function QuestionBankPage() {
@@ -40,7 +40,7 @@ export default function QuestionBankPage() {
   const closeModal = () => setModalMode(null)
 
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       const data = await getQuestionBanks()
       setBanks(data)
       setSelected([])
@@ -120,18 +120,18 @@ export default function QuestionBankPage() {
           setCurrentPage(1)
         }}
         statusValue=""
-        onStatusChange={() => {}}
-        onStatusClear={() => {}}
-        onStatusApply={() => {}}
+        onStatusChange={() => { }}
+        onStatusClear={() => { }}
+        onStatusApply={() => { }}
         questionFilters={{
           questionType: '',
           educationLevel: '',
           difficulty: '',
           disciplineId: '',
         }}
-        onQuestionFilterChange={() => {}}
-        onQuestionFilterClear={() => {}}
-        onQuestionFilterApply={() => {}}
+        onQuestionFilterChange={() => { }}
+        onQuestionFilterClear={() => { }}
+        onQuestionFilterApply={() => { }}
         disciplines={[]}
         bankFilterValue={filters.disciplineId}
         onBankFilterChange={v => {
@@ -295,7 +295,7 @@ export default function QuestionBankPage() {
         currentBankIds={[]}
         currentQuestionIds={[]}
         onClose={closeModal}
-        onAdded={() => {}}
+        onAdded={() => { }}
         onCreated={newBank => {
           setBanks(prev => [newBank, ...prev])
           closeModal()

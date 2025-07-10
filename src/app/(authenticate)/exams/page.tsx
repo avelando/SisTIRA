@@ -2,10 +2,9 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, Edit, Trash2, Calendar, Plus } from 'lucide-react'
+import { Eye, Edit, Trash2, Calendar } from 'lucide-react'
 
 import { useExams } from '@/hooks/app/useExams'
-import { createExam } from '@/api/exams'
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Pagination } from '@/components/ui/Pagination/Pagination'
@@ -32,15 +31,8 @@ export default function ExamsPage() {
     formatDate,
   } = useExams()
 
-  // cria uma prova "vazia" e navega direto para /exams/:id
-  async function handleNewExam() {
-    const created = await createExam({
-      title: 'Prova sem título',
-      description: '',
-      isPublic: false,
-      generateAccessCode: true,
-    })
-    router.push(`/exams/${created.id}`)
+  function handleNewExam() {
+    router.push('/exams/new')
   }
 
   return (
@@ -114,9 +106,10 @@ export default function ExamsPage() {
                   )}
                 </label>
                 <div className="text-sm text-slate-600">
-                  Mostrando {Math.min(filteredExams.length, (currentPage - 1) * 10 + 1)} a{' '}
-                  {Math.min(currentPage * 10, filteredExams.length)} de {filteredExams.length}{' '}
-                  provas
+                  Mostrando{' '}
+                  {Math.min(filteredExams.length, (currentPage - 1) * 10 + 1)} a{' '}
+                  {Math.min(currentPage * 10, filteredExams.length)} de{' '}
+                  {filteredExams.length} provas
                 </div>
               </div>
             </div>
@@ -158,8 +151,12 @@ export default function ExamsPage() {
                             className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 focus:ring-opacity-50"
                           />
                           <div>
-                            <div className="font-medium text-slate-900">{exam.title}</div>
-                            <div className="text-xs text-slate-500">ID: {exam.id.slice(0, 8)}…</div>
+                            <div className="font-medium text-slate-900">
+                              {exam.title}
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              ID: {exam.id.slice(0, 8)}…
+                            </div>
                           </div>
                         </div>
                       </td>

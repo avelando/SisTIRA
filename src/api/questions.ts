@@ -29,10 +29,25 @@ export const getQuestion = async (id: string) => {
 
 export const updateQuestion = async (id: string, data: any) => {
   try {
-    const response = await api.put(`/questions/${id}`, data);
+    const { id: _, modelAnswers, ...rest } = data;
+
+    const payload: any = {
+      ...rest,
+    };
+
+    if (modelAnswers) {
+      payload.modelAnswers = modelAnswers.map((ma: any) => ({
+        type: ma.type,
+        content: ma.content,
+      }));
+    }
+
+    const response = await api.put(`/questions/${id}`, payload);
     return response.data;
   } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao atualizar questão.');
+    throw new Error(
+      error.response?.data?.message || 'Erro ao atualizar questão.'
+    );
   }
 };
 

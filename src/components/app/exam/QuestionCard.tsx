@@ -1,11 +1,11 @@
-import { Edit3, Trash2 } from 'lucide-react'
+import { Edit, Edit3, Trash2 } from 'lucide-react'
 import { Question } from '@/interfaces/QuestionProps'
 
 interface QuestionCardProps {
   question: Question
   index: number
   onRemove: (id: string) => void
-  onEdit?: (id: string) => void
+  onEdit: (id: string) => void
 }
 
 export default function QuestionCard({
@@ -29,13 +29,19 @@ export default function QuestionCard({
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          {onEdit && (
-            <button onClick={() => onEdit(q.id)} className="p-1 hover:text-blue-600">
-              <Edit3 />
-            </button>
-          )}
-          <button onClick={() => onRemove(q.id)} className="p-1 hover:text-red-600">
-            <Trash2 />
+          <button
+            onClick={() => onEdit(q.id)}
+            title="Editar"
+            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            <Edit size={16} />
+          </button>
+          <button
+            onClick={() => onRemove(q.id)}
+            title="Deletar"
+            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          >
+            <Trash2 size={16} />
           </button>
         </div>
       </div>

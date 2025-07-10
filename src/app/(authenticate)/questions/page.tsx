@@ -5,16 +5,16 @@ import { HelpCircle, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
-import { QuestionCard } from '@/components/questions/QuestionCard'
-import { QuestionsSkeleton } from '@/components/questions/QuestionsSkeleton'
-import { QuestionModal } from '@/components/modals/QuestionModal'
+import { QuestionCard } from '@/components/app/questions/QuestionCard'
+import { QuestionsSkeleton } from '@/components/app/questions/QuestionsSkeleton'
+import { QuestionModal } from '@/components/ui/Modals/QuestionModal'
 import { useDisciplines } from '@/hooks/useDisciplines'
 import { useResponsive } from '@/hooks/useResponsive'
 import { useQuestions } from '@/hooks/app/useQuestions'
 
 export default function QuestionsPage() {
   const router = useRouter()
-  const { isMobile }    = useResponsive()
+  const { isMobile } = useResponsive()
   const { disciplines } = useDisciplines()
   const {
     filteredQuestions,
@@ -54,9 +54,9 @@ export default function QuestionsPage() {
         onToggleFilters={() => setIsFilterOpen(o => !o)}
 
         statusValue=""
-        onStatusChange={() => {}}
-        onStatusClear={() => {}}
-        onStatusApply={() => {}}
+        onStatusChange={() => { }}
+        onStatusClear={() => { }}
+        onStatusApply={() => { }}
 
         questionFilters={filters}
         onQuestionFilterChange={(field, value) =>
@@ -64,22 +64,22 @@ export default function QuestionsPage() {
         }
         onQuestionFilterClear={() =>
           setFilters({
-            questionType:   '',
+            questionType: '',
             educationLevel: '',
-            difficulty:     '',
-            disciplineId:   '',
+            difficulty: '',
+            disciplineId: '',
           })
         }
         onQuestionFilterApply={() => setIsFilterOpen(false)}
         disciplines={disciplines}
 
         bankFilterValue=""
-        onBankFilterChange={() => {}}
-        onBankFilterClear={() => {}}
-        onBankFilterApply={() => {}}
+        onBankFilterChange={() => { }}
+        onBankFilterClear={() => { }}
+        onBankFilterApply={() => { }}
         bankFilterOptions={[]}
 
-        onNewClick={handleCreateClick} 
+        onNewClick={handleCreateClick}
       />
 
       {hasActiveFilters && (
@@ -157,9 +157,8 @@ export default function QuestionsPage() {
         </div>
       ) : (
         <div
-          className={`grid gap-6 ${
-            isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'
-          }`}
+          className={`grid gap-6 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'
+            }`}
         >
           {filteredQuestions.map(q => (
             <QuestionCard

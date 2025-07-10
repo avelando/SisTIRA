@@ -3,18 +3,18 @@
 import React, { useState } from 'react'
 import { Plus, Minus, Check } from 'lucide-react'
 import { QuestionModalProps } from '@/interfaces/QuestionProps'
-import { BaseModal } from '@/components/modals/BaseModal'
+import { BaseModal } from '@/components/ui/Modals/BaseModal'
 import { useQuestionModal } from '@/hooks/modals/useQuestionModal'
 
 const EDUCATION_LEVELS = [
-  '1º ano EF','2º ano EF','3º ano EF','4º ano EF','5º ano EF',
-  '6º ano EF','7º ano EF','8º ano EF','9º ano EF',
-  '1º ano EM','2º ano EM','3º ano EM',
-  'Graduação','Especialização','Mestrado','Doutorado'
+  '1º ano EF', '2º ano EF', '3º ano EF', '4º ano EF', '5º ano EF',
+  '6º ano EF', '7º ano EF', '8º ano EF', '9º ano EF',
+  '1º ano EM', '2º ano EM', '3º ano EM',
+  'Graduação', 'Especialização', 'Mestrado', 'Doutorado'
 ] as const
 
 const DIFFICULTIES = [
-  'Muito fácil','Fácil','Médio','Difícil','Muito difícil'
+  'Muito fácil', 'Fácil', 'Médio', 'Difícil', 'Muito difícil'
 ] as const
 
 export const QuestionModal: React.FC<QuestionModalProps> = ({
@@ -31,9 +31,6 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
     updateAlt,
     addAlt,
     removeAlt,
-    updateModel,
-    addModel,
-    removeModel,
     handleSubmit,
   } = useQuestionModal({
     question,
@@ -67,9 +64,6 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
     )
   }
 
-  const truncate = (text: string, len = 150) =>
-    text.length > len ? text.slice(0, len) + '...' : text
-
   return (
     <BaseModal
       visible={visible}
@@ -82,6 +76,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
       maxWidthClass="max-w-3xl"
     >
       <form className="space-y-6" onSubmit={e => e.preventDefault()}>
+        {/* --- texto da questão */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Texto da Questão *
@@ -96,6 +91,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           />
         </div>
 
+        {/* --- tipo de questão */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Tipo de Questão *
@@ -113,6 +109,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           </select>
         </div>
 
+        {/* --- grau de ensino */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Grau de Ensino *
@@ -132,6 +129,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           </select>
         </div>
 
+        {/* --- dificuldade */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Dificuldade *
@@ -151,6 +149,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           </select>
         </div>
 
+        {/* --- referência da prova */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Referência da Prova
@@ -164,6 +163,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           />
         </div>
 
+        {/* --- disciplinas */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Disciplinas
@@ -195,6 +195,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           </div>
         </div>
 
+        {/* --- alternativas (objetiva) */}
         {formData.questionType === 'OBJ' && (
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -215,10 +216,9 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                   <button
                     type="button"
                     onClick={() => updateAlt(i, 'correct', !alt.correct)}
-                    className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors ${
-                      alt.correct
-                        ? 'bg-green-600 border-green-600 text-white'
-                        : 'border-slate-300 hover:border-slate-400'
+                    className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors ${alt.correct
+                      ? 'bg-green-600 border-green-600 text-white'
+                      : 'border-slate-300 hover:border-slate-400'
                     }`}
                   >
                     {alt.correct && <Check size={14} />}
@@ -245,6 +245,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           </div>
         )}
 
+        {/* --- respostas subjetivas */}
         {formData.questionType === 'SUB' && (
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -260,55 +261,88 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                 Usar Respostas Modelo
               </label>
             </div>
+
             {formData.useModelAnswers && (
-              <>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-slate-700">
-                    Respostas Modelo
-                  </span>
-                  <button
-                    type="button"
-                    onClick={addModel}
-                    className="flex items-center gap-1 px-3 py-1 text-sm text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
-                  >
-                    <Plus size={14} /> Adicionar
-                  </button>
+              <div className="space-y-4">
+                {/* ERRADA */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Resposta Modelo ERRADA *
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={
+                      formData.modelAnswers.find(m => m.type === 'WRONG')
+                        ?.content || ''
+                    }
+                    onChange={e => {
+                      const idx = formData.modelAnswers.findIndex(
+                        m => m.type === 'WRONG'
+                      )
+                      if (idx >= 0) {
+                        const copy = [...formData.modelAnswers]
+                        copy[idx] = { ...copy[idx], content: e.target.value }
+                        updateField('modelAnswers', copy)
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 resize-none"
+                    placeholder="Digite um exemplo totalmente errado"
+                    required
+                  />
                 </div>
-                <div className="space-y-4">
-                  {formData.modelAnswers.map((ma, i) => (
-                    <div
-                      key={i}
-                      className="border border-slate-200 rounded-lg p-4"
-                    >
-                      <div className="flex items-center gap-3 mb-2">
-                        <input
-                          type="text"
-                          value={ma.type}
-                          onChange={e => updateModel(i, 'type', e.target.value)}
-                          className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
-                          placeholder="Tipo de resposta"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeModel(i)}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        >
-                          <Minus size={16} />
-                        </button>
-                      </div>
-                      <textarea
-                        value={ma.content}
-                        onChange={e =>
-                          updateModel(i, 'content', e.target.value)
-                        }
-                        rows={3}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 resize-none"
-                        placeholder="Conteúdo da resposta..."
-                      />
-                    </div>
-                  ))}
+                {/* MEDIANA */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Resposta Modelo MEDIANA *
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={
+                      formData.modelAnswers.find(m => m.type === 'MEDIAN')
+                        ?.content || ''
+                    }
+                    onChange={e => {
+                      const idx = formData.modelAnswers.findIndex(
+                        m => m.type === 'MEDIAN'
+                      )
+                      if (idx >= 0) {
+                        const copy = [...formData.modelAnswers]
+                        copy[idx] = { ...copy[idx], content: e.target.value }
+                        updateField('modelAnswers', copy)
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 resize-none"
+                    placeholder="Digite um exemplo nem certo nem totalmente errado"
+                    required
+                  />
                 </div>
-              </>
+                {/* CERTA */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Resposta Modelo CERTA *
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={
+                      formData.modelAnswers.find(m => m.type === 'CORRECT')
+                        ?.content || ''
+                    }
+                    onChange={e => {
+                      const idx = formData.modelAnswers.findIndex(
+                        m => m.type === 'CORRECT'
+                      )
+                      if (idx >= 0) {
+                        const copy = [...formData.modelAnswers]
+                        copy[idx] = { ...copy[idx], content: e.target.value }
+                        updateField('modelAnswers', copy)
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 resize-none"
+                    placeholder="Digite um exemplo totalmente correto"
+                    required
+                  />
+                </div>
+              </div>
             )}
           </div>
         )}

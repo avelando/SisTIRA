@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "hash:zip": "npx ts-node --files scripts/generate-hash.ts"
   },
   "dependencies": {
     "axios": "^1.10.0",
+    "cookie": "^1.0.2",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.516.0",
@@ -20,17 +22,20 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",
+    "@types/cookie": "^0.6.0",
     "@types/lodash": "^4.17.17",
     "@types/lodash.debounce": "^4.0.9",
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.19.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.21",
+    "glob": "^10.4.5",
     "lightningcss-wasm": "^1.30.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.10",
     "tailwindcss-filters": "^3.0.0",
-    "typescript": "^5.0.0"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "index.js",
