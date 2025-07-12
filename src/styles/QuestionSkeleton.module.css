@@ -1,0 +1,157 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  height: 1.5rem;
+  width: 5rem;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+}
+
+.icons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.iconBox {
+  height: 2rem;
+  width: 2rem;
+  background-color: #e2e8f0;
+  border-radius: 0.5rem;
+}
+
+.textLines {
+  margin-bottom: 1rem;
+}
+
+.textLine {
+  height: 1rem;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.textLine:nth-child(2) {
+  width: 75%;
+}
+
+.textLine:nth-child(3) {
+  width: 50%;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  height: 1.5rem;
+  width: 4rem;
+  background-color: #e2e8f0;
+  border-radius: 0.375rem;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.metaLine {
+  height: 1rem;
+  width: 6rem;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+}
+
+.metaLine.small {
+  width: 4rem;
+}
+
+.options {
+  margin-bottom: 1rem;
+}
+
+.optionHeader {
+  height: 0.75rem;
+  width: 25%;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.optionIcon {
+  height: 1rem;
+  width: 1rem;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+}
+
+.optionText {
+  height: 0.75rem;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+  flex: 1;
+}
+
+.footer {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1rem;
+}
+
+.footerLine {
+  height: 0.75rem;
+  width: 8rem;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}

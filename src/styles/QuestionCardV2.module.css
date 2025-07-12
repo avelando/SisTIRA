@@ -1,0 +1,203 @@
+.container {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.container:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+}
+
+.badgeObj {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.badgeSubj {
+  background: #f3e8ff;
+  color: #7e22ce;
+  border: 1px solid #e9d5ff;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+.actionsVisible {
+  opacity: 1;
+}
+
+.actionButton {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: color 150ms, background-color 150ms;
+  outline: none;
+}
+
+.editButton {
+  color: #94a3b8;
+}
+
+.editButton:hover {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.editButton:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.deleteButton {
+  color: #94a3b8;
+}
+
+.deleteButton:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.deleteButton:focus {
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+}
+
+.textWrapper {
+  margin-bottom: 1rem;
+}
+
+.text {
+  color: #0f172a;
+  font-weight: 500;
+  line-height: 1.625;
+}
+
+.disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.disciplineBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #374151;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.alternativesSection,
+.modelAnswersSection {
+  margin-bottom: 1rem;
+}
+
+.altHeader,
+.modelHeader {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.alternativeItem,
+.modelItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.correctIcon {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.wrongIcon {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.altText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.altTextCorrect {
+  color: #047857;
+  font-weight: 500;
+}
+
+.altTextWrong {
+  color: #4b5563;
+}
+
+.moreAlts,
+.moreModels {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.modelType {
+  font-weight: 500;
+  color: #374151;
+}
+
+.modelContent {
+  color: #4b5563;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.created {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.75rem;
+  color: #6b7280;
+}

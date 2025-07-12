@@ -1,0 +1,23 @@
+.wrapper {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.input {
+  width: 100%;
+  background-color: transparent;
+  padding: 0.625rem;
+  border: 2px solid #123653;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  color: #123653;
+}
+
+.input::placeholder {
+  color: #123653;
+  font-weight: 500;
+}
+
+.input:focus {
+  outline: none;
+}

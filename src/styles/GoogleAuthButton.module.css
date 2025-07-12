@@ -1,0 +1,29 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  background-color: transparent;
+  border: 2px solid #133856;
+  border-radius: 0.25rem;
+  padding: 0.625rem 1rem;
+  font-size: 1rem;
+  color: #133856;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: #133856;
+  color: #f8ffff;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.icon {
+  display: block;
+}

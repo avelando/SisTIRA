@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
-import { Eye, Edit, Trash2, Calendar } from 'lucide-react'
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { Eye, Edit, Trash2, Calendar } from 'lucide-react';
 
-import { useExams } from '@/hooks/app/useExams'
-import { Toolbar } from '@/components/ui/ToolBar/ToolBar'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { Pagination } from '@/components/ui/Pagination/Pagination'
-import { FileText } from 'lucide-react'
+import { useExams } from '@/hooks/app/useExams';
+import { Toolbar } from '@/components/ui/ToolBar';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Pagination } from '@/components/ui/Pagination';
+import styles from '@/styles/ExamsPage.module.css';
 
 export default function ExamsPage() {
-  const router = useRouter()
+  const router = useRouter();
   const {
     pageExams,
     filteredExams,
@@ -29,58 +29,39 @@ export default function ExamsPage() {
     handleSelectAll,
     handleSelectOne,
     formatDate,
-  } = useExams()
+  } = useExams();
 
   function handleNewExam() {
-    router.push('/exams/new')
+    router.push('/exams/new');
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <Toolbar
         searchValue={searchQuery}
-        onSearch={value => {
-          setSearchQuery(value)
-          setCurrentPage(1)
-        }}
+        onSearch={(value) => { setSearchQuery(value); setCurrentPage(1); }}
         isFilterOpen={isFilterOpen}
         onToggleFilters={() => setIsFilterOpen(o => !o)}
-
         statusValue={filters.status}
-        onStatusChange={newStatus => {
-          setFilters(f => ({ ...f, status: newStatus }))
-          setCurrentPage(1)
-        }}
-        onStatusClear={() => {
-          setFilters({ status: '', dateRange: '', sortBy: 'createdAt' })
-          setCurrentPage(1)
-          setIsFilterOpen(false)
-        }}
+        onStatusChange={(newStatus) => { setFilters(f => ({ ...f, status: newStatus })); setCurrentPage(1); }}
+        onStatusClear={() => { setFilters({ status: '', dateRange: '', sortBy: 'createdAt' }); setCurrentPage(1); setIsFilterOpen(false); }}
         onStatusApply={() => setIsFilterOpen(false)}
-
-        questionFilters={{
-          questionType: '',
-          educationLevel: '',
-          difficulty: '',
-          disciplineId: '',
-        }}
-        onQuestionFilterChange={() => {}}
-        onQuestionFilterClear={() => {}}
-        onQuestionFilterApply={() => {}}
+        questionFilters={{ questionType: '', educationLevel: '', difficulty: '', disciplineId: '' }}
+        onQuestionFilterChange={() => { }}
+        onQuestionFilterClear={() => { }}
+        onQuestionFilterApply={() => { }}
         disciplines={[]}
-
         bankFilterValue=""
-        onBankFilterChange={() => {}}
-        onBankFilterClear={() => {}}
-        onBankFilterApply={() => {}}
+        onBankFilterChange={() => { }}
+        onBankFilterClear={() => { }}
+        onBankFilterApply={() => { }}
         bankFilterOptions={[]}
-
         onNewClick={handleNewExam}
       />
 
       {filteredExams.length === 0 ? (
         <EmptyState
-          icon={<FileText size={24} className="text-slate-400" />}
+          icon={<Calendar size={24} className={styles.emptyIcon} />}
           title="Nenhuma prova encontrada"
           message="Crie sua primeira prova para começar."
           actionLabel="Criar Nova Prova"
@@ -88,118 +69,86 @@ export default function ExamsPage() {
         />
       ) : (
         <>
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-sm text-slate-600">
-                  <input
-                    type="checkbox"
-                    checked={selectedExams.length === filteredExams.length}
-                    onChange={e => handleSelectAll(e.target.checked)}
-                    className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 focus:ring-opacity-50"
-                  />
-                  {selectedExams.length > 0 && (
-                    <span className="font-medium">
-                      {selectedExams.length} selecionada
-                      {selectedExams.length > 1 ? 's' : ''}
-                    </span>
-                  )}
-                </label>
-                <div className="text-sm text-slate-600">
-                  Mostrando{' '}
-                  {Math.min(filteredExams.length, (currentPage - 1) * 10 + 1)} a{' '}
-                  {Math.min(currentPage * 10, filteredExams.length)} de{' '}
-                  {filteredExams.length} provas
-                </div>
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <label className={styles.headerLabel}>
+                <input
+                  type="checkbox"
+                  checked={selectedExams.length === filteredExams.length}
+                  onChange={e => handleSelectAll(e.target.checked)}
+                  className={styles.checkbox}
+                />
+                {selectedExams.length > 0 && (
+                  <span className={styles.selectedCount}>
+                    {selectedExams.length} selecionada{selectedExams.length > 1 ? 's' : ''}
+                  </span>
+                )}
+              </label>
+              <div className={styles.headerInfo}>
+                Mostrando {Math.min(filteredExams.length, (currentPage - 1) * 10 + 1)} a {Math.min(currentPage * 10, filteredExams.length)} de {filteredExams.length} provas
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead className={styles.thead}>
                   <tr>
-                    <th className="py-3 px-6 text-left text-xs font-semibold uppercase text-slate-600">
-                      Prova
-                    </th>
-                    <th className="py-3 px-6 text-left text-xs font-semibold uppercase text-slate-600">
-                      Data de Criação
-                    </th>
-                    <th className="py-3 px-6 text-left text-xs font-semibold uppercase text-slate-600">
-                      Questões
-                    </th>
-                    <th className="py-3 px-6 text-right text-xs font-semibold uppercase text-slate-600">
-                      Ações
-                    </th>
+                    <th className={styles.th}>Prova</th>
+                    <th className={styles.th}>Data de Criação</th>
+                    <th className={styles.th}>Questões</th>
+                    <th className={`${styles.th} ${styles.actions}`}>Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
+                <tbody className={styles.tbody}>
                   {pageExams.map(exam => (
                     <tr
                       key={exam.id}
-                      className="cursor-pointer hover:bg-slate-50 transition-colors"
+                      className={styles.tr}
                       onClick={() => router.push(`/exams/${exam.id}`)}
                     >
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-3">
+                      <td className={styles.td}>
+                        <div className={styles.tdContent}>
                           <input
                             type="checkbox"
                             checked={selectedExams.includes(exam.id)}
-                            onChange={e => {
-                              e.stopPropagation()
-                              handleSelectOne(exam.id, e.target.checked)
-                            }}
-                            className="rounded border-slate-300 text-slate-900 focus:ring-slate-900 focus:ring-opacity-50"
+                            onChange={e => { e.stopPropagation(); handleSelectOne(exam.id, e.target.checked); }}
+                            className={styles.checkbox}
                           />
-                          <div>
-                            <div className="font-medium text-slate-900">
-                              {exam.title}
-                            </div>
-                            <div className="text-xs text-slate-500">
-                              ID: {exam.id.slice(0, 8)}…
-                            </div>
+                          <div className={styles.titleWrapper}>
+                            <div className={styles.examTitle}>{exam.title}</div>
+                            <div className={styles.examId}>ID: {exam.id.slice(0, 8)}…</div>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-2 text-slate-600">
+                      <td className={styles.td}>
+                        <div className={styles.dateCell}>
                           <Calendar size={16} />
                           <span>{formatDate(exam.createdAt)}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6">
-                        <span className="font-medium text-slate-900">
-                          {exam.questionsCount ?? 0} questões
-                        </span>
+                      <td className={styles.td}>
+                        <span className={styles.questionsCount}>{exam.questionsCount ?? 0} questões</span>
                       </td>
-                      <td className="py-4 px-6 text-right">
-                        <div className="flex justify-end gap-2">
+                      <td className={`${styles.td} ${styles.actionsCell}`}>
+                        <div className={styles.actionButtons}>
                           <button
-                            onClick={e => {
-                              e.stopPropagation()
-                              router.push(`/exams/${exam.id}`)
-                            }}
+                            onClick={e => { e.stopPropagation(); router.push(`/exams/${exam.id}`); }}
                             title="Visualizar"
-                            className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50"
+                            className={styles.viewButton}
                           >
                             <Eye size={16} />
                           </button>
                           <button
-                            onClick={e => {
-                              e.stopPropagation()
-                              router.push(`/exams/${exam.id}`)
-                            }}
+                            onClick={e => { e.stopPropagation(); router.push(`/exams/${exam.id}`); }}
                             title="Editar"
-                            className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className={styles.editButton}
                           >
                             <Edit size={16} />
                           </button>
                           <button
-                            onClick={e => {
-                              e.stopPropagation()
-                              handleDelete(exam.id)
-                            }}
+                            onClick={e => { e.stopPropagation(); handleDelete(exam.id); }}
                             title="Excluir"
-                            className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                            className={styles.deleteButton}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -220,5 +169,5 @@ export default function ExamsPage() {
         </>
       )}
     </div>
-  )
+  );
 }

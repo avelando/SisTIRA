@@ -118,3 +118,10 @@ export interface ExamResponseResult {
   };
   answers: ExamAnswerResult[];
 }
+
+export interface ExamInfoProps {
+  title: string
+  description: string
+  onTitleChange: (v: string) => void
+  onDescriptionChange: (v: string) => void
+}

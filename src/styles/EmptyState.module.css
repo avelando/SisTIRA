@@ -1,0 +1,50 @@
+.container {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.iconWrapper {
+  width: 4rem;
+  height: 4rem;
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.message {
+  margin: 0 0 1.5rem 0;
+  color: #64748b;
+}
+
+.button {
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #1e293b;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.5);
+}

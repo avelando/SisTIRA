@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { Link, Copy } from 'lucide-react'
+import React, { useState } from 'react'
+import { Link as LinkIcon, Copy } from 'lucide-react'
+import styles from '@/styles/ShareExamFAB.module.css'
 
 interface ShareExamFABProps {
   examId: string
@@ -12,7 +13,9 @@ export default function ShareExamFAB({ examId, accessCode }: ShareExamFABProps) 
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const examURL = `${window.location.origin}/respond/${examId}`
+  const examURL = typeof window !== 'undefined'
+    ? `${window.location.origin}/respond/${examId}`
+    : ''
 
   const copyToClipboard = async () => {
     const text = accessCode
@@ -25,54 +28,42 @@ export default function ShareExamFAB({ examId, accessCode }: ShareExamFABProps) 
   }
 
   return (
-    <div className="fixed bottom-6 right-24 z-50 flex flex-col items-end">
-      <div
-        className={`
-          transition-all duration-200 ease-out
-          ${open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}
-        `}
-      >
-        <div className="mb-3 p-4 bg-white shadow-xl rounded-lg max-w-xs">
-          <p className="text-sm font-semibold mb-2">Compartilhar prova</p>
+    <div className={styles.container}>
+      <div className={`${styles.popup} ${open ? styles.popupOpen : ''}`}>        
+        <div className={styles.popupContent}>
+          <p className={styles.popupTitle}>Compartilhar prova</p>
 
-          <div className="flex items-center mb-2">
-            <Link className="mr-2 text-slate-700" size={18} />
+          <div className={styles.popupRow}>
+            <LinkIcon size={18} className={styles.icon} />
             <input
-              className="border rounded px-2 py-1 w-full text-sm bg-slate-50"
+              type="text"
               readOnly
               value={examURL}
+              className={styles.input}
             />
           </div>
 
           {accessCode && (
-            <div className="flex items-center mb-2">
-              <span className="mr-2 font-medium text-slate-700">Código:</span>
+            <div className={styles.popupRow}>
+              <span className={styles.codeLabel}>Código:</span>
               <input
-                className="border rounded px-2 py-1 w-full text-sm bg-slate-50"
+                type="text"
                 readOnly
                 value={accessCode}
+                className={styles.input}
               />
             </div>
           )}
 
-          <button
-            onClick={copyToClipboard}
-            className="mt-2 w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white py-1 rounded transition"
-          >
+          <button onClick={copyToClipboard} className={styles.copyButton}>
             <Copy size={16} />
             {copied ? 'Copiado!' : 'Copiar'}
           </button>
         </div>
       </div>
 
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="
-          w-14 h-14 bg-slate-900 hover:bg-slate-700 text-white rounded-full shadow-xl
-          flex items-center justify-center transition-transform duration-200 ease-out
-        "
-      >
-        <Link size={24} />
+      <button onClick={() => setOpen(o => !o)} className={styles.mainButton}>
+        <LinkIcon size={24} className={`${styles.mainIcon} ${open ? styles.rotated : ''}`} />
       </button>
     </div>
   )
