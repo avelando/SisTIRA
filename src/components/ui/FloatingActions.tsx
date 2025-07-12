@@ -2,20 +2,14 @@
 
 import React from 'react'
 import { FloatingActionsProps } from '@/interfaces/FloatingActionsProps'
+import styles from '@/styles/FloatingActions.module.css'
 
 export default function FloatingActions({ onOpen }: FloatingActionsProps) {
   return (
-    <div className="fixed top-24 right-6 flex flex-col gap-3 z-50">
+    <div className={styles.container}>
       <button
         onClick={() => onOpen('existente')}
-        className="
-          px-4 py-2 
-          bg-blue-600 text-white 
-          rounded-md 
-          hover:bg-blue-700 
-          transition-colors 
-          focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50
-        "
+        className={styles.button}
       >
         + Questões Existentes
       </button>

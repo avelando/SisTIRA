@@ -1,21 +1,14 @@
-import React from "react";
-import { AuthButtonProps } from "@/interfaces/AuthButtonProps";
+'use client';
 
-export default function AuthButton({
-  text,
-  onClick,
-  className = "",
-}: AuthButtonProps) {
+import React from 'react';
+import { AuthButtonProps } from '@/interfaces/AuthButtonProps';
+import styles from '@/styles/AuthButton.module.css';
+
+export default function AuthButton({ text, onClick, className = '' }: AuthButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`
-        w-full text-base bg-[#133856] text-[#f8ffff]
-        border-2 border-transparent py-1.5 px-4 rounded
-        cursor-pointer transition duration-200 ease-in-out
-        hover:bg-transparent hover:border-[#133856] hover:text-[#133856]
-        ${className}
-      `}
+      className={`${styles.base} ${className}`}
     >
       {text}
     </button>

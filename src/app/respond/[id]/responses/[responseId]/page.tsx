@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getResponseResult } from '@/api/exams';
 import type { ExamResponseResult } from '@/interfaces/ExamsProps';
+import styles from '@/styles/FeedbackPage.module.css';
 
 export default function FeedbackPage() {
   const params = useParams();
@@ -26,25 +27,27 @@ export default function FeedbackPage() {
       });
   }, [responseId, router]);
 
-  if (!result) return <p>Carregando feedback…</p>;
+  if (!result) {
+    return <p className={styles.emptyState}>Carregando feedback…</p>;
+  }
 
   return (
-    <section className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-semibold">Seu Feedback</h1>
+    <section className={styles.container}>
+      <h1 className={styles.title}>Seu Feedback</h1>
       {result.answers.map((ans, i) => (
-        <div key={ans.id} className="p-4 bg-white rounded shadow">
-          <p className="font-medium mb-1">Questão {i + 1}</p>
-          <p className="italic mb-2">{ans.question.text}</p>
-          <p className="mb-1">
+        <div key={ans.id} className={styles.answerCard}>
+          <p className={styles.questionLabel}>Questão {i + 1}</p>
+          <p className={styles.questionText}>{ans.question.text}</p>
+          <p className={styles.responseText}>
             <strong>Sua resposta:</strong>{' '}
             {ans.question.questionType === 'OBJ'
               ? ans.alternative?.content
               : ans.subjectiveText}
           </p>
-          <p className="mb-1">
+          <p className={styles.scoreText}>
             <strong>Nota:</strong> {ans.score?.toFixed(1) ?? '–'}
           </p>
-          <p>
+          <p className={styles.feedbackText}>
             <strong>Feedback:</strong> {ans.feedback ?? '–'}
           </p>
         </div>

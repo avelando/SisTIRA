@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+}
+
+.headerLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.selectedCount {
+  font-weight: 500;
+}
+
+.headerInfo {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thead {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.th {
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.actions {
+  text-align: right;
+}
+
+.tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tr:hover {
+  background-color: #f8fafc;
+}
+
+.td {
+  padding: 0.75rem 1.5rem;
+  vertical-align: middle;
+}
+
+.tdContent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox {
+  border-radius: 0.25rem;
+  border: 1px solid #cbd5e1;
+  accent-color: #0f172a;
+}
+
+.examTitle {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.examId {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.dateCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+}
+
+.questionsCount {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.actionsCell {
+  text-align: right;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.viewButton,
+.editButton,
+.deleteButton {
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.viewButton {
+  color: #cbd5e1;
+}
+
+.viewButton:hover {
+  color: #64748b;
+  background-color: #f8fafc;
+}
+
+.editButton {
+  color: #cbd5e1;
+}
+
+.editButton:hover {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.deleteButton {
+  color: #cbd5e1;
+}
+
+.deleteButton:hover {
+  color: #dc2626;
+  background-color: #fef2f2;
+}

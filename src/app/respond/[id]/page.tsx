@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import {
@@ -12,6 +13,7 @@ import type {
   SubmitResponseDto,
   SubmitResponseResult,
 } from '@/interfaces/ExamsProps'
+import styles from '@/styles/RespondExamPage.module.css'
 
 export default function RespondExamPage() {
   const params = useParams()
@@ -32,7 +34,6 @@ export default function RespondExamPage() {
       router.push('/respond/enter-code')
       return
     }
-
     ;(async () => {
       setLoading(true)
       try {
@@ -85,19 +86,25 @@ export default function RespondExamPage() {
   if (!exam) return null
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold">{exam.title}</h1>
-        {exam.description && <p>{exam.description}</p>}
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <header className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>{exam.title}</h1>
+        {exam.description && (
+          <p className={styles.pageDescription}>{exam.description}</p>
+        )}
       </header>
+
       {exam.questions.map((q, idx) => (
-        <div key={q.id} className="p-4 bg-white rounded shadow">
-          <p className="font-medium mb-2">{idx + 1}. {q.text}</p>
+        <div key={q.id} className={styles.questionCard}>
+          <p className={styles.questionText}>
+            {idx + 1}. {q.text}
+          </p>
+
           {q.questionType === 'OBJ' ? (
-            <ul className="space-y-2">
+            <ul className={styles.radioList}>
               {q.alternatives?.map(a => (
-                <li key={a.id}>
-                  <label className="flex items-center gap-2">
+                <li key={a.id} className={styles.radioOption}>
+                  <label>
                     <input
                       type="radio"
                       name={q.id}
@@ -114,19 +121,20 @@ export default function RespondExamPage() {
           ) : (
             <textarea
               rows={4}
+              className={styles.textResponse}
               value={answers[q.id] || ''}
               onChange={e => handleChange(q, e.target.value)}
               disabled={submitting}
               placeholder="Sua resposta…"
-              className="w-full border px-3 py-2 rounded"
             />
           )}
         </div>
       ))}
+
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-green-600 text-white py-2 rounded disabled:opacity-50"
+        className={styles.submitButton}
       >
         {submitting ? 'Enviando…' : 'Enviar Respostas'}
       </button>

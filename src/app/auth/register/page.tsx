@@ -1,47 +1,44 @@
 'use client';
 
-import React, { useState } from "react";
-import { registerUser } from "@/api/auth";
-import FormField from "@/components/ui/FormField";
-import AuthButton from "@/components/ui/AuthButton";
-import GoogleAuthButton from "@/components/ui/GoogleAuthButton";
-import BackButton from "@/components/ui/BackButton";
-import { useRouter } from "next/navigation";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { registerUser } from '@/api/auth';
+import FormField from '@/components/ui/FormField';
+import AuthButton from '@/components/ui/AuthButton';
+import GoogleAuthButton from '@/components/ui/GoogleAuthButton';
+import BackButton from '@/components/ui/BackButton';
+import styles from '@/styles/AuthPage.module.css';
 
 export default function Register() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [error, setError] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleNextStep = () => {
     if (!firstName || !lastName || !username) {
-      setError("Preencha todos os campos para continuar.");
+      setError('Preencha todos os campos para continuar.');
       return;
     }
-    setError("");
+    setError('');
     setStep(2);
   };
 
   const handlePreviousStep = () => {
     setStep(1);
-    setError("");
+    setError('');
   };
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
+      setError('As senhas não coincidem.');
       return;
     }
-
     try {
       await registerUser({
         firstName: firstName.trim(),
@@ -50,30 +47,24 @@ export default function Register() {
         email: email.trim(),
         password: password.trim(),
       });
-      alert("Cadastro realizado com sucesso!");
-      router.push("/auth/login");
+      alert('Cadastro realizado com sucesso!');
+      router.push('/auth/login');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro desconhecido ao tentar cadastrar.");
+      setError(err instanceof Error ? err.message : 'Erro desconhecido ao tentar cadastrar.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+    <div className={styles.container}>
+      <div className={styles.card}>
         <BackButton text="Home" />
-
-        <div className="text-center mb-4">
-          <h1 className="text-2xl font-semibold text-[#133856]">
-            Bem-vindo(a) ao SisTIRA
-          </h1>
-          <span className="block text-sm text-gray-600">
+        <div className={styles.header}>
+          <h1 className={styles.title}>Bem-vindo(a) ao SisTIRA</h1>
+          <span className={styles.description}>
             Preencha suas credenciais para criar uma conta
           </span>
         </div>
-
-        <h2 className="text-center text-xl font-medium text-[#133856] mb-4">
-          {step === 1 ? "Identificação" : "Credenciais"}
-        </h2>
+        <h2 className={styles.subTitle}>{step === 1 ? 'Identificação' : 'Credenciais'}</h2>
 
         {step === 1 ? (
           <>
@@ -95,10 +86,12 @@ export default function Register() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-            {error && (
-              <p className="text-red-600 text-sm text-center mb-2">{error}</p>
-            )}
-            <AuthButton text="Próximo" onClick={handleNextStep} className="w-full" />
+            {error && <p className={styles.error}>{error}</p>}
+            <AuthButton
+              text="Próximo"
+              onClick={handleNextStep}
+              className={styles.authButton}
+            />
           </>
         ) : (
           <>
@@ -120,21 +113,27 @@ export default function Register() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            {error && (
-              <p className="text-red-600 text-sm text-center mb-2">{error}</p>
-            )}
+            {error && <p className={styles.error}>{error}</p>}
 
-            <div className="flex justify-between mb-4">
-              <AuthButton text="Voltar" onClick={handlePreviousStep} className="bg-gray-300 text-gray-700 hover:bg-gray-400" />
-              <AuthButton text="Cadastrar" onClick={handleRegister} className="ml-2 w-full" />
+            <div className={styles.buttonGroup}>
+              <AuthButton
+                text="Voltar"
+                onClick={handlePreviousStep}
+                className={styles.secondaryButton}
+              />
+              <AuthButton
+                text="Cadastrar"
+                onClick={handleRegister}
+                className={styles.authButton}
+              />
             </div>
           </>
         )}
 
-        <div className="flex items-center gap-2 my-4">
-          <hr className="flex-grow border-t border-gray-300" />
-          <span className="text-sm font-bold text-gray-600">ou</span>
-          <hr className="flex-grow border-t border-gray-300" />
+        <div className={styles.divider}>
+          <hr className={styles.dividerHr} />
+          <span className={styles.dividerText}>ou</span>
+          <hr className={styles.dividerHr} />
         </div>
 
         <GoogleAuthButton
@@ -142,25 +141,14 @@ export default function Register() {
           redirectUrl="http://127.0.0.1:3001/auth/google"
         />
 
-        <div className="flex justify-center gap-2 mt-6">
-          <div
-            className={`w-5 h-1 rounded-full transition-colors ${
-              step === 1 ? "bg-[#133856]" : "bg-gray-300"
-            }`}
-          />
-          <div
-            className={`w-5 h-1 rounded-full transition-colors ${
-              step === 2 ? "bg-[#133856]" : "bg-gray-300"
-            }`}
-          />
+        <div className={styles.steps}>
+          <div className={`${styles.step} ${step === 1 ? styles.stepActive : ''}`} />
+          <div className={`${styles.step} ${step === 2 ? styles.stepActive : ''}`} />
         </div>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Já possui uma conta?{" "}
-          <a
-            href="/auth/login"
-            className="text-[#133856] font-medium hover:underline"
-          >
+        <div className={styles.footerText}>
+          Já possui uma conta?{' '}
+          <a href="/auth/login" className={styles.footerLink}>
             Faça o Login
           </a>
         </div>

@@ -1,0 +1,35 @@
+.wrapper {
+  display: inline-block;
+}
+
+.base {
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in, color 0.2s ease-in, border-color 0.2s ease-in;
+  cursor: pointer;
+}
+
+.default {
+  background-color: #f8ffff;
+  color: #133856;
+  border: 2px solid #f8ffff;
+  box-shadow: 2px 2px 10px rgba(248, 255, 255, 0.5);
+}
+
+.default:hover {
+  background-color: transparent;
+  color: #f8ffff;
+}
+
+.reverse {
+  background-color: #133856;
+  color: #f8ffff;
+  border: 2px solid #133856;
+}
+
+.reverse:hover {
+  background-color: transparent;
+  color: #f8ffff;
+  border-color: #f8ffff;
+}
