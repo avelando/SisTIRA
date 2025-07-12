@@ -1,0 +1,304 @@
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.aboutSection {
+  background-color: #ffffff;
+  padding: 0 0 4rem 0;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.badgeDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.5rem;
+  background-color: #6b7280;
+  border-radius: 9999px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+.highlight {
+  background: linear-gradient(to right, #133856, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.contentGrid {
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.avatarContainer {
+  width: 20rem;
+  height: 20rem;
+  padding: 0.25rem;
+  background: linear-gradient(to bottom right, #133856, #2563eb);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarInner {
+  width: 100%;
+  height: 100%;
+  background-color: #e5e7eb;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatarPlaceholder {
+  font-size: 4rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.floatIconTop {
+  position: absolute;
+  top: -1rem;
+  right: 6.4rem;
+  width: 4rem;
+  height: 4rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradIcon {
+  color: #133856;
+}
+
+.floatIconBottom {
+  position: absolute;
+  bottom: -1rem;
+  left: 6rem;
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(to bottom right, #3b82f6, #2563eb);
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ifpiLabel {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.infoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.nameSection {
+  margin-bottom: 1rem;
+}
+
+.name {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+@media (min-width: 1024px) {
+  .name {
+    font-size: 2.25rem;
+  }
+}
+
+.role {
+  font-size: 1.125rem;
+  color: #133856;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.educationCard {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #eff6ff;
+  border-radius: 0.5rem;
+}
+
+.educationIcon {
+  color: #133856;
+  flex-shrink: 0;
+}
+
+.educationTitle {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.educationCourse {
+  color: #4b5563;
+}
+
+.educationInstitution {
+  font-size: 0.875rem;
+  color: #133856;
+  font-weight: 500;
+}
+
+.sectionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blockTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.blockText {
+  color: #4b5563;
+  line-height: 1.625;
+}
+
+.socialLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.socialButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.socialButton:hover {
+  background-color: #1f2937;
+}
+
+.socialButtonLinkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.socialButtonLinkedin:hover {
+  background-color: #1e40af;
+}
+
+.socialButtonMail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #133856;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.socialButtonMail:hover {
+  background-color: #2563eb;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+}
+
+.locationIcon {
+  color: #133856;
+}
