@@ -1,0 +1,337 @@
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+}
+
+.root {
+  display: flex;
+  min-height: 100vh;
+}
+
+.leftSide {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(to bottom right, #133856, #1e40af);
+  overflow: hidden;
+}
+
+.pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  background: radial-gradient(circle at 20% 20%, #fff 20%, transparent 20%), radial-gradient(circle at 80% 60%, #fff 15%, transparent 15%), radial-gradient(circle at 33% 50%, #fff 10%, transparent 10%);
+}
+
+.contentOverlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 3rem;
+  color: #fff;
+}
+
+.logoBar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.logoBox {
+  width: 3rem;
+  height: 3rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoIcon {
+  color: #133856;
+}
+
+.logoText {
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.welcome {
+  margin-bottom: 2rem;
+}
+
+.welcomeTitle {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.welcomeHighlight {
+  display: block;
+  color: #bfdbfe;
+}
+
+.welcomeText {
+  font-size: 1.125rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.featureIcon {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.featureTitle {
+  font-weight: 600;
+}
+
+.featureText {
+  color: #cbd5e1;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 2rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #bfdbfe;
+}
+
+.rightSide {
+  width: 100%;
+  max-width: 50rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom right, #f8fafc, #eff6ff);
+}
+
+.backBtnWrapper {
+  padding: 1.5rem 0 0 1.5rem;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #475569;
+}
+
+.formWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 1.5rem;
+  max-width: 100%;
+}
+
+.mobileLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.mobileLogoBox {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #133856;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileLogoText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #133856;
+}
+
+.formHeader {
+  margin-bottom: 2rem;
+}
+
+.formTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.formSubtitle {
+  color: #6b7280;
+}
+
+.googleBtn {
+  width: 100rem;
+  max-width: 25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  color: #475569;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+}
+
+.googleIcon {
+  color: #3b82f6;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  max-width: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.input {
+  width: 100rem;
+  max-width: 25rem;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #fff;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #133856;
+  box-shadow: 0 0 0 2px rgba(19, 56, 86, 0.5);
+}
+
+.error {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.toggleBtn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.errorText {
+  margin-top: 0.25rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.forgotWrapper {
+  text-align: right;
+}
+
+.forgotBtn {
+  font-size: 0.875rem;
+  color: #133856;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #133856;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signupPrompt {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.signupLink {
+  color: #133856;
+  font-weight: 500;
+}

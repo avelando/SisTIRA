@@ -1,158 +1,219 @@
-'use client';
+'use client'
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { registerUser } from '@/api/auth';
-import FormField from '@/components/ui/FormField';
-import AuthButton from '@/components/ui/AuthButton';
-import GoogleAuthButton from '@/components/ui/GoogleAuthButton';
-import BackButton from '@/components/ui/BackButton';
-import styles from '@/styles/AuthPage.module.css';
+import {
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Chrome,
+  ArrowRight,
+  ArrowLeft,
+  BookOpen,
+  Zap,
+  Shield,
+  Sparkles,
+} from 'lucide-react';
+import styles from '@/styles/SignupPage.module.css';
 
-export default function Register() {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+type SignupStep = 'identification' | 'credentials';
+
+const Signup: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState<SignupStep>('identification');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
+  };
+
+  const validateIdentification = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.firstName.trim()) newErrors.firstName = 'Nome é obrigatório';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Sobrenome é obrigatório';
+    if (!formData.username.trim()) newErrors.username = 'Username é obrigatório';
+    else if (formData.username.length < 3) newErrors.username = 'Username deve ter pelo menos 3 caracteres';
+    else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) newErrors.username = 'Username pode conter apenas letras, números e underscore';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateCredentials = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.email) newErrors.email = 'Email é obrigatório';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email inválido';
+    if (!formData.password) newErrors.password = 'Senha é obrigatória';
+    else if (formData.password.length < 8) newErrors.password = 'Senha deve ter pelo menos 8 caracteres';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
+    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Senhas não coincidem';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleNextStep = () => {
-    if (!firstName || !lastName || !username) {
-      setError('Preencha todos os campos para continuar.');
-      return;
-    }
-    setError('');
-    setStep(2);
+    if (validateIdentification()) setCurrentStep('credentials');
   };
+  const handlePreviousStep = () => setCurrentStep('identification');
 
-  const handlePreviousStep = () => {
-    setStep(1);
-    setError('');
-  };
-
-  const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      setError('As senhas não coincidem.');
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateCredentials()) return;
+    setLoading(true);
     try {
-      await registerUser({
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        username: username.trim(),
-        email: email.trim(),
-        password: password.trim(),
-      });
-      alert('Cadastro realizado com sucesso!');
-      router.push('/auth/login');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido ao tentar cadastrar.');
+      await new Promise(r => setTimeout(r, 2000));
+      window.location.href = '/dashboard';
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    try {
+      await new Promise(r => setTimeout(r, 1000));
+      window.location.href = '/dashboard';
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToHome = () => { window.location.href = '/'; };
+  const handleGoToLogin = () => { window.location.href = './login'; };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <BackButton text="Home" />
-        <div className={styles.header}>
-          <h1 className={styles.title}>Bem-vindo(a) ao SisTIRA</h1>
-          <span className={styles.description}>
-            Preencha suas credenciais para criar uma conta
-          </span>
-        </div>
-        <h2 className={styles.subTitle}>{step === 1 ? 'Identificação' : 'Credenciais'}</h2>
-
-        {step === 1 ? (
-          <>
-            <FormField
-              type="text"
-              label="Nome"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <FormField
-              type="text"
-              label="Sobrenome"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <FormField
-              type="text"
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            {error && <p className={styles.error}>{error}</p>}
-            <AuthButton
-              text="Próximo"
-              onClick={handleNextStep}
-              className={styles.authButton}
-            />
-          </>
-        ) : (
-          <>
-            <FormField
-              type="email"
-              label="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <FormField
-              type="password"
-              label="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <FormField
-              type="password"
-              label="Confirme a senha"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            {error && <p className={styles.error}>{error}</p>}
-
-            <div className={styles.buttonGroup}>
-              <AuthButton
-                text="Voltar"
-                onClick={handlePreviousStep}
-                className={styles.secondaryButton}
-              />
-              <AuthButton
-                text="Cadastrar"
-                onClick={handleRegister}
-                className={styles.authButton}
-              />
+    <div className={styles.root}>
+      <aside className={styles.leftSide}>
+        <div className={styles.pattern} />
+        <div className={styles.overlay}>
+          <div className={styles.logoBar}>
+            <div className={styles.logoBox}><BookOpen size={24} className={styles.logoIcon} /></div>
+            <span className={styles.logoText}>SisTIRA</span>
+          </div>
+          <div className={styles.welcome}>
+            <h1 className={styles.welcomeTitle}>
+              {currentStep === 'identification' ? 'Junte-se ao' : 'Continue em'}
+              <span className={styles.welcomeHighlight}>SisTIRA</span>
+            </h1>
+            <p className={styles.welcomeText}>
+              {currentStep === 'identification'
+                ? 'Comece sua jornada na criação de avaliações inteligentes. Transforme a forma como você ensina e avalia.'
+                : 'Complete suas credenciais para acessar todos os recursos'}
+            </p>
+          </div>
+          <div className={styles.benefits}>
+            <div className={styles.benefitItem}>
+              <div className={styles.benefitIcon}><Zap size={24} /></div>
+              <div>
+                <h3 className={styles.benefitTitle}>Configuração Rápida</h3>
+                <p className={styles.benefitText}>Em menos de 5 minutos</p>
+              </div>
             </div>
-          </>
-        )}
-
-        <div className={styles.divider}>
-          <hr className={styles.dividerHr} />
-          <span className={styles.dividerText}>ou</span>
-          <hr className={styles.dividerHr} />
+            <div className={styles.benefitItem}>
+              <div className={styles.benefitIcon}><Shield size={24} /></div>
+              <div>
+                <h3 className={styles.benefitTitle}>Dados Seguros</h3>
+                <p className={styles.benefitText}>Proteção total</p>
+              </div>
+            </div>
+            <div className={styles.benefitItem}>
+              <div className={styles.benefitIcon}><Sparkles size={24} /></div>
+              <div>
+                <h3 className={styles.benefitTitle}>IA Avançada</h3>
+                <p className={styles.benefitText}>Tecnologia de ponta</p>
+              </div>
+            </div>
+          </div>
+          <div className={styles.progressIndicator}>
+            <div className={styles.stepBar}>
+              <div className={`${styles.stepCircle} ${currentStep === 'identification' ? styles.active : ''}`}>1</div>
+              <div className={`${styles.stepLine} ${currentStep === 'credentials' ? styles.activeLine : ''}`} />
+              <div className={`${styles.stepCircle} ${currentStep === 'credentials' ? styles.active : ''}`}>2</div>
+            </div>
+            <div className={styles.stepLabels}>
+              <span>Identificação</span><span>Credenciais</span>
+            </div>
+          </div>
         </div>
+      </aside>
 
-        <GoogleAuthButton
-          content="Crie uma conta com o Google"
-          redirectUrl="http://127.0.0.1:3001/auth/google"
-        />
-
-        <div className={styles.steps}>
-          <div className={`${styles.step} ${step === 1 ? styles.stepActive : ''}`} />
-          <div className={`${styles.step} ${step === 2 ? styles.stepActive : ''}`} />
+      <main className={styles.rightSide}>
+        <div className={styles.backWrapper}>
+          <button onClick={handleBackToHome} className={styles.backBtn}>
+            <ArrowLeft size={20} /> Voltar ao início
+          </button>
         </div>
+        <div className={styles.formWrapper}>
+          <div className={styles.formHeader}>
+            <h2 className={styles.formTitle}>Criar Conta</h2>
+            <p className={styles.formSubtitle}>Etapa {currentStep === 'identification' ? 1 : 2} de 2</p>
+          </div>
 
-        <div className={styles.footerText}>
-          Já possui uma conta?{' '}
-          <a href="/auth/login" className={styles.footerLink}>
-            Faça o Login
-          </a>
+          {currentStep === 'identification' ? (
+            <> 
+              <button onClick={handleGoogleSignup} disabled={loading} className={styles.googleBtn}>
+                <Chrome size={20} className={styles.googleIcon} /> Continuar com Google
+              </button>
+              <div className={styles.divider}><div className={styles.line} />ou<div className={styles.line} /></div>
+              <div className={styles.formStep}>
+                <div className={styles.field}>
+                  <label className={styles.label}>Nome</label>
+                  <div className={styles.inputWrapper}>
+                    <User size={20} className={styles.inputIcon} />
+                    <input type="text" value={formData.firstName} onChange={e => handleInputChange('firstName', e.target.value)} placeholder="Seu nome" className={`${styles.input} ${errors.firstName ? styles.error : ''}`} />
+                  </div>
+                  {errors.firstName && <p className={styles.errorText}>{errors.firstName}</p>}
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>Sobrenome</label>
+                  <div className={styles.inputWrapper}>
+                    <User size={20} className={styles.inputIcon} />
+                    <input type="text" value={formData.lastName} onChange={e => handleInputChange('lastName', e.target.value)} placeholder="Seu sobrenome" className={`${styles.input} ${errors.lastName ? styles.error : ''}`} />
+                  </div>
+                  {errors.lastName && <p className={styles.errorText}>{errors.lastName}</p>}
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>Username</label>
+                  <div className={styles.inputWrapper}>
+                    <span className={styles.usernamePrefix}>@</span>
+                    <input type="text" value={formData.username} onChange={e => handleInputChange('username', e.target.value.toLowerCase())} placeholder="username" className={`${styles.input} ${errors.username ? styles.error : ''}`} />
+                  </div>
+                  {errors.username && <p className={styles.errorText}>{errors.username}</p>}
+                </div>
+                <button onClick={handleNextStep} className={styles.nextBtn}>
+                  Próximo <ArrowRight size={20} />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className={styles.form}>...
+              </form>
+            </>
+          )}
+
+          <div className={styles.switchPrompt}>
+            {currentStep === 'identification' ? (
+              <p>Já tem uma conta? <button onClick={handleGoToLogin} className={styles.linkBtn}>Entrar</button></p>
+            ) : (
+              <button onClick={handlePreviousStep} className={styles.backStepBtn}><ArrowLeft size={16} /> Voltar</button>
+            )}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
-}
+};
+
+export default Signup;
