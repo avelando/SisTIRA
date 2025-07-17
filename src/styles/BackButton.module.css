@@ -1,0 +1,29 @@
+.backBtnWrapper {
+  padding: 1.5rem 0 0 1.5rem;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #475569;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.backBtn:hover {
+  color: #1e293b;
+  transform: translateX(-4px);
+}
+
+.backBtn:active {
+  transform: translateX(-2px);
+}
+
+.backBtn:focus {
+  outline: 2px solid rgba(19, 56, 86, 0.5);
+  outline-offset: 2px;
+}

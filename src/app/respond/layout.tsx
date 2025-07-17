@@ -10,6 +10,7 @@ import {
   ChevronDown,
   LogOut as LogOutIcon,
 } from 'lucide-react'
+import styles from '@/styles/Layout.module.css'
 
 export default function RespondLayout({
   children,
@@ -39,7 +40,10 @@ export default function RespondLayout({
 
   useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsDropdownOpen(false)
       }
     }
@@ -69,56 +73,50 @@ export default function RespondLayout({
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="flex-shrink-0 sticky top-0 z-30 flex items-center justify-between h-18 bg-white border-b border-slate-200 px-6">
-        <h1 className="text-xl font-semibold text-slate-900">
-          {getPageTitle(pathname)}
-        </h1>
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.pageTitle}>{getPageTitle(pathname)}</h1>
 
-        <div className="relative" ref={dropdownRef}>
+        <div className={styles.userWrapper} ref={dropdownRef}>
           <button
-            onClick={() => setIsDropdownOpen(v => !v)}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-opacity-50"
+            onClick={() => setIsDropdownOpen((v) => !v)}
+            className={styles.userButton}
           >
-            <div className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center">
-              <User size={16} className="text-white" />
+            <div className={styles.avatar}>
+              <User size={16} className={styles.avatarIcon} />
             </div>
-            <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-slate-900">{user?.firstName}</p>
-              <p className="text-xs text-slate-500">@{user?.username}</p>
+            <div className={styles.userInfo}>
+              <p className={styles.userName}>{user?.firstName}</p>
+              <p className={styles.userHandle}>@{user?.username}</p>
             </div>
             <ChevronDown
               size={16}
-              className={`text-slate-400 transition-transform duration-200 ${
-                isDropdownOpen ? 'rotate-180' : ''
+              className={`${styles.chevron} ${
+                isDropdownOpen ? styles.rotate : ''
               }`}
             />
           </button>
 
           <div
-            className={`
-              absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2
-              transform origin-top-right transition-all duration-200 ease-out
-              ${isDropdownOpen
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 -translate-y-2 pointer-events-none'}
-            `}
+            className={`${styles.dropdown} ${
+              isDropdownOpen ? styles.dropdownOpen : ''
+            }`}
           >
             <button
               onClick={() => router.push('/profile')}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              className={styles.dropdownItem}
             >
               <User size={16} /> Perfil
             </button>
             <button
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
               onClick={() => router.push('/settings')}
+              className={styles.dropdownItem}
             >
               <Settings size={16} /> Configurações
             </button>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-700 hover:bg-slate-50"
+              className={styles.dropdownItem}
             >
               <LogOutIcon size={16} /> Logout
             </button>
@@ -126,9 +124,7 @@ export default function RespondLayout({
         </div>
       </header>
 
-      <main className="flex-1 overflow-auto bg-gray-100 p-4">
-        {children}
-      </main>
+      <main className={styles.main}>{children}</main>
     </div>
   )
 }

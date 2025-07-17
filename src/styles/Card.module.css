@@ -1,0 +1,57 @@
+.card {
+  border: 1px solid;
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+.card:hover {
+  box-shadow: 0 10px 15px rgba(148, 163, 184, 0.5);
+  transform: translateY(-0.25rem);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.quant {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+}
+
+.bgYellow { background-color: #fefce8; }
+.borderYellow { border-color: #fef9c3; }
+.hoverYellow:hover { background-color: #fef9c3; }
+.iconBgYellow { background-color: #fef9c3; }
+.iconColorYellow { color: #78350f; }
+
+.bgPink { background-color: #fdf2f8; }
+.borderPink { border-color: #fce7f3; }
+.hoverPink:hover { background-color: #fce7f3; }
+.iconBgPink { background-color: #fce7f3; }
+.iconColorPink { color: #be185d; }
+
+.bgGreen { background-color: #f0fdf4; }
+.borderGreen { border-color: #dcfce7; }
+.hoverGreen:hover { background-color: #dcfce7; }
+.iconBgGreen { background-color: #dcfce7; }
+.iconColorGreen { color: #166534; }

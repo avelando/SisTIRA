@@ -1,0 +1,20 @@
+.wrapper {
+  font-size: 0.875rem;
+  color: #374151;
+  text-align: center;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: #133856;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  margin: 0;
+}
+
+.linkBtn:hover {
+  color: #2563eb;
+}

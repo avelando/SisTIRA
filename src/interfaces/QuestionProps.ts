@@ -71,3 +71,18 @@ export interface ExistingQuestionsModalProps {
   onClose: () => void
   onAdded: (updated: FullExam) => void
 }
+
+export interface QuestionCardProps {
+  question: Question
+  index: number
+  onRemove: (id: string) => void
+  onEdit: (id: string) => void
+}
+
+export interface QuestionListProps {
+  questions: Question[]
+  showExisting: boolean
+  onOpenExisting: () => void
+  onRemove: (id: string) => void
+  onEdit: (id: string) => void
+}

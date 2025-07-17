@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createExam } from '@/api/exams'
+import styles from '@/styles/NewExamPage.module.css'
 
 export default function NewExamPage() {
   const router = useRouter()
@@ -31,15 +32,15 @@ export default function NewExamPage() {
 
   if (error) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="text-red-600">{error}</p>
+      <div className={styles.fullscreen}>
+        <p className={styles.errorText}>{error}</p>
       </div>
     )
   }
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <p>Criando prova…</p>
+    <div className={styles.fullscreen}>
+      <p className={styles.message}>Criando prova…</p>
     </div>
   )
 }

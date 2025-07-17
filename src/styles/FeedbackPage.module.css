@@ -1,0 +1,46 @@
+.container {
+  max-width: 42rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.answerCard {
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.questionLabel {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.questionText {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.responseText,
+.scoreText,
+.feedbackText {
+  margin-bottom: 0.25rem;
+}
+
+.responseText strong,
+.scoreText strong,
+.feedbackText strong {
+  font-weight: 600;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+}

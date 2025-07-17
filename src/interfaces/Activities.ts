@@ -1,3 +1,4 @@
+import { LucideIcon } from 'lucide-react'
 import { ReactNode } from 'react'
 
 export interface ActionButtonProps {
@@ -6,6 +7,14 @@ export interface ActionButtonProps {
   title?: string
   description?: string
   onClick?: () => void
+}
+
+export interface ActivityItem {
+  id: string;
+  type: 'prova' | 'questao' | 'banco_de_questao';
+  title: string;
+  time: string;
+  icon: React.ReactNode;
 }
 
 export interface SearchBarProps {
@@ -84,4 +93,20 @@ export interface ToolbarProps {
   onBankFilterClear: () => void
   onBankFilterApply: () => void
   bankFilterOptions: { id: string; name: string }[]
+}
+
+export interface CompactActionButtonProps {
+  icon: React.ReactElement<LucideIcon>
+  title: string
+  onClick: () => void
+}
+
+export interface EmptyQuestionsProps {
+  onOpen: () => void
+}
+
+export interface SidebarActionsProps {
+  visible: boolean
+  onAddQuestion: () => void
+  onOpenBank: () => void
 }

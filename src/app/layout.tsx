@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { defaultMetadata } from '@/app/metadata'
+import ApiProvider from '@/providers/ApiProvider';
 
 export const metadata: Metadata = defaultMetadata
 
@@ -11,7 +12,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <ApiProvider>
+          {children}
+        </ApiProvider>
+      </body>
     </html>
   )
 }
