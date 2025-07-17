@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   Edit,
   Trash2,
@@ -9,74 +7,70 @@ import {
   BookOpen,
   Target,
   GraduationCap,
-} from 'lucide-react'
-import { Question } from '@/interfaces/QuestionProps'
-import styles from '@/styles/QuestionCardV2.module.css'
+} from 'lucide-react';
+import styles from '@/styles/QuestionCard.module.css';
+import { Question } from '@/interfaces/QuestionProps';
 
 interface QuestionCardProps {
-  question: Question & {
-    questionDisciplines?: { discipline: { id: string; name: string } }[]
-    educationLevel?: string
-    difficulty?: string
-    examReference?: string
-    useModelAnswers?: boolean
-    createdAt?: string
-    modelAnswers?: { id?: string; type: string; content: string }[]
-  }
-  index: number
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
+  question: Question & Partial<{
+    questionDisciplines: { discipline: { id: string; name: string } }[];
+    educationLevel: string;
+    difficulty: string;
+    examReference: string;
+    useModelAnswers: boolean;
+    modelAnswers: { id?: string; type: string; content: string }[];
+    alternatives: { content: string; correct: boolean }[];
+    createdAt: string;
+  }>;
+  onEdit: (question: Question) => void;
+  onDelete: (id: string) => void;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
-  index,
   onEdit,
   onDelete,
 }) => {
-  const [showActions, setShowActions] = useState(false)
+  const [showActions, setShowActions] = useState(false);
 
   const truncate = (text: string, len = 150) =>
-    text.length > len ? text.slice(0, len) + '...' : text
+    text.length > len ? text.slice(0, len) + '...' : text;
 
   const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onEdit(question.id)
-  }
+    e.stopPropagation();
+    onEdit(question);
+  };
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (confirm('Tem certeza que deseja deletar esta questão?')) {
-      onDelete(question.id)
+      onDelete(question.id);
     }
-  }
+  };
 
   return (
     <div
-      className={styles.container}
+      className={styles.card}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      <div className={styles.header}>
+      <div className={styles.cardHeader}>
         <span
-          className={
+          className={`${styles.typeBadge} ${
             question.questionType === 'OBJ'
-              ? `${styles.badge} ${styles.badgeObj}`
-              : `${styles.badge} ${styles.badgeSubj}`
-          }
+              ? styles.objectiveBadge
+              : styles.subjectiveBadge
+          }`}
         >
-          {index + 1}.{' '}
           {question.questionType === 'OBJ' ? 'Objetiva' : 'Subjetiva'}
         </span>
         <div
-          className={`${styles.actions} ${
-            showActions ? styles.actionsVisible : ''
-          }`}
+          className={`${styles.actions} ${showActions ? styles.actionsVisible : ''}`}
         >
           <button
             onClick={handleEdit}
             title="Editar"
-            className={`${styles.actionButton} ${styles.editButton}`}
+            className={styles.actionButton}
           >
             <Edit size={16} />
           </button>
@@ -90,56 +84,54 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
       </div>
 
-      <div className={styles.textWrapper}>
-        <p className={styles.text}>{truncate(question.text)}</p>
+      <div className={styles.contentSection}>
+        <p className={styles.contentText}>{truncate(question.text)}</p>
       </div>
 
       {question.questionDisciplines?.length ? (
-        <div className={styles.disciplines}>
-          {question.questionDisciplines.map((qd) => (
-            <span key={qd.discipline.id} className={styles.disciplineBadge}>
+        <div className={styles.disciplinesWrapper}>
+          {question.questionDisciplines.map(qd => (
+            <span
+              key={qd.discipline.id}
+              className={styles.disciplineBadge}
+            >
               {qd.discipline.name}
             </span>
           ))}
         </div>
       ) : null}
 
-      <div className={styles.meta}>
+      <div className={styles.metaWrapper}>
         {question.educationLevel && (
           <div className={styles.metaItem}>
-            <GraduationCap size={14} />
-            <span>{question.educationLevel}</span>
+            <GraduationCap size={14} /> <span>{question.educationLevel}</span>
           </div>
         )}
         {question.difficulty && (
           <div className={styles.metaItem}>
-            <Target size={14} />
-            <span>{question.difficulty}</span>
+            <Target size={14} /> <span>{question.difficulty}</span>
           </div>
         )}
         {question.examReference && (
           <div className={styles.metaItem}>
-            <BookOpen size={14} />
-            <span>{question.examReference}</span>
+            <BookOpen size={14} /> <span>{question.examReference}</span>
           </div>
         )}
       </div>
 
       {question.questionType === 'OBJ' && question.alternatives?.length ? (
-        <div className={styles.alternativesSection}>
-          <h4 className={styles.altHeader}>Alternativas:</h4>
+        <div className={styles.alternativesWrapper}>
+          <h4 className={styles.sectionTitle}>Alternativas:</h4>
           {question.alternatives.slice(0, 3).map((alt, i) => (
             <div key={i} className={styles.alternativeItem}>
               {alt.correct ? (
-                <CheckCircle className={styles.correctIcon} size={16} />
+                <CheckCircle size={16} className={styles.alternativeIconCorrect} />
               ) : (
-                <Circle className={styles.wrongIcon} size={16} />
+                <Circle size={16} className={styles.alternativeIcon} />
               )}
               <span
                 className={
-                  alt.correct
-                    ? `${styles.altText} ${styles.altTextCorrect}`
-                    : `${styles.altText} ${styles.altTextWrong}`
+                  alt.correct ? styles.alternativeTextCorrect : styles.alternativeText
                 }
               >
                 {alt.content}
@@ -147,7 +139,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
           ))}
           {question.alternatives.length > 3 && (
-            <p className={styles.moreAlts}>
+            <p className={styles.moreAlternatives}>
               +{question.alternatives.length - 3} alternativas
             </p>
           )}
@@ -157,18 +149,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {question.questionType === 'SUB' &&
       question.useModelAnswers &&
       question.modelAnswers?.length ? (
-        <div className={styles.modelAnswersSection}>
-          <h4 className={styles.modelHeader}>Respostas Modelo:</h4>
-          {question.modelAnswers.slice(0, 2).map((ans, i) => (
-            <div key={ans.id ?? i} className={styles.modelItem}>
-              <span className={styles.modelType}>{ans.type}:</span>
-              <p className={styles.modelContent}>
+        <div className={styles.modelAnswersWrapper}>
+          <h4 className={styles.sectionTitle}>Respostas Modelo:</h4>
+          {question.modelAnswers.slice(0, 2).map(ans => (
+            <div key={ans.id} className={styles.modelAnswerItem}>
+              <span className={styles.modelAnswerType}>{ans.type}:</span>
+              <p className={styles.modelAnswerContent}>
                 {truncate(ans.content, 100)}
               </p>
             </div>
           ))}
           {question.modelAnswers.length > 2 && (
-            <p className={styles.moreModels}>
+            <p className={styles.moreAnswers}>
               +{question.modelAnswers.length - 2} respostas
             </p>
           )}
@@ -176,10 +168,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       ) : null}
 
       {question.createdAt && (
-        <div className={styles.created}>
+        <div className={styles.createdAt}>
           Criada em {new Date(question.createdAt).toLocaleDateString('pt-BR')}
         </div>
       )}
     </div>
-  )
-}
+  );
+};
