@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ActionButtonProps } from '@/interfaces/Activities'
-import styles from '@/styles/CompactActionButton.module.css'
+import styles from '@/styles/ActionButton.module.css'
 
 export const ActionButton: React.FC<ActionButtonProps> = ({
   label,
