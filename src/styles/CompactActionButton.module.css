@@ -1,21 +1,52 @@
 .button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #0f172a;
-  color: #ffffff;
+  gap: 0.75rem;
+  padding: 1rem 0.75rem;
+  border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
-  border: none;
+  background-color: #ffffff;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
   cursor: pointer;
-  transition: background-color 150ms;
   outline: none;
 }
 
 .button:hover {
-  background-color: #1e293b;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-color: #cbd5e1;
 }
 
 .button:focus {
-  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.5);
+  box-shadow: 0 0 0 2px rgba(55,65,81,0.5);
+}
+
+.iconContainer {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.title {
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.2;
+  text-align: left;
 }
