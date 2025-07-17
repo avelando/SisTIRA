@@ -1,6 +1,9 @@
-export interface FormFieldProps {
+import { InputHTMLAttributes, ReactNode } from "react";
+
+export interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  type: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: ReactNode;
+  prefix?: string;
+  error?: string;
+  isPassword?: boolean;
 }

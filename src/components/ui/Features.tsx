@@ -83,19 +83,6 @@ export const Features: React.FC = () => {
             />
           ))}
         </div>
-
-        <div className={styles.bottomCTA}>
-          <div className={styles.ctaBox}>
-            <h3 className={styles.ctaTitle}>Pronto para começar?</h3>
-            <p className={styles.ctaText}>
-              Experimente todas essas funcionalidades gratuitamente por 30 dias.
-            </p>
-            <button className={styles.ctaButton}>
-              Começar Teste Gratuito
-              <CheckCircle size={20} className={styles.ctaButtonIcon} />
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

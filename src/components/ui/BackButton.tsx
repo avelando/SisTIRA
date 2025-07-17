@@ -1,22 +1,26 @@
-'use client';
-
 import React from 'react';
-import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import styles from '@/styles/BackButton.module.css';
 
 interface BackButtonProps {
-  text: string;
+  text?: string;
+  onClick: () => void;
 }
 
-export default function BackButton({ text }: BackButtonProps) {
-  return (
-    <Link href="/">
-      <div className={styles.backButton}>
-        <div className={styles.arrow} />
-        <div className={styles.textContainer}>
-          <span>{text}</span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+export const BackButton: React.FC<BackButtonProps> = ({
+  text = 'Voltar ao início',
+  onClick,
+}) => (
+  <div className={styles.backBtnWrapper}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={styles.backBtn}
+    >
+      <ArrowLeft size={20} />
+      {text}
+    </button>
+  </div>
+);
+
+export default BackButton;

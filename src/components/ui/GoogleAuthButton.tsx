@@ -1,29 +1,41 @@
-'use client';
+'use client'
 
-import React from 'react';
-import Image from 'next/image';
-import styles from '@/styles/GoogleAuthButton.module.css';
+import React from 'react'
+import styles from '@/styles/GoogleAuthButton.module.css'
+import Image from 'next/image'
 
 interface GoogleAuthButtonProps {
-  content: string;
-  redirectUrl: string;
+  content: string
+  redirectUrl?: string
+  disabled?: boolean
 }
 
-export default function GoogleAuthButton({ content, redirectUrl }: GoogleAuthButtonProps) {
+const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({
+  content,
+  redirectUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+  disabled = false,
+}) => {
   const handleClick = () => {
-    window.location.href = redirectUrl;
-  };
+    if (disabled) return
+    window.location.href = redirectUrl
+  }
 
   return (
-    <button onClick={handleClick} className={styles.button}>
+    <button
+      onClick={handleClick}
+      disabled={disabled}
+      className={styles.googleBtn}
+    >
       <Image
         src="/assets/google-logo.png"
-        alt="Google Icon"
+        alt="Google logo"
         width={20}
         height={20}
-        className={styles.icon}
+        className={styles.googleIcon}
       />
       {content}
     </button>
-  );
+  )
 }
+
+export default GoogleAuthButton
