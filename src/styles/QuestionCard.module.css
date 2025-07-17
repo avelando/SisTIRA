@@ -1,124 +1,169 @@
-.container {
+.card {
+  position: relative;
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
   padding: 1.5rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
 }
 
-.header {
+.cardHeader {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
-.headerLeft {
-  display: flex;
+.typeBadge {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-}
-
-.indexCircle {
-  width: 2rem;
-  height: 2rem;
-  background-color: #dcfce7;
+  padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.indexNumber {
-  color: #16a34a;
-}
-
-.heading {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.badge {
-  padding: 0.25rem 0.5rem;
-  background-color: #dbeafe;
-  color: #2563eb;
   font-size: 0.75rem;
   font-weight: 500;
-  border-radius: 9999px;
+  border: 1px solid;
+}
+.objectiveBadge {
+  background-color: #ebf8ff;
+  color: #2c5282;
+  border-color: #bfdbfe;
+}
+.subjectiveBadge {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  border-color: #d8b4fe;
 }
 
 .actions {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.actionsVisible {
+  opacity: 1;
 }
 
-.editButton,
-.deleteButton {
+.actionButton {
   padding: 0.5rem;
+  background: none;
+  border: none;
+  color: #64748b;
   border-radius: 0.5rem;
-  transition: color 150ms, background-color 150ms;
-  outline: none;
+  transition: background-color 0.2s, color 0.2s;
 }
-
-.editButton {
-  color: #94a3b8;
+.actionButton:hover {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
 }
-
-.editButton:hover {
-  color: #2563eb;
-  background-color: #eff6ff;
-}
-
-.editButton:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.deleteButton {
-  color: #94a3b8;
-}
-
 .deleteButton:hover {
-  color: #dc2626;
-  background-color: #fef2f2;
+  background-color: #fff5f5;
+  color: #c53030;
 }
 
-.deleteButton:focus {
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
-}
-
-.text {
-  color: #374151;
+.contentSection {
   margin-bottom: 1rem;
 }
 
-.optionsList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.contentText {
+  color: #1f2937;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
-.optionsList>li+li {
-  margin-top: 0.5rem;
-}
-
-.optionItem {
+.disciplinesWrapper {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.optionCircle {
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 9999px;
+.disciplineBadge {
+  padding: 0.25rem 0.5rem;
+  background-color: #f1f5f9;
+  color: #334155;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.metaWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: #475569;
+  font-size: 0.875rem;
+}
+
+.metaItem {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.25rem;
 }
 
-.optionLabel {
+.alternativesWrapper,
+.modelAnswersWrapper {
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.alternativeItem,
+.modelAnswerItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.alternativeIcon,
+.alternativeIconCorrect {
+  flex-shrink: 0;
+}
+.alternativeIconCorrect {
+  color: #22543d;
+}
+
+.alternativeText,
+.alternativeTextCorrect {
+  line-height: 1.25;
+}
+.alternativeTextCorrect {
+  color: #276749;
+  font-weight: 500;
+}
+
+.moreAlternatives,
+.moreAnswers {
   font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.modelAnswerType {
+  font-weight: 500;
+  color: #334155;
+}
+.modelAnswerContent {
+  color: #475569;
+  margin-top: 0.25rem;
+  line-height: 1.5;
+}
+
+.createdAt {
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  color: #64748b;
 }
