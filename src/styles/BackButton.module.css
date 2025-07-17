@@ -1,34 +1,29 @@
-.backButton {
-  position: absolute;
-  top: 1.25rem;
-  left: 1.25rem;
+.backBtnWrapper {
+  padding: 1.5rem 0 0 1.5rem;
+}
+
+.backBtn {
   display: flex;
   align-items: center;
-  padding: 0.3125rem 0.9375rem;
-  background-color: transparent;
-  border-radius: 9999px;
-  color: #ffffff;
-  font-weight: 700;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #475569;
+  font: inherit;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.arrow {
-  width: 0;
-  height: 0;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-right: 10px solid #F8FFFF;
-  margin-right: 0.375rem;
+.backBtn:hover {
+  color: #1e293b;
+  transform: translateX(-4px);
 }
 
-.textContainer {
-  border: 2px solid #F8FFFF;
-  border-radius: 0 0.5rem 0.5rem 0;
-  padding: 0.25rem 0.625rem;
-  transition: background-color 0.1s ease;
+.backBtn:active {
+  transform: translateX(-2px);
 }
 
-.textContainer:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.backBtn:focus {
+  outline: 2px solid rgba(19, 56, 86, 0.5);
+  outline-offset: 2px;
 }

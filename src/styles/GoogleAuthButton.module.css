@@ -1,29 +1,28 @@
-.button {
+.googleBtn {
+  width: 100%;
+  max-width: 25rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  margin-bottom: 1.25rem;
-  background-color: transparent;
-  border: 2px solid #133856;
-  border-radius: 0.25rem;
-  padding: 0.625rem 1rem;
-  font-size: 1rem;
-  color: #133856;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  color: #475569;
+  font-weight: 500;
+  background-color: #fff;
+  transition: background 0.2s;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.button:hover {
-  background-color: #133856;
-  color: #f8ffff;
+.googleBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.button:focus {
-  outline: none;
+.googleBtn:hover:not(:disabled) {
+  background: #f9fafb;
 }
 
-.icon {
-  display: block;
+.googleIcon {
+  color: #3b82f6;
 }

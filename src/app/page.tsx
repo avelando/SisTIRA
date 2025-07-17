@@ -4,10 +4,11 @@ import { Hero } from '@/components/ui/Hero';
 import { Features } from '@/components/ui/Features';
 import { About } from '@/components/ui/About';
 import { Footer } from '@/components/ui/Footer';
+import styles from '@/styles/Index.module.css'
 
 export const Landing: React.FC = () => {
   return (
-    <div className="min-h-screen">
+    <div className={styles.body}>
       <Header />
       <Hero />
       <Features />

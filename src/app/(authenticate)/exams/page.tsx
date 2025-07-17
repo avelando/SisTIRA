@@ -9,6 +9,7 @@ import { Toolbar } from '@/components/ui/ToolBar';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Pagination } from '@/components/ui/Pagination';
 import styles from '@/styles/ExamsPage.module.css';
+import { useDeleteExam } from 'sistira';
 
 export default function ExamsPage() {
   const router = useRouter();
@@ -25,11 +26,12 @@ export default function ExamsPage() {
     currentPage,
     setCurrentPage,
     totalPages,
-    handleDelete,
     handleSelectAll,
     handleSelectOne,
     formatDate,
   } = useExams();
+
+  const { deleteExam, loading: deleting, error: deleteError } = useDeleteExam();
 
   function handleNewExam() {
     router.push('/exams/new');
@@ -146,11 +148,18 @@ export default function ExamsPage() {
                             <Edit size={16} />
                           </button>
                           <button
-                            onClick={e => { e.stopPropagation(); handleDelete(exam.id); }}
+                            onClick={e => {
+                              e.stopPropagation();
+                              deleteExam(exam.id).catch(() => {
+                              });
+                            }}
+                            disabled={deleting}
                             title="Excluir"
                             className={styles.deleteButton}
                           >
-                            <Trash2 size={16} />
+                            {deleting
+                              ? 'Excluindo…'
+                              : <Trash2 size={16} />}
                           </button>
                         </div>
                       </td>

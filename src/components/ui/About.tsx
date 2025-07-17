@@ -1,6 +1,7 @@
 import React from 'react';
 import { Github, Linkedin, Mail, MapPin, GraduationCap } from 'lucide-react';
 import styles from '@/styles/About.module.css';
+import Image from 'next/image'
 
 export const About: React.FC = () => {
   return (
@@ -9,8 +10,8 @@ export const About: React.FC = () => {
 
         <div className={styles.header}>
           <h2 className={styles.title}>
-            Conheça o{' '}
-            <span className={styles.highlight}>Desenvolvedor</span>
+            Conheça os{' '}
+            <span className={styles.highlight}>Desenvolvedores</span>
           </h2>
         </div>
 
@@ -18,9 +19,13 @@ export const About: React.FC = () => {
 
           <div className={styles.imageWrapper}>
             <div className={styles.avatarContainer}>
-              <div className={styles.avatarInner}>
-                <div className={styles.avatarPlaceholder}>A</div>
-              </div>
+              <Image
+                src="/assets/avelar.jpg"
+                alt="Avatar do usuário"
+                width={500}
+                height={500}
+                className={styles.avatarImage}
+              />
             </div>
             <div className={styles.floatIconTop}>
               <GraduationCap size={24} className={styles.gradIcon} />
