@@ -1,0 +1,284 @@
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.controlsCard {
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+  padding: 16px;
+}
+
+.controlsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.controlsHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.controlsBody {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: #64748b;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+}
+
+.itemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.userLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.handle {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.time {
+  color: #475569;
+  font-size: 13px;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answerRow {
+  display: grid;
+  gap: 10px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 10px;
+}
+
+.answerRow:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.qHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.qLeft {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.qIndex {
+  color: #0f172a;
+}
+
+.qTitle {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.qtext {
+  color: #0f172a;
+}
+
+.answer {
+  color: #0f172a;
+}
+
+.meta {
+  display: flex;
+  gap: 16px;
+  color: #334155;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.finalBox {
+  display: flex;
+  gap: 16px;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.secondaryLine {
+  color: #475569;
+  font-size: 14px;
+}
+
+.secondaryFeedbacks {
+  display: grid;
+  gap: 4px;
+}
+
+.actionsRow {
+  display: flex;
+  gap: 8px;
+}
+
+.teacherBox {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.teacherInputs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inlineLabel {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.input {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  width: 80%;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+
+.select {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.btn {
+  background: #0ea5e9;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewCard {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.controlsRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search {
+  min-width: 240px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.teacherBox {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 8px;
+}
+
+.teacherHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.btnGhost {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.tagOverride {
+  font-size: 12px;
+  margin-left: 6px;
+  color: #0ea5e9;
+}
+
+.aiTag {
+  font-size: 12px;
+  color: #64748b;
+}

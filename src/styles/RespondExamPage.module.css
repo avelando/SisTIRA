@@ -69,3 +69,38 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.gateCard {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+  padding: 24px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.gateActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  background: #0ea5e9;
+  color: #fff;
+  border-color: #0ea5e9;
+}
+
+.secondaryBtn {
+  background: #fff;
+  color: #0f172a;
+}

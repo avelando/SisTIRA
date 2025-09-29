@@ -12,13 +12,14 @@ export default function ExamInfo({
   onDescriptionChange,
 }: ExamInfoProps) {
   return (
-    <div className={styles.container}>
+    <section className={styles.card} aria-labelledby="examinfo-title">
       <div className={styles.header}>
         <HelpCircle className={styles.icon} />
-        <h2 className={styles.heading}>Informações da Prova</h2>
+        <h2 id="examinfo-title" className={styles.heading}>Informações da Prova</h2>
       </div>
+
       <div className={styles.group}>
-        <div>
+        <div className={styles.field}>
           <label className={styles.label}>Título da Prova</label>
           <input
             value={title}
@@ -26,7 +27,8 @@ export default function ExamInfo({
             className={styles.input}
           />
         </div>
-        <div>
+
+        <div className={styles.field}>
           <label className={styles.label}>Descrição</label>
           <textarea
             value={description}
@@ -36,6 +38,6 @@ export default function ExamInfo({
           />
         </div>
       </div>
-    </div>
+    </section>
   )
 }

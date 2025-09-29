@@ -25,7 +25,7 @@ export const getQuestionBank = async (id: string) => {
 };
 
 export const updateQuestionBank = async (id: string, payload: { name: string; description: string }) => {
-  const { data } = await api.put(`/question-banks/${id}`, payload);
+  const { data } = await api.patch(`/question-banks/${id}`, payload);
   return data;
 };
 

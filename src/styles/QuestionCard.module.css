@@ -7,6 +7,7 @@
   cursor: pointer;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
+
 .card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border-color: #cbd5e1;
@@ -28,11 +29,13 @@
   font-weight: 500;
   border: 1px solid;
 }
+
 .objectiveBadge {
   background-color: #ebf8ff;
   color: #2c5282;
   border-color: #bfdbfe;
 }
+
 .subjectiveBadge {
   background-color: #f3e8ff;
   color: #6b21a8;
@@ -45,6 +48,7 @@
   opacity: 0;
   transition: opacity 0.2s;
 }
+
 .actionsVisible {
   opacity: 1;
 }
@@ -57,10 +61,12 @@
   border-radius: 0.5rem;
   transition: background-color 0.2s, color 0.2s;
 }
+
 .actionButton:hover {
   background-color: #ebf8ff;
   color: #2b6cb0;
 }
+
 .deleteButton:hover {
   background-color: #fff5f5;
   color: #c53030;
@@ -132,6 +138,7 @@
 .alternativeIconCorrect {
   flex-shrink: 0;
 }
+
 .alternativeIconCorrect {
   color: #22543d;
 }
@@ -140,6 +147,7 @@
 .alternativeTextCorrect {
   line-height: 1.25;
 }
+
 .alternativeTextCorrect {
   color: #276749;
   font-weight: 500;
@@ -155,6 +163,7 @@
   font-weight: 500;
   color: #334155;
 }
+
 .modelAnswerContent {
   color: #475569;
   margin-top: 0.25rem;

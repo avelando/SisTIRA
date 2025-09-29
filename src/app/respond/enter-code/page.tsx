@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { checkExamAccess, grantExamAccess } from '@/api/exams';
+import { checkExamAccess, grantExamAccess } from '@/api/exam-responses';
 import styles from '@/styles/EnterCodePage.module.css';
 
-export default function EnterCodePage() {
+function EnterCodeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo') || '';
@@ -71,5 +71,13 @@ export default function EnterCodePage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function EnterCodePage() {
+  return (
+    <Suspense fallback={<p className="text-center p-6">Carregando…</p>}>
+      <EnterCodeContent />
+    </Suspense>
   );
 }

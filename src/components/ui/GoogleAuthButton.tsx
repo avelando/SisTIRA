@@ -1,30 +1,43 @@
-'use client'
+'use client';
 
-import React from 'react'
-import styles from '@/styles/GoogleAuthButton.module.css'
-import Image from 'next/image'
+import React, { useMemo } from 'react';
+import Image from 'next/image';
+import styles from '@/styles/GoogleAuthButton.module.css';
 
 interface GoogleAuthButtonProps {
-  content: string
-  redirectUrl?: string
-  disabled?: boolean
+  content: string;
+  redirectUrl?: string;
+  nextPath?: string;
+  disabled?: boolean;
 }
+
+const DEFAULT_API_BASE =
+  (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:3001/api/v1').replace(/\/+$/, '');
 
 const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({
   content,
-  redirectUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+  redirectUrl,
+  nextPath,
   disabled = false,
 }) => {
-  const handleClick = () => {
-    if (disabled) return
-    window.location.href = redirectUrl
-  }
+  const href = useMemo(() => {
+    if (redirectUrl) return redirectUrl;
+
+    const base = `${DEFAULT_API_BASE}/auth/google`;
+
+    if (!nextPath) return base;
+
+    const u = new URL(base);
+    u.searchParams.set('next', nextPath);
+    return u.toString();
+  }, [redirectUrl, nextPath]);
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={disabled}
+    <a
+      href={disabled ? undefined : href}
+      onClick={(e) => disabled && e.preventDefault()}
       className={styles.googleBtn}
+      aria-disabled={disabled}
     >
       <Image
         src="/assets/google-logo.png"
@@ -34,8 +47,8 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({
         className={styles.googleIcon}
       />
       {content}
-    </button>
-  )
-}
+    </a>
+  );
+};
 
-export default GoogleAuthButton
+export default GoogleAuthButton;

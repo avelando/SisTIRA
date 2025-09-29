@@ -1,5 +1,16 @@
 export type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT';
 
+export type Visibility = 'PUBLIC' | 'PRIVATE';
+export type ResultsVisibility = 'IMMEDIATE' | 'WHEN_TEACHER_RELEASES' | 'AT_DATE';
+
+export type BackendQuestionType =
+  | 'SUBJECTIVE'
+  | 'MULTIPLE_CHOICE_SINGLE'
+  | 'MULTIPLE_CHOICE_MULTI'
+  | 'TRUE_FALSE';
+
+export type ResponseQuestionType = 'OBJ' | 'SUB';
+
 export interface ExamPayload {
   title: string;
   description?: string;
@@ -26,31 +37,39 @@ export interface ExamQuestionAlternative {
 export interface ExamQuestion {
   id: string;
   text: string;
-  questionType: 'OBJ' | 'SUB';
+  questionType: BackendQuestionType;
   alternatives?: ExamQuestionAlternative[];
 }
 
+export interface ExamSettings {
+  accessCode?: string | null;
+  visibility: Visibility;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  timeLimitInMinutes?: number | null;
+  allowResponseEdit?: boolean;
+  resultsVisibility?: ResultsVisibility;
+  resultsReleaseAt?: string | null;
+}
+
 export interface FullExam {
-  accessCode?: string;
   id: string;
   title: string;
   description?: string;
   createdAt: string;
   creatorId: string;
-
+  settings?: ExamSettings;
   examQuestionBanks: {
     questionBank: ExamBank;
   }[];
-
   allQuestions: ExamQuestion[];
-
   questionCount: number;
 }
 
 export interface QuestionForResponse {
   id: string;
   text: string;
-  questionType: 'OBJ' | 'SUB';
+  questionType: BackendQuestionType;
   alternatives?: { id: string; content: string }[];
   modelAnswers?: { type: ModelAnswerType; content: string }[];
 }
@@ -60,7 +79,6 @@ export interface ExamForResponse {
   title: string;
   accessCode?: string;
   description?: string;
-  createdBy?: string;
   questions: QuestionForResponse[];
 }
 
@@ -91,14 +109,11 @@ export interface SubmitResponseResult {
 export interface ExamAnswerResult {
   id: string;
   question: {
-    id: string;
     text: string;
-    questionType: 'OBJ' | 'SUB';
+    questionType: ResponseQuestionType;
   };
   alternative?: {
-    id: string;
     content: string;
-    correct: boolean;
   };
   subjectiveText?: string;
   score?: number;
@@ -110,18 +125,32 @@ export interface ExamResponseResult {
   examId: string;
   userId: string;
   createdAt: string;
+  answers: ExamAnswerResult[];
+}
+
+export interface ExamResponseListItem {
+  id: string;
+  examId: string;
+  createdAt: string;
   user: {
     id: string;
     username: string;
     firstName: string;
     lastName: string;
   };
-  answers: ExamAnswerResult[];
+  answers: Array<{
+    id: string;
+    question: { id: string; text: string; questionType: BackendQuestionType };
+    alternative?: { id: string; content: string; correct: boolean };
+    subjectiveText?: string;
+    score?: number;
+    feedback?: string;
+  }>;
 }
 
 export interface ExamInfoProps {
-  title: string
-  description: string
-  onTitleChange: (v: string) => void
-  onDescriptionChange: (v: string) => void
+  title: string;
+  description: string;
+  onTitleChange: (v: string) => void;
+  onDescriptionChange: (v: string) => void;
 }

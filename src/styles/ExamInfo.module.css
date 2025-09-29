@@ -1,59 +1,62 @@
-.container {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  padding: 20px;
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #2563eb;
-  background-color: #dbebfe;
-  border-radius: 9999px;
-  padding: 0.25rem;
+  width: 20px;
+  height: 20px;
+  color: #334155;
 }
 
 .heading {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
 }
 
-.group>*+* {
-  margin-top: 1rem;
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  color: #334155;
+  font-weight: 600;
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  outline: none;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #0f172a;
 }
 
 .input:focus,
 .textarea:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.textarea {
-  resize: none;
+  outline: none;
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.25);
 }

@@ -15,6 +15,13 @@ import {
 
 type ModalMode = 'create' | 'edit';
 
+function matchesTypeFilter(qType: string, filter: string): boolean {
+  if (!filter) return true;
+  if (filter === 'OBJ') return qType !== 'SUBJECTIVE';
+  if (filter === 'SUB') return qType === 'SUBJECTIVE';
+  return qType === filter;
+}
+
 export function useQuestions() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -108,13 +115,16 @@ export function useQuestions() {
 
   const filteredQuestions = questions.filter(q => {
     if (search && !q.text.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filters.questionType && q.questionType !== filters.questionType)
+
+    if (filters.questionType && !matchesTypeFilter(String(q.questionType), filters.questionType)) {
       return false;
+    }
+
     if (
       filters.disciplineId &&
       !q.questionDisciplines?.some(d => d.discipline.id === filters.disciplineId)
-    )
-      return false;
+    ) return false;
+
     return true;
   });
 

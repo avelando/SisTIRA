@@ -1,29 +1,26 @@
 import api from '@/lib/axios'
-import {
-  ExamPayload,
-  FullExam,
-  ExamForResponse,
-  SubmitResponseDto,
-  SubmitResponseResult,
-} from '@/interfaces/ExamsProps'
+import { ExamPayload, FullExam } from '@/interfaces/ExamsProps'
 import { CountsResponse } from '@/interfaces/CountsResponse'
 
-import { ExamResponseResult } from '@/interfaces/ExamsProps'
+export type Visibility = 'PUBLIC' | 'PRIVATE'
+export type ResultsVisibility = 'IMMEDIATE' | 'WHEN_TEACHER_RELEASES' | 'AT_DATE'
+
+export interface ExamSettings {
+  accessCode?: string | null
+  visibility?: Visibility
+  startsAt?: string | null
+  endsAt?: string | null
+  timeLimitInMinutes?: number | null
+  allowResponseEdit?: boolean
+  resultsVisibility?: ResultsVisibility
+  resultsReleaseAt?: string | null
+}
 
 export interface RawExam {
   id: string
   title: string
   createdAt: string
   _count: { questions: number }
-}
-
-export interface ExamAnswerResult {
-  id: string
-  question: { text: string; questionType: 'OBJ' | 'SUB' }
-  alternative?: { content: string }
-  subjectiveText?: string
-  score?: number
-  feedback?: string
 }
 
 export const getExams = async (): Promise<RawExam[]> => {
@@ -37,27 +34,20 @@ export const getExam = async (id: string): Promise<FullExam> => {
   return data
 }
 
-export const createExam = async (
-  payload: ExamPayload
-): Promise<FullExam> => {
+export const createExam = async (payload: ExamPayload): Promise<FullExam> => {
   const { data } = await api.post<FullExam>('/exams', payload)
   return data
 }
 
-export const updateExam = async (
-  id: string,
-  payload: ExamPayload
-): Promise<FullExam> => {
+export const updateExam = async (id: string, payload: ExamPayload): Promise<FullExam> => {
   if (!id) throw new Error('updateExam: id inválido')
-  const { data } = await api.put<FullExam>(`/exams/${id}`, payload)
+  const { data } = await api.patch<FullExam>(`/exams/${id}`, payload)
   return data
 }
 
-export const deleteExam = async (
-  id: string
-): Promise<{ message: string }> => {
+export const deleteExam = async <T = any>(id: string): Promise<T> => {
   if (!id) throw new Error('deleteExam: id inválido')
-  const { data } = await api.delete<{ message: string }>(`/exams/${id}`)
+  const { data } = await api.delete<T>(`/exams/${id}`)
   return data
 }
 
@@ -66,10 +56,7 @@ export const addQuestionsToExam = async (
   questions: string[]
 ): Promise<FullExam> => {
   if (!examId) throw new Error('addQuestionsToExam: id inválido')
-  const { data } = await api.patch<FullExam>(
-    `/exams/${examId}/add-questions`,
-    { questions }
-  )
+  const { data } = await api.patch<FullExam>(`/exams/${examId}/add-questions`, { questions })
   return data
 }
 
@@ -78,10 +65,7 @@ export const removeQuestionsFromExam = async (
   questions: string[]
 ): Promise<FullExam> => {
   if (!examId) throw new Error('removeQuestionsFromExam: id inválido')
-  const { data } = await api.delete<FullExam>(
-    `/exams/${examId}/remove-questions`,
-    { data: { questions } }
-  )
+  const { data } = await api.patch<FullExam>(`/exams/${examId}/remove-questions`, { questions })
   return data
 }
 
@@ -90,10 +74,7 @@ export const addBanksToExam = async (
   bankIds: string[]
 ): Promise<FullExam> => {
   if (!examId) throw new Error('addBanksToExam: id inválido')
-  const { data } = await api.patch<FullExam>(
-    `/exams/${examId}/add-banks`,
-    { bankIds }
-  )
+  const { data } = await api.patch<FullExam>(`/exams/${examId}/add-banks`, { bankIds })
   return data
 }
 
@@ -102,10 +83,7 @@ export const removeBanksFromExam = async (
   bankIds: string[]
 ): Promise<FullExam> => {
   if (!examId) throw new Error('removeBanksFromExam: id inválido')
-  const { data } = await api.patch<FullExam>(
-    `/exams/${examId}/remove-banks`,
-    { bankIds }
-  )
+  const { data } = await api.patch<FullExam>(`/exams/${examId}/remove-banks`, { bankIds })
   return data
 }
 
@@ -114,64 +92,68 @@ export const getUserCounts = async (): Promise<CountsResponse> => {
   return data
 }
 
-export const getExamForResponse = async (
-  identifier: string,
-  accessCode?: string,
-): Promise<ExamForResponse> => {
-  const { data } = await api.get<ExamForResponse>(
-    `/exams/respond/${encodeURIComponent(identifier)}`,
-    { params: accessCode ? { accessCode } : {} }
-  )
+export const getExamSettings = async (examId: string): Promise<ExamSettings | null> => {
+  if (!examId) throw new Error('getExamSettings: id inválido')
+  const { data } = await api.get<ExamSettings | null>(`/exams/${examId}/settings`)
   return data
 }
 
-export const submitExamResponse = async (
-  payload: SubmitResponseDto
-): Promise<SubmitResponseResult> => {
-  const { data } = await api.post<SubmitResponseResult>('/exams/respond', payload)
-  return data
-}
-
-export const checkExamAccess = async (
-  examId: string
-): Promise<{ hasAccess: boolean }> => {
-  const { data } = await api.get<{ hasAccess: boolean }>(
-    `/exams/${examId}/access`
-  )
-  return data
-}
-
-export const grantExamAccess = async (
+export const updateExamSettings = async (
   examId: string,
-  accessCode: string
-): Promise<{ success: boolean }> => {
-  const { data } = await api.post<{ success: boolean }>(
-    `/exams/${examId}/access`,
-    { accessCode }
+  dto: Partial<ExamSettings> & {
+    generateAccessCode?: boolean
+    clearAccessCode?: boolean
+    customAccessCode?: string
+  }
+): Promise<ExamSettings> => {
+  if (!examId) throw new Error('updateExamSettings: id inválido')
+  const { data } = await api.patch<ExamSettings>(`/exams/${examId}/settings`, dto)
+  return data
+}
+
+export const generateExamAccessCode = async (
+  examId: string,
+  length?: number
+): Promise<{ accessCode: string }> => {
+  if (!examId) throw new Error('generateExamAccessCode: id inválido')
+  const body = typeof length === 'number' ? { length } : {}
+  const { data } = await api.post<{ accessCode: string }>(
+    `/exams/${examId}/settings/access-code/generate`,
+    body
   )
   return data
 }
 
-export const getExamForResponseAuth = async (
+export const setExamCustomAccessCode = async (
+  examId: string,
+  code: string
+): Promise<{ accessCode: string }> => {
+  if (!examId) throw new Error('setExamCustomAccessCode: id inválido')
+  const { data } = await api.patch<{ accessCode: string }>(
+    `/exams/${examId}/settings/access-code`,
+    { code }
+  )
+  return data
+}
+
+export const clearExamAccessCode = async (
   examId: string
-): Promise<ExamForResponse> => {
-  const { data } = await api.get<ExamForResponse>(
-    `/exams/${examId}/respond-auth`
+): Promise<{ accessCode: null }> => {
+  if (!examId) throw new Error('clearExamAccessCode: id inválido')
+  const { data } = await api.delete<{ accessCode: null }>(
+    `/exams/${examId}/settings/access-code`
   )
   return data
 }
 
-export const getResponseResult = async (
-  responseId: string
-): Promise<ExamResponseResult> => {
-  if (!responseId) throw new Error('responseId inválido')
-  const { data } = await api.get<ExamResponseResult>(
-    `/exams/responses/${encodeURIComponent(responseId)}`
+export const setExamVisibility = async (
+  examId: string,
+  visibility: Visibility
+): Promise<{ visibility: Visibility }> => {
+  if (!examId) throw new Error('setExamVisibility: id inválido')
+  const { data } = await api.patch<{ visibility: Visibility }>(
+    `/exams/${examId}/settings/visibility`,
+    { visibility }
   )
-  return data
-}
-
-export const getExamResponses = async (examId: string): Promise<ExamResponseResult[]> => {
-  const { data } = await api.get<ExamResponseResult[]>(`/exams/${examId}/responses`)
   return data
 }

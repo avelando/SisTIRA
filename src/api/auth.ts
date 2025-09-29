@@ -1,21 +1,13 @@
-import api from '@/lib/axios';
+import api, { raw } from '@/lib/axios';
+import { setTokens, clearTokens, getRefreshToken } from '@/lib/authStorage';
 
-export const loginUser = async (data: { email: string; password: string }) => {
-  try {
-    const response = await api.post('/auth/login', data);
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao realizar login.');
-  }
-};
+type LoginPayload = { email: string; password: string };
 
-export const checkAuth = async () => {
-  try {
-    const response = await api.get('/users/me', { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    return null;
-  }
+export const loginUser = async (data: LoginPayload) => {
+  const res = await api.post('/auth/login', data);
+  const { accessToken, refreshToken, user } = res.data;
+  setTokens(accessToken, refreshToken);
+  return user;
 };
 
 export const registerUser = async (data: {
@@ -25,12 +17,35 @@ export const registerUser = async (data: {
   username: string;
   password: string;
 }) => {
+  const res = await api.post('/auth/register', data);
+  const { accessToken, refreshToken, user } = res.data;
+  setTokens(accessToken, refreshToken);
+  return user;
+};
+
+export const checkAuth = async () => {
   try {
-    const response = await api.post('/users', data);
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || 'Erro ao registrar usuário.');
+    const res = await api.get('/users/me');
+    return res.data;
+  } catch {
+    return null;
   }
 };
 
-export { api };
+export const refreshTokens = async () => {
+  const rt = getRefreshToken();
+  if (!rt) throw new Error('No refresh token');
+  const res = await raw.post('/auth/refresh', { refreshToken: rt });
+  const { accessToken, refreshToken } = res.data;
+  setTokens(accessToken, refreshToken);
+  return accessToken;
+};
+
+export const logout = async () => {
+  const rt = getRefreshToken();
+  try {
+    if (rt) await raw.post('/auth/logout', { refreshToken: rt });
+  } finally {
+    clearTokens();
+  }
+};

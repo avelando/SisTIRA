@@ -82,7 +82,6 @@ export function useAddQuestionModal({
           getQuestionBanks(),
         ])
         setBanks(allBanks)
-        setAllQuestions(exam.allQuestions)
         setSelectedBankIds(new Set(exam.examQuestionBanks.map(b => b.questionBank.id)))
         setSelectedQuestionIds(new Set(exam.allQuestions.map(q => q.id)))
       }
@@ -119,10 +118,8 @@ export function useAddQuestionModal({
     const newQuestions = new Set(selectedQuestionIds)
 
     if (selectedBankIds.has(bId)) {
-      // desmarcou: remove todas as questões deste banco
       bankQs.forEach(qId => newQuestions.delete(qId))
     } else {
-      // marcou: adiciona todas as questões deste banco
       bankQs.forEach(qId => newQuestions.add(qId))
     }
 

@@ -1,21 +1,13 @@
 import api from '@/lib/axios';
 
 export const getUserProfile = async () => {
-  try {
-    const response = await api.get('/users/me');
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Erro ao obter os dados do usuário.");
-  }
+  const res = await api.get('/users/me');
+  return res.data;
 };
 
 export const deleteUserProfile = async () => {
-  try {
-    const response = await api.delete('/users/me');
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Erro ao deletar a conta do usuário.");
-  }
+  const res = await api.delete('/users/me');
+  return res.data;
 };
 
 export const updateUserProfile = async (userData: {
@@ -25,25 +17,13 @@ export const updateUserProfile = async (userData: {
   email: string;
   profileImageUrl: string | null;
 }) => {
-  try {
-    const response = await api.patch('/users/me', userData);
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Erro ao atualizar os dados do usuário.");
-  }
+  const res = await api.patch('/users/me', userData);
+  return res.data;
 };
 
 export const updateUserProfileImage = async (formData: FormData) => {
-  try {
-    const response = await api.patch('/users/me/profile-image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    throw new Error(
-      error.response?.data?.message || 'Erro ao atualizar imagem de perfil.'
-    );
-  }
+  const res = await api.patch('/users/me/profile-image', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return res.data;
 };

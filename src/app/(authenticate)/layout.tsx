@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { checkAuth } from '@/api/auth';
+import { checkAuth, logout } from '@/api/auth';
+import { setTokens } from '@/lib/authStorage';
 import { UserProps } from '@/interfaces/UserProps';
 import { LogoIcon } from '@/lib/images';
 import { pageTitles } from '@/utils/pageTitles';
@@ -46,7 +47,43 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hydratedTokens, setHydratedTokens] = useState(false); // <- novo
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const src = window.location.hash?.startsWith('#')
+        ? window.location.hash.slice(1)
+        : window.location.search?.replace(/^\?/, '');
+
+      if (src) {
+        const params = new URLSearchParams(src);
+        const accessToken = params.get('accessToken');
+        const refreshToken = params.get('refreshToken');
+
+        if (accessToken && refreshToken) {
+          setTokens(accessToken, refreshToken);
+          window.history.replaceState(null, '', pathname);
+        }
+      }
+    } finally {
+      setHydratedTokens(true);
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!hydratedTokens) return;
+
+    (async () => {
+      try {
+        const u = await checkAuth();
+        if (!u) router.push('/auth/login');
+        else setUser(u);
+      } catch {
+        router.push('/auth/login');
+      }
+    })();
+  }, [hydratedTokens, router]);
 
   useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
@@ -65,27 +102,13 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const u = await checkAuth();
-        if (!u) router.push('/auth/login');
-        else setUser(u);
-      } catch {
-        router.push('/auth/login');
-      }
-    })();
-  }, [router]);
-
   const handleLogout = async () => {
     try {
-      await fetch('/api/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      router.push('/auth/login');
+      await logout();
     } catch (e) {
       console.error('Logout falhou', e);
+    } finally {
+      router.replace('/auth/login');
     }
   };
 
@@ -106,6 +129,8 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     { label: 'Questões', route: '/questions', icon: <HelpCircle size={20} /> },
     { label: 'Banco de Questões', route: '/questionsBank', icon: <Database size={20} /> },
   ];
+
+  if (!hydratedTokens || !user) return null;
 
   return (
     <>
@@ -166,15 +191,11 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
                 </div>
                 <ChevronDown
                   size={16}
-                  className={`${styles.chevron} ${
-                    isDropdownOpen ? styles.rotate : ''
-                  }`}
+                  className={`${styles.chevron} ${isDropdownOpen ? styles.rotate : ''}`}
                 />
               </button>
               <div
-                className={`${styles.dropdown} ${
-                  isDropdownOpen ? styles.dropdownOpen : ''
-                }`}
+                className={`${styles.dropdown} ${isDropdownOpen ? styles.dropdownOpen : ''}`}
               >
                 <button
                   onClick={() => router.push('/profile')}

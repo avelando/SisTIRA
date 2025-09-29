@@ -14,6 +14,11 @@ export interface UseQuestionModalParams {
 
 type ModelAnswerType = 'WRONG' | 'MEDIAN' | 'CORRECT'
 
+function toUiType(apiType?: string): 'OBJ' | 'SUB' {
+  if (!apiType) return 'OBJ'
+  return apiType === 'SUBJECTIVE' ? 'SUB' : 'OBJ'
+}
+
 export function useQuestionModal({
   question,
   mode,
@@ -51,17 +56,17 @@ export function useQuestionModal({
       setFormData({
         id: question.id,
         text: question.text,
-        questionType: question.questionType,
-        educationLevel: question.educationLevel ?? '',
-        difficulty: question.difficulty ?? '',
+        questionType: toUiType(String(question.questionType)),
+        educationLevel: (question.educationLevel ?? '') as string,
+        difficulty: (question.difficulty ?? '') as string,
         examReference: question.examReference ?? '',
-        useModelAnswers: question.useModelAnswers ?? false,
+        useModelAnswers: !!question.useModelAnswers,
         disciplines:
           question.questionDisciplines?.map(qd => qd.discipline.name) ?? [],
         alternatives:
           question.alternatives?.map(a => ({
             content: a.content,
-            correct: a.correct,
+            correct: !!a.correct,
           })) ?? Array(4).fill({ content: '', correct: false }),
         modelAnswers:
           question.modelAnswers?.map(ma => ({
@@ -109,13 +114,13 @@ export function useQuestionModal({
     (i: number, key: 'content' | 'correct', val: any) => {
       const newAlts = formData.alternatives.map((alt, idx) => {
         if (idx === i) return { ...alt, [key]: val }
-        return key === 'correct' && val
+        return key === 'correct' && val && formData.questionType === 'OBJ'
           ? { ...alt, correct: false }
           : alt
       })
       updateField('alternatives', newAlts)
     },
-    [formData.alternatives, updateField]
+    [formData.alternatives, formData.questionType, updateField]
   )
 
   const addAlt = useCallback(() => {
